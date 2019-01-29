@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Camera/CameraComponent.h"
+#include "Weapon.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -26,10 +28,21 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// FPS camera.
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* FPSCameraComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = Spawn)
+	TSubclassOf<class AWeapon> WeaponSpawn;
+
+	AWeapon *CurrentWeapon;
 
 	UFUNCTION()
 	void MoveForward(float Value);
 
 	UFUNCTION()
 	void MoveRight(float Value);
+
+	UFUNCTION()
+	void FireWeapon();
 };

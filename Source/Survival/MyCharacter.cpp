@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyCharacter.h"
+#include "Engine.h"
 #include "Components/InputComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -10,13 +13,41 @@ AMyCharacter::AMyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Create a first person camera component.
+	FPSCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	// Attach the camera component to our capsule component.
+	FPSCameraComponent->SetupAttachment(GetCapsuleComponent());
+	// Position the camera slightly above the eyes.
+	FPSCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight));
+	// Allow the pawn to control camera rotation.
+	FPSCameraComponent->bUsePawnControlRotation = true;
+
+
+	static ConstructorHelpers::FObjectFinder<UBlueprint> WeaponBlueprint(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Gun.BP_Gun'"));
+	WeaponSpawn = NULL;
+
+	if (WeaponBlueprint.Succeeded())
+	{
+		WeaponSpawn = (UClass*)WeaponBlueprint.Object->GeneratedClass;
+	}
 }
 
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	SpawnParameters.Instigator = Instigator;
+
+	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn, SpawnParameters);
+	if (Spawner)
+	{
+		Spawner->AttachToComponent(FPSCameraComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		Spawner->SetActorLocation(FVector(100.0f, 100.0f, BaseEyeHeight));
+		CurrentWeapon = Spawner;
+	}
 }
 
 // Called every frame
@@ -36,6 +67,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAxis("Turn", this, &AMyCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMyCharacter::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::FireWeapon);
 }
 
 void AMyCharacter::MoveForward(float Value)
@@ -50,4 +83,9 @@ void AMyCharacter::MoveRight(float Value)
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
+}
+
+void AMyCharacter::FireWeapon()
+{
+	CurrentWeapon->Fire();
 }
