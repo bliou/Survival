@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Weapon.h"
 #include "MyCharacter.generated.h"
 
@@ -31,6 +32,10 @@ public:
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
+
+	// First-person mesh (arms), visible only to the owning player.
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	USkeletalMeshComponent* FPSMesh;
 
 	UPROPERTY(VisibleAnywhere, Category = Spawn)
 	TSubclassOf<class AWeapon> WeaponSpawn;

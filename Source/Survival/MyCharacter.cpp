@@ -22,6 +22,16 @@ AMyCharacter::AMyCharacter()
 	// Allow the pawn to control camera rotation.
 	FPSCameraComponent->bUsePawnControlRotation = true;
 
+	// Create a first person mesh component for the owning player.
+	FPSMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	// Only the owning player sees this mesh.
+	FPSMesh->SetOnlyOwnerSee(true);
+	// Attach the FPS mesh to the FPS camera.
+	FPSMesh->SetupAttachment(FPSCameraComponent);
+	// Disable some environmental shadowing to preserve the illusion of having a single mesh.
+	FPSMesh->bCastDynamicShadow = false;
+	FPSMesh->CastShadow = false;
+
 
 	static ConstructorHelpers::FObjectFinder<UBlueprint> WeaponBlueprint(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Gun.BP_Gun'"));
 	WeaponSpawn = NULL;
@@ -44,8 +54,12 @@ void AMyCharacter::BeginPlay()
 	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn, SpawnParameters);
 	if (Spawner)
 	{
-		Spawner->AttachToComponent(FPSCameraComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		Spawner->SetActorLocation(FVector(100.0f, 100.0f, BaseEyeHeight));
+		Spawner->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Spawner->AttachToComponent(
+			FPSMesh, 
+			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+			TEXT("b_RightWeapon")
+		);
 		CurrentWeapon = Spawner;
 	}
 }
@@ -87,5 +101,6 @@ void AMyCharacter::MoveRight(float Value)
 
 void AMyCharacter::FireWeapon()
 {
-	CurrentWeapon->Fire();
+	if (CurrentWeapon)
+		CurrentWeapon->Fire();
 }

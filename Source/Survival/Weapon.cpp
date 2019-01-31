@@ -9,7 +9,7 @@ AWeapon::AWeapon()
 	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComp"));
 	RootComponent = dynamic_cast<USceneComponent*>(CollisionComp);
 
-	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
 }
 
@@ -40,8 +40,8 @@ void AWeapon::InstantFire()
 	FRandomStream WeaponRandomStream(RandomSeed);
 	const float WeaponSpread = WeaponConfig.WeaponSpread;
 	const float SpreadCone = FMath::DegreesToRadians(WeaponSpread * 0.5);
-	const FVector AimDir = WeaponMesh->GetSocketRotation("MP").Vector();
-	const FVector StartTrace = WeaponMesh->GetSocketLocation("MP");
+	const FVector AimDir = WeaponMesh->GetSocketRotation("MS").Vector();
+	const FVector StartTrace = WeaponMesh->GetSocketLocation("MS");
 	const FVector ShootDir = WeaponRandomStream.VRandCone(AimDir, SpreadCone, SpreadCone);
 	const FVector EndTrace = StartTrace + ShootDir * WeaponConfig.WeaponRange;
 	const FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
@@ -53,6 +53,8 @@ void AWeapon::InstantFire()
 		RandomSeed,
 		WeaponSpread
 	);
+
+	DrawDebugSphere(GetWorld(), StartTrace, 1.f, 32, FColor::Black, true, 1000.f);
 }
 
 FHitResult AWeapon::WeaponTrace(

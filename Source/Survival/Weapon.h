@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include <string>
 #include "Weapon.generated.h"
 
 
@@ -62,8 +63,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Collision)
 	class UBoxComponent* CollisionComp;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
-	class USkeletalMeshComponent* WeaponMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
+	class UStaticMeshComponent* WeaponMesh;
 
 protected:
 
