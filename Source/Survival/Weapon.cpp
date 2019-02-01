@@ -2,6 +2,8 @@
 
 #include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/DecalActor.h"
+#include "Components/DecalComponent.h"
 #include "Engine.h"
 
 AWeapon::AWeapon()
@@ -53,8 +55,6 @@ void AWeapon::InstantFire()
 		RandomSeed,
 		WeaponSpread
 	);
-
-	DrawDebugSphere(GetWorld(), StartTrace, 1.f, 32, FColor::Black, true, 1000.f);
 }
 
 FHitResult AWeapon::WeaponTrace(
@@ -70,7 +70,12 @@ FHitResult AWeapon::WeaponTrace(
 
 	FHitResult Hit(ForceInit);
 
-	GetWorld()->LineTraceSingleByChannel(Hit, TraceFrom, TraceTo, ECollisionChannel::ECC_EngineTraceChannel1, TraceParams);
+	bool r = GetWorld()->LineTraceSingleByChannel(
+		Hit, 
+		TraceFrom, 
+		TraceTo, 
+		ECollisionChannel::ECC_PhysicsBody, 
+		TraceParams);
 
 	return Hit;
 }
@@ -86,4 +91,12 @@ void AWeapon::ProcessInstantHit(
 	const FVector EndPoint = Impact.GetActor() ? Impact.ImpactPoint : EndTrace;
 
 	DrawDebugLine(GetWorld(), Origin, EndPoint, FColor::Black, true, 10000, 10);
+
+	if (Impact.GetActor())
+	{
+		ADecalActor* decal = GetWorld()->SpawnActor<ADecalActor>(Impact.Location, FRotator());
+		decal->SetDecalMaterial(BulletHole);
+		decal->SetLifeSpan(2.0f);
+		decal->GetDecal()->DecalSize = FVector(10.f, 10.f, 10.f);
+	}
 }
