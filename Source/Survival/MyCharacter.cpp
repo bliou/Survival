@@ -102,5 +102,24 @@ void AMyCharacter::MoveRight(float Value)
 void AMyCharacter::FireWeapon()
 {
 	if (CurrentWeapon)
+	{
+		// try and play the sound if specified
+		if (CurrentWeapon->FireSound != NULL)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, CurrentWeapon->FireSound, GetActorLocation());
+		}
+
+		//// try and play a firing animation if specified
+		//if (FireAnimation != NULL)
+		//{
+		//	// Get the animation object for the arms mesh
+		//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		//	if (AnimInstance != NULL)
+		//	{
+		//		AnimInstance->Montage_Play(FireAnimation, 1.f);
+		//	}
+		//}
+
 		CurrentWeapon->Fire();
+	}
 }

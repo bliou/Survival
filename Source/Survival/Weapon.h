@@ -66,6 +66,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
 	class UStaticMeshComponent* WeaponMesh;
 
+	/** Sound to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class USoundBase* FireSound;
+
 protected:
 
 	UFUNCTION()
