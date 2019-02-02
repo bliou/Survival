@@ -17,6 +17,12 @@ AWeapon::AWeapon()
 
 void AWeapon::Fire()
 {
+	UGameplayStatics::PlaySoundAtLocation(
+		this, 
+		FireSound, 
+		GetActorLocation()
+	);
+
 	switch (WeaponProjectile)
 	{
 	case EWeaponProjectile::EBullet:

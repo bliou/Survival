@@ -32,14 +32,21 @@ AMyCharacter::AMyCharacter()
 	FPSMesh->bCastDynamicShadow = false;
 	FPSMesh->CastShadow = false;
 
+	// By default, the player has a gun
+	Weapons.SetNum(2, false);
+	static ConstructorHelpers::FObjectFinder<UBlueprint> GunBP(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Gun.BP_Gun'"));
 
-	static ConstructorHelpers::FObjectFinder<UBlueprint> WeaponBlueprint(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Gun.BP_Gun'"));
-	WeaponSpawn = NULL;
-
-	if (WeaponBlueprint.Succeeded())
+	if (GunBP.Succeeded())
 	{
-		WeaponSpawn = (UClass*)WeaponBlueprint.Object->GeneratedClass;
+		Weapons[0] = (UClass*)GunBP.Object->GeneratedClass;
 	}
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ShotgunBP(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Shotgun.BP_Shotgun'"));
+
+	if (ShotgunBP.Succeeded())
+	{
+		Weapons[1] = (UClass*)ShotgunBP.Object->GeneratedClass;
+	}
+	PreviousWeaponSlot = -1;
 }
 
 // Called when the game starts or when spawned
@@ -47,21 +54,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.Owner = this;
-	SpawnParameters.Instigator = Instigator;
-
-	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn, SpawnParameters);
-	if (Spawner)
-	{
-		Spawner->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Spawner->AttachToComponent(
-			FPSMesh, 
-			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-			TEXT("b_RightWeapon")
-		);
-		CurrentWeapon = Spawner;
-	}
+	EquipGun();
 }
 
 // Called every frame
@@ -82,7 +75,10 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("Turn", this, &AMyCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMyCharacter::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::FireWeapon);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Fire);
+	PlayerInputComponent->BindAction("EquipGun", IE_Pressed, this, &AMyCharacter::EquipGun);
+	PlayerInputComponent->BindAction("EquipHeavyWeapon", IE_Pressed, this, &AMyCharacter::EquipHeavyWeapon);
+	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 }
 
 void AMyCharacter::MoveForward(float Value)
@@ -99,16 +95,10 @@ void AMyCharacter::MoveRight(float Value)
 	AddMovementInput(Direction, Value);
 }
 
-void AMyCharacter::FireWeapon()
+void AMyCharacter::Fire()
 {
 	if (CurrentWeapon)
 	{
-		// try and play the sound if specified
-		if (CurrentWeapon->FireSound != NULL)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, CurrentWeapon->FireSound, GetActorLocation());
-		}
-
 		//// try and play a firing animation if specified
 		//if (FireAnimation != NULL)
 		//{
@@ -122,4 +112,87 @@ void AMyCharacter::FireWeapon()
 
 		CurrentWeapon->Fire();
 	}
+}
+
+void AMyCharacter::EquipGun()
+{
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	SpawnParameters.Instigator = Instigator;
+
+	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(Weapons[0], SpawnParameters);
+	if (Spawner)
+	{
+		if (CurrentWeapon)
+		{
+			if (CurrentWeapon->WeaponType == EWeaponType::EGun)
+				return;
+
+			int Slot = CurrentWeaponSlot();
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
+			Weapons[Slot] = NULL;
+			Weapons[Slot] = CurrentWeapon->GetClass();
+			PreviousWeaponSlot = Slot;
+			CurrentWeapon->Destroy();
+		}
+
+		Spawner->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Spawner->AttachToComponent(
+			FPSMesh,
+			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+			TEXT("b_RightWeapon")
+		);
+		CurrentWeapon = Spawner;
+	}
+}
+
+void AMyCharacter::EquipHeavyWeapon()
+{
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	SpawnParameters.Instigator = Instigator;
+
+	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(Weapons[1], SpawnParameters);
+	if (Spawner)
+	{
+		if (CurrentWeapon)
+		{
+			if (CurrentWeapon->WeaponType == EWeaponType::EHeavyWeapon)
+				return;
+
+			int Slot = CurrentWeaponSlot();
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
+			Weapons[Slot] = NULL;
+			Weapons[Slot] = CurrentWeapon->GetClass();
+			PreviousWeaponSlot = Slot;
+			CurrentWeapon->Destroy();
+		}
+
+		Spawner->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Spawner->AttachToComponent(
+			FPSMesh,
+			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+			TEXT("b_RightWeapon")
+		);
+		CurrentWeapon = Spawner;
+	}
+}
+
+void AMyCharacter::EquipPreviousWeapon()
+{
+}
+
+int AMyCharacter::CurrentWeaponSlot()
+{
+	if (CurrentWeapon)
+	{
+		switch (CurrentWeapon->WeaponType)
+		{
+		case EWeaponType::EGun:
+			return 0;
+		case EWeaponType::EHeavyWeapon:
+			return 1;
+		}
+	}
+	return -1;
 }

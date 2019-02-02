@@ -37,17 +37,22 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* FPSMesh;
 
-	UPROPERTY(VisibleAnywhere, Category = Spawn)
-	TSubclassOf<class AWeapon> WeaponSpawn;
-
 	AWeapon *CurrentWeapon;
+	int PreviousWeaponSlot;
 
-	UFUNCTION()
+	UPROPERTY()
+	TArray<TSubclassOf<class AWeapon>> Weapons;
+
+protected:
 	void MoveForward(float Value);
 
-	UFUNCTION()
 	void MoveRight(float Value);
 
-	UFUNCTION()
-	void FireWeapon();
+	void Fire();
+
+	void EquipGun();
+	void EquipHeavyWeapon();
+	void EquipPreviousWeapon();
+
+	int CurrentWeaponSlot();
 };

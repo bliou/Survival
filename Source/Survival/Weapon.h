@@ -21,6 +21,16 @@ namespace EWeaponProjectile
 	};
 }
 
+UENUM(BlueprintType)
+namespace EWeaponType
+{
+	enum WeaponType
+	{
+		EGun			UMETA(DisplayName = "Gun"),
+		EHeavyWeapon	UMETA(DisplayName = "HeavyWeapon")
+	};
+}
+
 
 USTRUCT()
 struct FWeaponData
@@ -41,6 +51,9 @@ struct FWeaponData
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float WeaponSpread;
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	FString Name;
 };
 
 UCLASS()
@@ -56,6 +69,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FWeaponData WeaponConfig;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
+	TEnumAsByte<EWeaponType::WeaponType> WeaponType;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
 	TEnumAsByte<EWeaponProjectile::WeaponProjectile> WeaponProjectile;
