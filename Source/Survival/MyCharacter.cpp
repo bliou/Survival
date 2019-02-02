@@ -180,6 +180,15 @@ void AMyCharacter::EquipHeavyWeapon()
 
 void AMyCharacter::EquipPreviousWeapon()
 {
+	switch (PreviousWeaponSlot)
+	{
+	case 0:
+		EquipGun();
+		break;
+	case 1:
+		EquipHeavyWeapon();
+		break;
+	}
 }
 
 int AMyCharacter::CurrentWeaponSlot()
