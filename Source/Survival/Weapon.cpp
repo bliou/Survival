@@ -5,6 +5,7 @@
 #include "Engine/DecalActor.h"
 #include "Components/DecalComponent.h"
 #include "MyCharacter.h"
+#include "Zombie.h"
 #include "Engine.h"
 
 AWeapon::AWeapon()
@@ -101,10 +102,25 @@ void AWeapon::ProcessInstantHit(
 
 	if (Impact.GetActor())
 	{
-		ADecalActor* decal = GetWorld()->SpawnActor<ADecalActor>(Impact.Location, FRotator());
-		decal->SetDecalMaterial(BulletHole);
-		decal->SetLifeSpan(2.0f);
-		decal->GetDecal()->DecalSize = FVector(10.f, 10.f, 10.f);
+		AZombie* zombie = Cast<AZombie>(Impact.GetActor());
+		if (zombie)
+		{
+			if (zombie->IsHeadShot(Impact))
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Head shot")));
+			}
+			else
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Normal shot")));
+			}
+		}
+		else
+		{
+			ADecalActor* decal = GetWorld()->SpawnActor<ADecalActor>(Impact.Location, FRotator());
+			decal->SetDecalMaterial(BulletHole);
+			decal->SetLifeSpan(2.0f);
+			decal->GetDecal()->DecalSize = FVector(10.f, 10.f, 10.f);
+		}
 	}
 }
 

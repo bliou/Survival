@@ -27,4 +27,7 @@ public:
 	// First-person mesh (arms), visible only to the owning player.
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* MeshComp;
+
+	UFUNCTION()
+	bool IsHeadShot(const FHitResult& Impact);
 };

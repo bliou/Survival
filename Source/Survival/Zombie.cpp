@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Zombie.h"
+#include "Engine.h"
 
 // Sets default values
 AZombie::AZombie()
@@ -26,3 +27,7 @@ void AZombie::Tick(float DeltaTime)
 
 }
 
+bool AZombie::IsHeadShot(const FHitResult& Impact)
+{
+	return Impact.BoneName == "Head";
+}
