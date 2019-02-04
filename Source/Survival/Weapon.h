@@ -9,6 +9,7 @@
 #include <string>
 #include "Weapon.generated.h"
 
+class AMyCharacter;
 
 UENUM(BlueprintType)
 namespace EWeaponProjectile
@@ -102,4 +103,12 @@ protected:
 		const FVector& ShootDir,
 		int32 RandomSeed,
 		float ReticleSpread);
+
+	AMyCharacter* MyPawn;
+
+public:
+
+	void SetOwningPawn(AMyCharacter* actor);
+	void Equip();
+	void UnEquip();
 };

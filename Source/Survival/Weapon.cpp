@@ -4,6 +4,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/DecalActor.h"
 #include "Components/DecalComponent.h"
+#include "MyCharacter.h"
 #include "Engine.h"
 
 AWeapon::AWeapon()
@@ -105,4 +106,27 @@ void AWeapon::ProcessInstantHit(
 		decal->SetLifeSpan(2.0f);
 		decal->GetDecal()->DecalSize = FVector(10.f, 10.f, 10.f);
 	}
+}
+
+void AWeapon::SetOwningPawn(AMyCharacter* actor)
+{
+	Instigator = actor;
+	MyPawn = actor;
+}
+
+void AWeapon::Equip()
+{
+	CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponMesh->SetHiddenInGame(false);
+	AttachToComponent(
+		MyPawn->FPSMesh,
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+		TEXT("b_RightWeapon")
+	);
+}
+
+void AWeapon::UnEquip()
+{
+	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepRelative, true));
+	WeaponMesh->SetHiddenInGame(true);
 }

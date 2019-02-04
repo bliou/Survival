@@ -13,6 +13,10 @@ AMyCharacter::AMyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComp"));
+	CollisionComponent->SetupAttachment(GetCapsuleComponent());
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMyCharacter::OnBeginOverlap);
+
 	// Create a first person camera component.
 	FPSCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	// Attach the camera component to our capsule component.
@@ -34,18 +38,6 @@ AMyCharacter::AMyCharacter()
 
 	// By default, the player has a gun
 	Weapons.SetNum(2, false);
-	static ConstructorHelpers::FObjectFinder<UBlueprint> GunBP(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Gun.BP_Gun'"));
-
-	if (GunBP.Succeeded())
-	{
-		Weapons[0] = (UClass*)GunBP.Object->GeneratedClass;
-	}
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ShotgunBP(TEXT("Blueprint'/Game/Blueprints/Weapons/BP_Shotgun.BP_Shotgun'"));
-
-	if (ShotgunBP.Succeeded())
-	{
-		Weapons[1] = (UClass*)ShotgunBP.Object->GeneratedClass;
-	}
 	PreviousWeaponSlot = -1;
 }
 
@@ -54,14 +46,36 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	EquipGun();
+	EquipDefaultWeapon();
 }
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void AMyCharacter::OnBeginOverlap(
+	UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult &SweepResult)
+{
+	//AWeapon* Weapon = Cast<AWeapon>(OtherActor);
+	//if (Weapon)
+	//{
+	//	AWeapon *Spawner = GetWorld()->SpawnActor<AWeapon>(Weapon->GetClass());
+	//	if (Weapon->WeaponType == EWeaponType::EHeavyWeapon)
+	//	{
+	//		Weapons[1] = Spawner;
+	//	}
+
+	//	Spawner->SetOwningPawn(this);
+	//	Spawner->UnEquip();
+	//	Weapon->Destroy();
+	//}
 }
 
 // Called to bind functionality to input
@@ -83,8 +97,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::MoveForward(float Value)
 {
-	// Find out which way is "right" and record that the player wants to move that way.
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+	const FRotator YawOnlyRotation = FRotator(0.0f, GetControlRotation().Yaw, 0.0f);
+	FVector Direction = FRotationMatrix(YawOnlyRotation).GetUnitAxis(EAxis::X);
 	AddMovementInput(Direction, Value);
 }
 
@@ -114,68 +128,57 @@ void AMyCharacter::Fire()
 	}
 }
 
-void AMyCharacter::EquipGun()
+void AMyCharacter::EquipDefaultWeapon()
 {
-	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.Owner = this;
-	SpawnParameters.Instigator = Instigator;
-
-	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(Weapons[0], SpawnParameters);
+	AWeapon *Spawner = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn);
 	if (Spawner)
 	{
-		if (CurrentWeapon)
-		{
-			if (CurrentWeapon->WeaponType == EWeaponType::EGun)
-				return;
-
-			int Slot = CurrentWeaponSlot();
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
-			Weapons[Slot] = NULL;
-			Weapons[Slot] = CurrentWeapon->GetClass();
-			PreviousWeaponSlot = Slot;
-			CurrentWeapon->Destroy();
-		}
-
-		Spawner->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Spawner->AttachToComponent(
-			FPSMesh,
-			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-			TEXT("b_RightWeapon")
-		);
+		Weapons[0] = Spawner;
 		CurrentWeapon = Spawner;
+		CurrentWeapon->SetOwningPawn(this);
+		CurrentWeapon->Equip();
 	}
+}
+
+void AMyCharacter::EquipGun()
+{
+	if (!Weapons[0])
+		return;
+	if (CurrentWeapon)
+	{
+		if (CurrentWeapon->WeaponType == EWeaponType::EGun)
+			return;
+
+		int Slot = CurrentWeaponSlot();
+		PreviousWeaponSlot = Slot;
+		CurrentWeapon->UnEquip();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
+	}
+
+	CurrentWeapon = Weapons[0];
+	CurrentWeapon->SetOwningPawn(this);
+	CurrentWeapon->Equip();
 }
 
 void AMyCharacter::EquipHeavyWeapon()
 {
-	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.Owner = this;
-	SpawnParameters.Instigator = Instigator;
+	if (!Weapons[1])
+		return;
 
-	AWeapon* Spawner = GetWorld()->SpawnActor<AWeapon>(Weapons[1], SpawnParameters);
-	if (Spawner)
+	if (CurrentWeapon)
 	{
-		if (CurrentWeapon)
-		{
-			if (CurrentWeapon->WeaponType == EWeaponType::EHeavyWeapon)
-				return;
+		if (CurrentWeapon->WeaponType == EWeaponType::EHeavyWeapon)
+			return;
 
-			int Slot = CurrentWeaponSlot();
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
-			Weapons[Slot] = NULL;
-			Weapons[Slot] = CurrentWeapon->GetClass();
-			PreviousWeaponSlot = Slot;
-			CurrentWeapon->Destroy();
-		}
-
-		Spawner->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Spawner->AttachToComponent(
-			FPSMesh,
-			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-			TEXT("b_RightWeapon")
-		);
-		CurrentWeapon = Spawner;
+		int Slot = CurrentWeaponSlot();
+		PreviousWeaponSlot = Slot;
+		CurrentWeapon->UnEquip();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
 	}
+
+	CurrentWeapon = Weapons[1];
+	CurrentWeapon->SetOwningPawn(this);
+	CurrentWeapon->Equip();
 }
 
 void AMyCharacter::EquipPreviousWeapon()

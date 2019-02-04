@@ -18,6 +18,15 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
 
+	UFUNCTION()
+	void OnBeginOverlap(
+		UPrimitiveComponent* OverlappedComponent, 
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, 
+		bool bFromSweep, 
+		const FHitResult &SweepResult);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -37,11 +46,17 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* FPSMesh;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = Collision)
+	UBoxComponent* CollisionComponent;
+
 	AWeapon *CurrentWeapon;
 	int PreviousWeaponSlot;
 
+	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
+	TSubclassOf<class AWeapon> WeaponSpawn;
+
 	UPROPERTY()
-	TArray<TSubclassOf<class AWeapon>> Weapons;
+	TArray<class AWeapon*> Weapons;
 
 protected:
 	void MoveForward(float Value);
@@ -50,6 +65,7 @@ protected:
 
 	void Fire();
 
+	void EquipDefaultWeapon();
 	void EquipGun();
 	void EquipHeavyWeapon();
 	void EquipPreviousWeapon();
