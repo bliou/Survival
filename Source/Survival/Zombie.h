@@ -6,8 +6,20 @@
 #include "GameFramework/Character.h"
 #include "Zombie.generated.h"
 
+USTRUCT()
+struct FZombieData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	int32 Health;
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	float DeathTimer;
+};
+
 UCLASS()
-class SURVIVAL_API AZombie : public AActor
+class SURVIVAL_API AZombie : public APawn
 {
 	GENERATED_BODY()
 
@@ -19,6 +31,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	bool IsHeadShot(const FHitResult& Impact);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -28,6 +42,12 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* MeshComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	FZombieData ZombieConfig;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsDying;
+
 	UFUNCTION()
-	bool IsHeadShot(const FHitResult& Impact);
+	void Damaged(const FHitResult& Impact, int GunDamage);
 };

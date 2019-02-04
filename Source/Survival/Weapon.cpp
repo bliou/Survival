@@ -105,14 +105,7 @@ void AWeapon::ProcessInstantHit(
 		AZombie* zombie = Cast<AZombie>(Impact.GetActor());
 		if (zombie)
 		{
-			if (zombie->IsHeadShot(Impact))
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Head shot")));
-			}
-			else
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Normal shot")));
-			}
+			zombie->Damaged(Impact, 100);
 		}
 		else
 		{
