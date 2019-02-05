@@ -106,6 +106,12 @@ void AWeapon::ProcessInstantHit(
 		if (zombie)
 		{
 			zombie->Damaged(Impact, 100);
+
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				BulletHitZombieSound,
+				Impact.Location
+			);
 		}
 		else
 		{
@@ -113,6 +119,12 @@ void AWeapon::ProcessInstantHit(
 			decal->SetDecalMaterial(BulletHole);
 			decal->SetLifeSpan(2.0f);
 			decal->GetDecal()->DecalSize = FVector(10.f, 10.f, 10.f);
+
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				BulletHitWallSound,
+				Impact.Location
+			);
 		}
 	}
 }
