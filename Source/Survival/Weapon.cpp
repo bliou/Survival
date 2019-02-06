@@ -140,9 +140,9 @@ void AWeapon::Equip()
 	CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponMesh->SetHiddenInGame(false);
 	AttachToComponent(
-		MyPawn->FPSMesh,
+		MyPawn->GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-		TEXT("b_RightWeapon")
+		TEXT("RightHandIndex2")
 	);
 }
 

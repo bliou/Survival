@@ -42,10 +42,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
 
-	// First-person mesh (arms), visible only to the owning player.
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USkeletalMeshComponent* FPSMesh;
-
 	UPROPERTY(VisibleDefaultsOnly, Category = Collision)
 	UBoxComponent* CollisionComponent;
 

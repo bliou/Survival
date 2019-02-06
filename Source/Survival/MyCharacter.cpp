@@ -17,24 +17,19 @@ AMyCharacter::AMyCharacter()
 	CollisionComponent->SetupAttachment(GetCapsuleComponent());
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMyCharacter::OnBeginOverlap);
 
+	// Don't rotate when the controller rotates. Let that just affect the camera.
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = true;
+	bUseControllerRotationRoll = false;
+
 	// Create a first person camera component.
 	FPSCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	// Attach the camera component to our capsule component.
-	FPSCameraComponent->SetupAttachment(GetCapsuleComponent());
-	// Position the camera slightly above the eyes.
-	FPSCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight));
-	// Allow the pawn to control camera rotation.
+	FPSCameraComponent->SetupAttachment(
+		GetMesh(),
+		TEXT("Head")
+	);
 	FPSCameraComponent->bUsePawnControlRotation = true;
-
-	// Create a first person mesh component for the owning player.
-	FPSMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
-	// Only the owning player sees this mesh.
-	FPSMesh->SetOnlyOwnerSee(true);
-	// Attach the FPS mesh to the FPS camera.
-	FPSMesh->SetupAttachment(FPSCameraComponent);
-	// Disable some environmental shadowing to preserve the illusion of having a single mesh.
-	FPSMesh->bCastDynamicShadow = false;
-	FPSMesh->CastShadow = false;
 
 	// By default, the player has a gun
 	Weapons.SetNum(2, false);
