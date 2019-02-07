@@ -76,6 +76,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FCharacterData CharacterConfig;
 
+	UPROPERTY(BlueprintReadonly, Category = State)
+	bool bIsReloading;
+
+	float ReloadTimer;
+
 protected:
 	void MoveForward(float Value);
 

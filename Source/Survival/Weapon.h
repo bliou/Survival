@@ -62,6 +62,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FString Name;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	float ReloadTime;
 };
 
 UCLASS()

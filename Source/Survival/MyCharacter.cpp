@@ -50,6 +50,13 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bIsReloading)
+	{
+		ReloadTimer -= DeltaTime;
+		if (ReloadTimer <= 0.f)
+			bIsReloading = false;
+	}
 }
 
 void AMyCharacter::OnBeginOverlap(

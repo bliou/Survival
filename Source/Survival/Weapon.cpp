@@ -158,7 +158,7 @@ void AWeapon::Equip()
 	AttachToComponent(
 		MyPawn->GetMesh(),
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-		TEXT("RightHandIndex2")
+		TEXT("WeaponSocket")
 	);
 }
 
@@ -176,4 +176,7 @@ void AWeapon::Reload()
 	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
 	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
 	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
+
+	MyPawn->bIsReloading = true;
+	MyPawn->ReloadTimer = WeaponConfig.ReloadTime;
 }
