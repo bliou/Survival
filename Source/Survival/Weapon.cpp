@@ -17,11 +17,24 @@ AWeapon::AWeapon()
 	WeaponMesh->SetupAttachment(RootComponent);
 }
 
+void AWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	WeaponConfig.CurrentAmmoInStock = WeaponConfig.MaxAmmoInStock;
+	WeaponConfig.CurrentAmmoInClip = WeaponConfig.MaxAmmoInClip;
+}
+
 void AWeapon::Fire()
 {
+	if (WeaponConfig.CurrentAmmoInClip <= 0) {
+		Reload();
+		return;
+	}
+
 	UGameplayStatics::PlaySoundAtLocation(
-		this, 
-		FireSound, 
+		this,
+		FireSound,
 		GetActorLocation()
 	);
 
@@ -42,6 +55,9 @@ void AWeapon::Fire()
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Fire Projectile")));
 		break;
 	}
+
+	// After firing, remove the used bullets
+	--WeaponConfig.CurrentAmmoInClip;
 }
 
 void AWeapon::InstantFire()
@@ -150,4 +166,14 @@ void AWeapon::UnEquip()
 {
 	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepRelative, true));
 	WeaponMesh->SetHiddenInGame(true);
+}
+
+void AWeapon::Reload()
+{
+	if (WeaponConfig.CurrentAmmoInClip == WeaponConfig.MaxAmmoInClip)
+		return;
+
+	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
+	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
+	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
 }

@@ -33,19 +33,26 @@ namespace EWeaponType
 }
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FWeaponData
 {
 	GENERATED_USTRUCT_BODY()
 
+public:
 	UPROPERTY(EditDefaultsOnly, Category = Ammo)
-	int32 MaxAmmo;
+	int32 MaxAmmoInStock;
+
+	UPROPERTY(EditDefaultsOnly, Category = Clip)
+	int32 MaxAmmoInClip;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Clip)
+	int32 CurrentAmmoInStock;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Clip)
+	int32 CurrentAmmoInClip;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float TimeBetweenShots;
-
-	UPROPERTY(EditDefaultsOnly, Category = Ammo)
-	int32 ShotCosts;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float WeaponRange;
@@ -65,10 +72,12 @@ class SURVIVAL_API AWeapon : public AActor
 public:
 	AWeapon();
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	void Fire();
 
-	UPROPERTY(EditDefaultsOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	FWeaponData WeaponConfig;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
@@ -117,4 +126,5 @@ public:
 	void SetOwningPawn(AMyCharacter* actor);
 	void Equip();
 	void UnEquip();
+	void Reload();
 };

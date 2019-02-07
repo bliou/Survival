@@ -45,6 +45,7 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Collision)
 	UBoxComponent* CollisionComponent;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	AWeapon *CurrentWeapon;
 	int PreviousWeaponSlot;
 
@@ -60,6 +61,7 @@ protected:
 	void MoveRight(float Value);
 
 	void Fire();
+	void Reload();
 
 	void EquipDefaultWeapon();
 	void EquipGun();
