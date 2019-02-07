@@ -9,6 +9,24 @@
 #include "Weapon.h"
 #include "MyCharacter.generated.h"
 
+
+USTRUCT(BlueprintType)
+struct FCharacterData
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	int32 MaxHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
+	int32 CurrentHealth;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	int32 CurrentMoney;
+};
+
 UCLASS()
 class SURVIVAL_API AMyCharacter : public ACharacter
 {
@@ -54,6 +72,9 @@ public:
 
 	UPROPERTY()
 	TArray<class AWeapon*> Weapons;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	FCharacterData CharacterConfig;
 
 protected:
 	void MoveForward(float Value);

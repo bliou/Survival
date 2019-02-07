@@ -42,6 +42,8 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	EquipDefaultWeapon();
+
+	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 }
 
 // Called every frame
