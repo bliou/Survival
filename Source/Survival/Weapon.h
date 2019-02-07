@@ -28,7 +28,9 @@ namespace EWeaponType
 	enum WeaponType
 	{
 		EGun			UMETA(DisplayName = "Gun"),
-		EHeavyWeapon	UMETA(DisplayName = "HeavyWeapon")
+		EShotgun		UMETA(DisplayName = "Shotgun"),
+		ERifle			UMETA(DisplayName = "Rifle"),
+		ESniper			UMETA(DisplayName = "Sniper")
 	};
 }
 
@@ -58,7 +60,19 @@ public:
 	float WeaponRange;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
-	float WeaponSpread;
+	float WeaponShots;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spread)
+	float WeaponMaxSpread;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spread)
+	float WeaponIncreaseSpread;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spread)
+	float WeaponDecreaseSpread;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Spread)
+	float CurrentWeaponSpread;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FString Name;
@@ -106,6 +120,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* BulletHitZombieSound;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
+	class USoundBase* ReloadSound;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Gameplay)
 	class UMaterialInterface* BulletHole;
 
@@ -138,4 +155,7 @@ public:
 	void Equip();
 	void UnEquip();
 	void Reload();
+
+	void IncreaseSpread();
+	void DecreaseSpread(float DeltaTime);
 };

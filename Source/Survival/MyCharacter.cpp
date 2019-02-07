@@ -33,7 +33,7 @@ AMyCharacter::AMyCharacter()
 
 	// By default, the player has a gun
 	Weapons.SetNum(2, false);
-	PreviousWeaponSlot = -1;
+	PreviousWeaponSlot = EWeaponType::EGun;
 }
 
 // Called when the game starts or when spawned
@@ -157,10 +157,8 @@ void AMyCharacter::EquipGun()
 		if (CurrentWeapon->WeaponType == EWeaponType::EGun)
 			return;
 
-		int Slot = CurrentWeaponSlot();
-		PreviousWeaponSlot = Slot;
+		PreviousWeaponSlot = CurrentWeapon->WeaponType;
 		CurrentWeapon->UnEquip();
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
 	}
 
 	CurrentWeapon = Weapons[0];
@@ -175,13 +173,11 @@ void AMyCharacter::EquipHeavyWeapon()
 
 	if (CurrentWeapon)
 	{
-		if (CurrentWeapon->WeaponType == EWeaponType::EHeavyWeapon)
+		if (CurrentWeapon->WeaponType == EWeaponType::EShotgun)
 			return;
 
-		int Slot = CurrentWeaponSlot();
-		PreviousWeaponSlot = Slot;
+		PreviousWeaponSlot = CurrentWeapon->WeaponType;
 		CurrentWeapon->UnEquip();
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Put away " + CurrentWeapon->WeaponConfig.Name + " in slot " + FString::FromInt(Slot))));
 	}
 
 	CurrentWeapon = Weapons[1];
@@ -189,30 +185,16 @@ void AMyCharacter::EquipHeavyWeapon()
 	CurrentWeapon->Equip();
 }
 
+
 void AMyCharacter::EquipPreviousWeapon()
 {
 	switch (PreviousWeaponSlot)
 	{
-	case 0:
+	case EWeaponType::EGun:
 		EquipGun();
 		break;
-	case 1:
+	case EWeaponType::EShotgun:
 		EquipHeavyWeapon();
 		break;
 	}
-}
-
-int AMyCharacter::CurrentWeaponSlot()
-{
-	if (CurrentWeapon)
-	{
-		switch (CurrentWeapon->WeaponType)
-		{
-		case EWeaponType::EGun:
-			return 0;
-		case EWeaponType::EHeavyWeapon:
-			return 1;
-		}
-	}
-	return -1;
 }

@@ -65,7 +65,7 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	AWeapon *CurrentWeapon;
-	int PreviousWeaponSlot;
+	EWeaponType::WeaponType PreviousWeaponSlot;
 
 	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
 	TSubclassOf<class AWeapon> WeaponSpawn;
@@ -94,6 +94,4 @@ protected:
 	void EquipGun();
 	void EquipHeavyWeapon();
 	void EquipPreviousWeapon();
-
-	int CurrentWeaponSlot();
 };

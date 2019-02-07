@@ -28,6 +28,8 @@ void AWeapon::BeginPlay()
 	WeaponConfig.CurrentAmmoInClip = WeaponConfig.MaxAmmoInClip;
 
 	bIsRecoiling = false;
+
+	WeaponConfig.CurrentWeaponSpread = 1.f;
 }
 
 void AWeapon::Tick(float DeltaTime)
@@ -46,8 +48,9 @@ void AWeapon::Tick(float DeltaTime)
 				&& WeaponConfig.CurrentAmmoInStock > 0)
 				Reload();
 		}
-
 	}
+
+	DecreaseSpread(DeltaTime);
 }
 
 void AWeapon::Fire()
@@ -69,7 +72,7 @@ void AWeapon::Fire()
 		InstantFire();
 		break;
 	case EWeaponProjectile::ESpread:
-		for (int32 i = 0; i < WeaponConfig.WeaponSpread; ++i)
+		for (int32 i = 0; i < WeaponConfig.WeaponShots; ++i)
 		{
 			InstantFire();
 		}
@@ -83,14 +86,15 @@ void AWeapon::Fire()
 	--WeaponConfig.CurrentAmmoInClip;
 	bIsRecoiling = true;
 	RecoilTimer = WeaponConfig.RecoilTime;
+
+	IncreaseSpread();
 }
 
 void AWeapon::InstantFire()
 {
 	const int32 RandomSeed = FMath::Rand();
 	FRandomStream WeaponRandomStream(RandomSeed);
-	const float WeaponSpread = WeaponConfig.WeaponSpread;
-	const float SpreadCone = FMath::DegreesToRadians(WeaponSpread * 0.5);
+	const float SpreadCone = FMath::DegreesToRadians(WeaponConfig.WeaponShots * 0.5 * WeaponConfig.CurrentWeaponSpread);
 	const FVector AimDir = WeaponMesh->GetSocketRotation("MS").Vector();
 	const FVector StartTrace = WeaponMesh->GetSocketLocation("MS");
 	const FVector ShootDir = WeaponRandomStream.VRandCone(AimDir, SpreadCone, SpreadCone);
@@ -102,7 +106,7 @@ void AWeapon::InstantFire()
 		StartTrace,
 		ShootDir,
 		RandomSeed,
-		WeaponSpread
+		WeaponConfig.CurrentWeaponSpread
 	);
 
 
@@ -213,4 +217,33 @@ void AWeapon::Reload()
 
 	MyPawn->bIsReloading = true;
 	MyPawn->ReloadTimer = WeaponConfig.ReloadTime;
+
+	UGameplayStatics::PlaySoundAtLocation(
+		this,
+		ReloadSound,
+		GetActorLocation()
+	);
+}
+
+void AWeapon::IncreaseSpread()
+{
+	WeaponConfig.CurrentWeaponSpread += WeaponConfig.WeaponIncreaseSpread;
+	if (WeaponConfig.CurrentWeaponSpread > WeaponConfig.WeaponMaxSpread)
+		WeaponConfig.CurrentWeaponSpread = WeaponConfig.WeaponMaxSpread;
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString("Weapon spread : " + FString::SanitizeFloat(WeaponConfig.CurrentWeaponSpread)));
+}
+
+void AWeapon::DecreaseSpread(float DeltaTime)
+{
+	if (WeaponConfig.CurrentWeaponSpread <= 1.f) {
+		return;
+	}
+
+	float Decrease = DeltaTime * WeaponConfig.WeaponDecreaseSpread;
+	WeaponConfig.CurrentWeaponSpread -= Decrease;
+	if (WeaponConfig.CurrentWeaponSpread <= 1.f)
+		WeaponConfig.CurrentWeaponSpread = 1.f;
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString("Weapon spread : " + FString::SanitizeFloat(WeaponConfig.CurrentWeaponSpread)));
 }
