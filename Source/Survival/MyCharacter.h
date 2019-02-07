@@ -76,9 +76,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FCharacterData CharacterConfig;
 
-	UPROPERTY(BlueprintReadonly, Category = State)
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = State)
 	bool bIsReloading;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Timer)
 	float ReloadTimer;
 
 protected:
