@@ -10,6 +10,9 @@
 
 AWeapon::AWeapon()
 {
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
 	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComp"));
 	RootComponent = dynamic_cast<USceneComponent*>(CollisionComp);
 
@@ -23,14 +26,36 @@ void AWeapon::BeginPlay()
 
 	WeaponConfig.CurrentAmmoInStock = WeaponConfig.MaxAmmoInStock;
 	WeaponConfig.CurrentAmmoInClip = WeaponConfig.MaxAmmoInClip;
+
+	bIsRecoiling = false;
+}
+
+void AWeapon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bIsRecoiling)
+	{
+		RecoilTimer -= DeltaTime;
+		if (RecoilTimer <= 0.f)
+		{
+			bIsRecoiling = false;
+
+			// Reload if needed
+			if (WeaponConfig.CurrentAmmoInClip <= 0
+				&& WeaponConfig.CurrentAmmoInStock > 0)
+				Reload();
+		}
+
+	}
 }
 
 void AWeapon::Fire()
 {
-	if (WeaponConfig.CurrentAmmoInClip <= 0) {
-		Reload();
+
+	if (bIsRecoiling
+		|| WeaponConfig.CurrentAmmoInClip <= 0)
 		return;
-	}
 
 	UGameplayStatics::PlaySoundAtLocation(
 		this,
@@ -58,6 +83,8 @@ void AWeapon::Fire()
 
 	// After firing, remove the used bullets
 	--WeaponConfig.CurrentAmmoInClip;
+	bIsRecoiling = true;
+	RecoilTimer = WeaponConfig.RecoilTime;
 }
 
 void AWeapon::InstantFire()

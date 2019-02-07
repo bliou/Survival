@@ -52,7 +52,7 @@ public:
 	int32 CurrentAmmoInClip;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
-	float TimeBetweenShots;
+	float RecoilTime;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float WeaponRange;
@@ -76,6 +76,7 @@ public:
 	AWeapon();
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void Fire();
@@ -83,29 +84,29 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	FWeaponData WeaponConfig;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	TEnumAsByte<EWeaponType::WeaponType> WeaponType;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	TEnumAsByte<EWeaponProjectile::WeaponProjectile> WeaponProjectile;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Collision)
 	class UBoxComponent* CollisionComp;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	class UStaticMeshComponent* WeaponMesh;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Sounds)
 	class USoundBase* FireSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Sounds)
 	class USoundBase* BulletHitWallSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sounds)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Sounds)
 	class USoundBase* BulletHitZombieSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Gameplay)
 	class UMaterialInterface* BulletHole;
 
 protected:
@@ -123,6 +124,10 @@ protected:
 		float ReticleSpread);
 
 	AMyCharacter* MyPawn;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Recoil)
+	bool bIsRecoiling;
+	float RecoilTimer;
 
 public:
 

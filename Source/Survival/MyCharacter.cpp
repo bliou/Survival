@@ -127,7 +127,8 @@ void AMyCharacter::Fire()
 	//	}
 	//}
 
-	CurrentWeapon->Fire();
+	if (!bIsReloading)
+		CurrentWeapon->Fire();
 }
 
 void AMyCharacter::Reload()
