@@ -48,7 +48,6 @@ void AZombie::Damaged(const FHitResult& Impact, int GunDamage)
 		GunDamage *= 5;
 
 	ZombieConfig.Health -= GunDamage;
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Zombie loses " + FString::FromInt(GunDamage) + " Health remains : " + FString::FromInt(ZombieConfig.Health))));
 	if (ZombieConfig.Health <= 0)
 		bIsDying = true;
 }

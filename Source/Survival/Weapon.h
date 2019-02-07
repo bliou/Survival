@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include <string>
+#include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 #include "Weapon.generated.h"
 
 class AMyCharacter;
@@ -81,33 +81,36 @@ public:
 	UFUNCTION()
 	void Fire();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FWeaponData WeaponConfig;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	TEnumAsByte<EWeaponType::WeaponType> WeaponType;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	TEnumAsByte<EWeaponProjectile::WeaponProjectile> WeaponProjectile;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Collision)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
 	class UBoxComponent* CollisionComp;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	class UStaticMeshComponent* WeaponMesh;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Sounds)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* FireSound;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Sounds)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* BulletHitWallSound;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Sounds)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* BulletHitZombieSound;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Gameplay)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Gameplay)
 	class UMaterialInterface* BulletHole;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Particles)
+	class UParticleSystem* FireParticles;
 
 protected:
 

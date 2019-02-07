@@ -66,11 +66,9 @@ void AWeapon::Fire()
 	switch (WeaponProjectile)
 	{
 	case EWeaponProjectile::EBullet:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Fire Bullet")));
 		InstantFire();
 		break;
 	case EWeaponProjectile::ESpread:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Fire Spread")));
 		for (int32 i = 0; i < WeaponConfig.WeaponSpread; ++i)
 		{
 			InstantFire();
@@ -80,7 +78,7 @@ void AWeapon::Fire()
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Fire Projectile")));
 		break;
 	}
-
+	
 	// After firing, remove the used bullets
 	--WeaponConfig.CurrentAmmoInClip;
 	bIsRecoiling = true;
@@ -105,6 +103,16 @@ void AWeapon::InstantFire()
 		ShootDir,
 		RandomSeed,
 		WeaponSpread
+	);
+
+
+	// Display the particles of the weapon
+	UGameplayStatics::SpawnEmitterAtLocation(
+		GetWorld(),
+		FireParticles,
+		StartTrace,
+		ShootDir.Rotation(),
+		true
 	);
 }
 
@@ -140,8 +148,6 @@ void AWeapon::ProcessInstantHit(
 {
 	const FVector EndTrace = Origin + ShootDir * WeaponConfig.WeaponRange;
 	const FVector EndPoint = Impact.GetActor() ? Impact.ImpactPoint : EndTrace;
-
-	DrawDebugLine(GetWorld(), Origin, EndPoint, FColor::Black, true, 10000, 10);
 
 	if (Impact.GetActor())
 	{
@@ -197,7 +203,8 @@ void AWeapon::UnEquip()
 
 void AWeapon::Reload()
 {
-	if (WeaponConfig.CurrentAmmoInClip == WeaponConfig.MaxAmmoInClip)
+	if (WeaponConfig.CurrentAmmoInClip == WeaponConfig.MaxAmmoInClip
+		|| WeaponConfig.CurrentAmmoInStock == 0)
 		return;
 
 	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
