@@ -218,11 +218,12 @@ void AWeapon::Reload()
 	MyPawn->bIsReloading = true;
 	MyPawn->ReloadTimer = WeaponConfig.ReloadTime;
 
-	UGameplayStatics::PlaySoundAtLocation(
-		this,
-		ReloadSound,
-		GetActorLocation()
-	);
+	if (ReloadSound)
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			ReloadSound,
+			GetActorLocation()
+		);
 }
 
 void AWeapon::IncreaseSpread()
