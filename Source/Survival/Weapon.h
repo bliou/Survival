@@ -76,9 +76,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FString Name;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
-	float ReloadTime;
 };
 
 UCLASS()
@@ -129,7 +126,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Particles)
 	class UParticleSystem* FireParticles;
 
-	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Montage)
+	class UAnimMontage* ReloadMontage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Montage)
 	class UAnimMontage* EquipMontage;
 
 protected:

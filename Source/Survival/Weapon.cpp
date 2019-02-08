@@ -222,15 +222,21 @@ void AWeapon::Reload()
 	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
 	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
 
-	MyPawn->State = ECharacterState::EReload;
-	MyPawn->ReloadTimer = WeaponConfig.ReloadTime;
+	UAnimInstance* AnimInstance = MyPawn->GetMesh()->GetAnimInstance();
+	if (AnimInstance != NULL)
+	{
+		AnimInstance->Montage_Play(ReloadMontage, 1.f);
 
-	if (ReloadSound)
-		UGameplayStatics::PlaySoundAtLocation(
-			this,
-			ReloadSound,
-			GetActorLocation()
-		);
+		MyPawn->State = ECharacterState::EReload;
+		MyPawn->ReloadTimer = ReloadMontage->GetPlayLength();
+
+		if (ReloadSound)
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				ReloadSound,
+				GetActorLocation()
+			);
+	}
 }
 
 void AWeapon::IncreaseSpread()
