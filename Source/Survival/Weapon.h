@@ -129,6 +129,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Particles)
 	class UParticleSystem* FireParticles;
 
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	class UAnimMontage* EquipMontage;
+
 protected:
 
 	UFUNCTION()

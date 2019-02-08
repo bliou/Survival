@@ -10,6 +10,19 @@
 #include "MyCharacter.generated.h"
 
 
+UENUM(BlueprintType)
+namespace ECharacterState
+{
+	enum CharacterState
+	{
+		EIdle			UMETA(DisplayName = "Idle"),
+		EReload			UMETA(DisplayName = "Reload"),
+		EEquip			UMETA(DisplayName = "Equip"),
+		EFire			UMETA(DisplayName = "Fire")
+	};
+}
+
+
 USTRUCT(BlueprintType)
 struct FCharacterData
 {
@@ -70,7 +83,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
 	TSubclassOf<class AWeapon> WeaponSpawn;
 
-
 	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
 	TSubclassOf<class AWeapon> ShotgunTest;
 
@@ -81,10 +93,13 @@ public:
 	FCharacterData CharacterConfig;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = State)
-	bool bIsReloading;
+	TEnumAsByte<ECharacterState::CharacterState> State;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Timer)
 	float ReloadTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Timer)
+	float EquipTimer;
 
 protected:
 	void MoveForward(float Value);

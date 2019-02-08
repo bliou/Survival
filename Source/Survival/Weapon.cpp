@@ -55,7 +55,6 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::Fire()
 {
-
 	if (bIsRecoiling
 		|| WeaponConfig.CurrentAmmoInClip <= 0)
 		return;
@@ -190,13 +189,21 @@ void AWeapon::SetOwningPawn(AMyCharacter* actor)
 
 void AWeapon::Equip()
 {
-	CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	WeaponMesh->SetHiddenInGame(false);
-	AttachToComponent(
-		MyPawn->GetMesh(),
-		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-		TEXT("WeaponSocket")
-	);
+	UAnimInstance* AnimInstance = MyPawn->GetMesh()->GetAnimInstance();
+	if (AnimInstance != NULL)
+	{
+		AnimInstance->Montage_Play(EquipMontage, 1.f);
+		MyPawn->State = ECharacterState::EEquip;
+		MyPawn->EquipTimer = EquipMontage->GetPlayLength();
+
+		CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		WeaponMesh->SetHiddenInGame(false);
+		AttachToComponent(
+			MyPawn->GetMesh(),
+			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+			TEXT("WeaponSocket")
+		);
+	}
 }
 
 void AWeapon::UnEquip()
@@ -215,7 +222,7 @@ void AWeapon::Reload()
 	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
 	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
 
-	MyPawn->bIsReloading = true;
+	MyPawn->State = ECharacterState::EReload;
 	MyPawn->ReloadTimer = WeaponConfig.ReloadTime;
 
 	if (ReloadSound)

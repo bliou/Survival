@@ -41,9 +41,10 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	EquipDefaultWeapon();
-
+	State = ECharacterState::EIdle;
 	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
+
+	EquipDefaultWeapon();
 }
 
 // Called every frame
@@ -51,11 +52,20 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsReloading)
+	if (State == ECharacterState::EReload)
 	{
 		ReloadTimer -= DeltaTime;
 		if (ReloadTimer <= 0.f)
-			bIsReloading = false;
+			State = ECharacterState::EIdle;
+	}
+
+	if (State == ECharacterState::EEquip)
+	{
+		EquipTimer -= DeltaTime;
+		if (EquipTimer <= 0.f)
+		{
+			State = ECharacterState::EIdle;
+		}
 	}
 
 	// If the player is moving, spread the weapon to its max value
@@ -124,18 +134,7 @@ void AMyCharacter::MoveRight(float Value)
 
 void AMyCharacter::Fire()
 {
-	//// try and play a firing animation if specified
-	//if (FireAnimation != NULL)
-	//{
-	//	// Get the animation object for the arms mesh
-	//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-	//	if (AnimInstance != NULL)
-	//	{
-	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
-	//	}
-	//}
-
-	if (!bIsReloading)
+	if (State == ECharacterState::EIdle)
 		CurrentWeapon->Fire();
 }
 
@@ -166,7 +165,8 @@ void AMyCharacter::EquipDefaultWeapon()
 
 void AMyCharacter::EquipGun()
 {
-	if (!Weapons[0])
+	if (!Weapons[0]
+		|| State == ECharacterState::EEquip)
 		return;
 	if (CurrentWeapon)
 	{
@@ -184,7 +184,8 @@ void AMyCharacter::EquipGun()
 
 void AMyCharacter::EquipHeavyWeapon()
 {
-	if (!Weapons[1])
+	if (!Weapons[1]
+		|| State == ECharacterState::EEquip)
 		return;
 
 	if (CurrentWeapon)
