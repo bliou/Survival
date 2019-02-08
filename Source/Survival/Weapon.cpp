@@ -230,8 +230,6 @@ void AWeapon::IncreaseSpread()
 	WeaponConfig.CurrentWeaponSpread += WeaponConfig.WeaponIncreaseSpread;
 	if (WeaponConfig.CurrentWeaponSpread > WeaponConfig.WeaponMaxSpread)
 		WeaponConfig.CurrentWeaponSpread = WeaponConfig.WeaponMaxSpread;
-
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString("Weapon spread : " + FString::SanitizeFloat(WeaponConfig.CurrentWeaponSpread)));
 }
 
 void AWeapon::DecreaseSpread(float DeltaTime)
@@ -244,6 +242,4 @@ void AWeapon::DecreaseSpread(float DeltaTime)
 	WeaponConfig.CurrentWeaponSpread -= Decrease;
 	if (WeaponConfig.CurrentWeaponSpread <= 1.f)
 		WeaponConfig.CurrentWeaponSpread = 1.f;
-
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString("Weapon spread : " + FString::SanitizeFloat(WeaponConfig.CurrentWeaponSpread)));
 }

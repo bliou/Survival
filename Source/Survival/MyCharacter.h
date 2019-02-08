@@ -70,6 +70,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
 	TSubclassOf<class AWeapon> WeaponSpawn;
 
+
+	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
+	TSubclassOf<class AWeapon> ShotgunTest;
+
 	UPROPERTY()
 	TArray<class AWeapon*> Weapons;
 

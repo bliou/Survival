@@ -57,6 +57,14 @@ void AMyCharacter::Tick(float DeltaTime)
 		if (ReloadTimer <= 0.f)
 			bIsReloading = false;
 	}
+
+	// If the player is moving, spread the weapon to its max value
+	if (GetVelocity().X != 0.f
+		|| GetVelocity().Y != 0.f)
+	{
+		CurrentWeapon->WeaponConfig.CurrentWeaponSpread = 
+			FMath::Max(CurrentWeapon->WeaponConfig.CurrentWeaponSpread, CurrentWeapon->WeaponConfig.WeaponMaxSpread / 2.f);
+	}
 }
 
 void AMyCharacter::OnBeginOverlap(
@@ -146,6 +154,14 @@ void AMyCharacter::EquipDefaultWeapon()
 		CurrentWeapon->SetOwningPawn(this);
 		CurrentWeapon->Equip();
 	}
+
+	// Equip shotgun test
+	AWeapon *ShotgunSpawn = GetWorld()->SpawnActor<AWeapon>(ShotgunTest);
+	if (ShotgunSpawn)
+	{
+		Weapons[1] = ShotgunSpawn;
+	}
+
 }
 
 void AMyCharacter::EquipGun()
