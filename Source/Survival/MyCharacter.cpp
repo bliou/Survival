@@ -56,7 +56,9 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 		ReloadTimer -= DeltaTime;
 		if (ReloadTimer <= 0.f)
+		{
 			State = ECharacterState::EIdle;
+		}
 	}
 
 	if (State == ECharacterState::EEquip)
@@ -115,7 +117,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("EquipGun", IE_Pressed, this, &AMyCharacter::EquipGun);
 	PlayerInputComponent->BindAction("EquipHeavyWeapon", IE_Pressed, this, &AMyCharacter::EquipHeavyWeapon);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::Reload);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 }
 
 void AMyCharacter::MoveForward(float Value)
@@ -136,6 +138,12 @@ void AMyCharacter::Fire()
 {
 	if (State == ECharacterState::EIdle)
 		CurrentWeapon->Fire();
+}
+
+void AMyCharacter::StartReloading()
+{
+	if (State == ECharacterState::EIdle)
+		CurrentWeapon->StartReloading();
 }
 
 void AMyCharacter::Reload()

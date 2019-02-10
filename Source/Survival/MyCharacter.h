@@ -69,6 +69,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	void Reload();
+
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
@@ -107,7 +110,7 @@ protected:
 	void MoveRight(float Value);
 
 	void Fire();
-	void Reload();
+	void StartReloading();
 
 	void EquipDefaultWeapon();
 	void EquipGun();

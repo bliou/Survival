@@ -46,7 +46,7 @@ void AWeapon::Tick(float DeltaTime)
 			// Reload if needed
 			if (WeaponConfig.CurrentAmmoInClip <= 0
 				&& WeaponConfig.CurrentAmmoInStock > 0)
-				Reload();
+				StartReloading();
 		}
 	}
 
@@ -212,15 +212,11 @@ void AWeapon::UnEquip()
 	WeaponMesh->SetHiddenInGame(true);
 }
 
-void AWeapon::Reload()
+void AWeapon::StartReloading()
 {
 	if (WeaponConfig.CurrentAmmoInClip == WeaponConfig.MaxAmmoInClip
 		|| WeaponConfig.CurrentAmmoInStock == 0)
 		return;
-
-	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
-	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
-	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
 
 	UAnimInstance* AnimInstance = MyPawn->GetMesh()->GetAnimInstance();
 	if (AnimInstance != NULL)
@@ -229,14 +225,14 @@ void AWeapon::Reload()
 
 		MyPawn->State = ECharacterState::EReload;
 		MyPawn->ReloadTimer = ReloadMontage->GetPlayLength();
-
-		if (ReloadSound)
-			UGameplayStatics::PlaySoundAtLocation(
-				this,
-				ReloadSound,
-				GetActorLocation()
-			);
 	}
+}
+
+void AWeapon::Reload()
+{
+	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
+	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
+	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
 }
 
 void AWeapon::IncreaseSpread()

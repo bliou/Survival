@@ -117,9 +117,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* BulletHitZombieSound;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
-	class USoundBase* ReloadSound;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Gameplay)
 	class UMaterialInterface* BulletHole;
 
@@ -157,6 +154,7 @@ public:
 	void SetOwningPawn(AMyCharacter* actor);
 	void Equip();
 	void UnEquip();
+	void StartReloading();
 	void Reload();
 
 	void IncreaseSpread();
