@@ -230,9 +230,27 @@ void AWeapon::StartReloading()
 
 void AWeapon::Reload()
 {
-	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
-	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
-	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
+	if (WeaponType != EWeaponType::EShotgun)
+	{
+		int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
+		WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
+		WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
+	}
+	else
+	{
+		WeaponConfig.CurrentAmmoInClip++;
+		WeaponConfig.CurrentAmmoInStock--;
+		if (WeaponConfig.CurrentAmmoInClip != WeaponConfig.MaxAmmoInClip
+			&& WeaponConfig.CurrentAmmoInStock != 0)
+		{
+			UAnimInstance* AnimInstance = MyPawn->GetMesh()->GetAnimInstance();
+			if (AnimInstance != NULL)
+			{
+				FName CurrentSection = AnimInstance->Montage_GetCurrentSection();
+				AnimInstance->Montage_JumpToSection(CurrentSection, ReloadMontage);
+			}
+		}
+	}
 }
 
 void AWeapon::IncreaseSpread()
