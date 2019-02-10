@@ -136,7 +136,9 @@ void AMyCharacter::MoveRight(float Value)
 
 void AMyCharacter::Fire()
 {
-	if (State == ECharacterState::EIdle)
+	if (State == ECharacterState::EIdle
+		|| (State == ECharacterState::EReload
+			&& CurrentWeapon->WeaponType == EWeaponType::EShotgun))
 		CurrentWeapon->Fire();
 }
 

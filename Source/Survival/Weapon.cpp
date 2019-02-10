@@ -59,6 +59,10 @@ void AWeapon::Fire()
 		|| WeaponConfig.CurrentAmmoInClip <= 0)
 		return;
 
+	// Stop all the animations
+	UAnimInstance* AnimInstance = MyPawn->GetMesh()->GetAnimInstance();
+	AnimInstance->StopAllMontages(0.f);
+
 	UGameplayStatics::PlaySoundAtLocation(
 		this,
 		FireSound,
