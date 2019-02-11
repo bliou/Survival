@@ -29,8 +29,24 @@ void AZombieController::Possess(APawn* InPawn)
 void AZombieController::SetPlayerFocus()
 {
 	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	MyFocus = Player;
 	BlackboardComp->SetValueAsObject("PlayerReference", Player);
 }
+
+bool AZombieController::IsInAttackRange()
+{
+	if (MyFocus)
+	{
+		return MyPawn->ActorsInRange.Find(MyFocus) != INDEX_NONE;
+	}
+	return false;
+}
+
+bool AZombieController::IsAttacking()
+{
+	return MyPawn->State == EZombieState::EAttack;
+}
+
 
 void AZombieController::Attack()
 {

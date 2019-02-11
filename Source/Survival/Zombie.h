@@ -4,7 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Zombie.generated.h"
+
+UENUM(BlueprintType)
+namespace EZombieState
+{
+	enum ZombieState
+	{
+		EIdle			UMETA(DisplayName = "Idle"),
+		EAttack			UMETA(DisplayName = "Attack"),
+		EDying			UMETA(DisplayName = "Dying")
+	};
+}
 
 USTRUCT()
 struct FZombieData
@@ -43,6 +55,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FZombieData ZombieConfig;
 
+	UPROPERTY(EditDefaultsOnly, Category = Collision)
+	UBoxComponent* AttackRangeComponent;
+
 	UPROPERTY(EditAnywhere, Category = Behavior)
 	class UBehaviorTree *ZombieBehavior;
 
@@ -50,10 +65,28 @@ public:
 	class UAnimMontage* AttackMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsDying;
+	TEnumAsByte<EZombieState::ZombieState> State;
 
 	UFUNCTION()
 	void Damaged(const FHitResult& Impact, int GunDamage);
 
+	UFUNCTION()
+	void OnStartAttack(
+		class UPrimitiveComponent* HitComp, 
+		class AActor* OtherActor, 
+		class UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, bool bFromSweep, 
+		const FHitResult & SweepResult);
+	
+	UFUNCTION()
+	void OnEndAttack(
+		class UPrimitiveComponent* HitComp, 
+		class AActor* OtherActor,
+		class UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex);
+	
 	void Attack();
+	float AttackTimer;
+
+	TArray<AActor*> ActorsInRange;
 };

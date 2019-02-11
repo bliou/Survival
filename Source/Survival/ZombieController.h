@@ -33,9 +33,18 @@ public:
 	void SetPlayerFocus();
 
 	UFUNCTION(BlueprintCallable)
+	bool IsInAttackRange();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsAttacking();
+
+	UFUNCTION(BlueprintCallable)
 	void Attack();
 
 protected:
 	UPROPERTY()
 	AZombie* MyPawn;
+
+	UPROPERTY()
+	AActor* MyFocus;
 };
