@@ -84,7 +84,7 @@ void AWeapon::Fire()
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Fire Projectile")));
 		break;
 	}
-	
+
 	// After firing, remove the used bullets
 	--WeaponConfig.CurrentAmmoInClip;
 	bIsRecoiling = true;
