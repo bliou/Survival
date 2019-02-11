@@ -2,6 +2,7 @@
 
 #include "Zombie.h"
 #include "Engine.h"
+#include "ZombieController.h"
 
 // Sets default values
 AZombie::AZombie()
@@ -9,17 +10,20 @@ AZombie::AZombie()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	bIsDying = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 
-	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
-	RootComponent = Cast<USceneComponent>(MeshComp);
+	bUseControllerRotationYaw = false;
+
+	AIControllerClass = AZombieController::StaticClass();
 }
 
 // Called when the game starts or when spawned
 void AZombie::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
+
+	bIsDying = false;
+	GetCharacterMovement()->MaxWalkSpeed = ZombieConfig.MovementSpeed;
 }
 
 // Called every frame
@@ -50,4 +54,10 @@ void AZombie::Damaged(const FHitResult& Impact, int GunDamage)
 	ZombieConfig.Health -= GunDamage;
 	if (ZombieConfig.Health <= 0)
 		bIsDying = true;
+}
+
+void AZombie::Attack()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(AttackMontage, 1.f);
 }

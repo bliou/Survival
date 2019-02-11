@@ -16,10 +16,13 @@ struct FZombieData
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float DeathTimer;
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	float MovementSpeed;
 };
 
 UCLASS()
-class SURVIVAL_API AZombie : public APawn
+class SURVIVAL_API AZombie : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -37,17 +40,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
-	// First-person mesh (arms), visible only to the owning player.
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USkeletalMeshComponent* MeshComp;
-
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FZombieData ZombieConfig;
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+	class UBehaviorTree *ZombieBehavior;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Montage)
+	class UAnimMontage* AttackMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsDying;
 
 	UFUNCTION()
 	void Damaged(const FHitResult& Impact, int GunDamage);
+
+	void Attack();
 };
