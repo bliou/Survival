@@ -110,6 +110,7 @@ protected:
 	void MoveRight(float Value);
 
 	void Fire();
+	void StopAutoFiring();
 	void StartReloading();
 
 	void EquipDefaultWeapon();

@@ -76,6 +76,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FString Name;
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	bool bAutoFire;
 };
 
 UCLASS()
@@ -129,6 +132,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Montage)
 	class UAnimMontage* EquipMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Recoil)
+	bool bIsRecoiling;
+
 protected:
 
 	UFUNCTION()
@@ -145,8 +151,6 @@ protected:
 
 	AMyCharacter* MyPawn;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Recoil)
-	bool bIsRecoiling;
 	float RecoilTimer;
 
 public:

@@ -70,6 +70,13 @@ void AMyCharacter::Tick(float DeltaTime)
 		}
 	}
 
+	if (State == ECharacterState::EFire)
+	{
+		if (CurrentWeapon->WeaponConfig.bAutoFire
+			&& !CurrentWeapon->bIsRecoiling)
+			CurrentWeapon->Fire();
+	}
+
 	// If the player is moving, spread the weapon to its max value
 	if (GetVelocity().X != 0.f
 		|| GetVelocity().Y != 0.f)
@@ -114,6 +121,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("LookUp", this, &AMyCharacter::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::StopAutoFiring);
 	PlayerInputComponent->BindAction("EquipGun", IE_Pressed, this, &AMyCharacter::EquipGun);
 	PlayerInputComponent->BindAction("EquipHeavyWeapon", IE_Pressed, this, &AMyCharacter::EquipHeavyWeapon);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
@@ -139,7 +147,16 @@ void AMyCharacter::Fire()
 	if (State == ECharacterState::EIdle
 		|| (State == ECharacterState::EReload
 			&& CurrentWeapon->WeaponType == EWeaponType::EShotgun))
+	{
 		CurrentWeapon->Fire();
+		State = ECharacterState::EFire;
+	}
+}
+
+void AMyCharacter::StopAutoFiring()
+{
+	if (State == ECharacterState::EFire)
+		State = ECharacterState::EIdle;
 }
 
 void AMyCharacter::StartReloading()
