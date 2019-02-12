@@ -154,8 +154,6 @@ protected:
 
 	AMyCharacter* MyPawn;
 
-	float RecoilTimer;
-
 public:
 
 	void SetOwningPawn(AMyCharacter* actor);
@@ -163,6 +161,8 @@ public:
 	void UnEquip();
 	void StartReloading();
 	void Reload();
+
+	void EndRecoiling();
 
 	void IncreaseSpread();
 	void DecreaseSpread(float DeltaTime);

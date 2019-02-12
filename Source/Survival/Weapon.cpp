@@ -36,20 +36,6 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsRecoiling)
-	{
-		RecoilTimer -= DeltaTime;
-		if (RecoilTimer <= 0.f)
-		{
-			bIsRecoiling = false;
-
-			// Reload if needed
-			if (WeaponConfig.CurrentAmmoInClip <= 0
-				&& WeaponConfig.CurrentAmmoInStock > 0)
-				StartReloading();
-		}
-	}
-
 	DecreaseSpread(DeltaTime);
 }
 
@@ -88,7 +74,13 @@ void AWeapon::Fire()
 	// After firing, remove the used bullets
 	--WeaponConfig.CurrentAmmoInClip;
 	bIsRecoiling = true;
-	RecoilTimer = WeaponConfig.RecoilTime;
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(
+		UnusedHandle,
+		this,
+		&AWeapon::EndRecoiling,
+		WeaponConfig.RecoilTime,
+		false);
 
 	IncreaseSpread();
 }
@@ -198,7 +190,13 @@ void AWeapon::Equip()
 	{
 		AnimInstance->Montage_Play(EquipMontage, 1.f);
 		MyPawn->State = ECharacterState::EEquip;
-		MyPawn->EquipTimer = EquipMontage->GetPlayLength();
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle,
+			MyPawn,
+			&AMyCharacter::EndEquipping,
+			EquipMontage->GetPlayLength(),
+			false);
 
 		CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		WeaponMesh->SetHiddenInGame(false);
@@ -228,7 +226,13 @@ void AWeapon::StartReloading()
 		AnimInstance->Montage_Play(ReloadMontage, 1.f);
 
 		MyPawn->State = ECharacterState::EReload;
-		MyPawn->ReloadTimer = ReloadMontage->GetPlayLength();
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle,
+			MyPawn,
+			&AMyCharacter::EndReloading,
+			ReloadMontage->GetPlayLength(),
+			false);
 	}
 }
 
@@ -274,4 +278,14 @@ void AWeapon::DecreaseSpread(float DeltaTime)
 	WeaponConfig.CurrentWeaponSpread -= Decrease;
 	if (WeaponConfig.CurrentWeaponSpread <= 1.f)
 		WeaponConfig.CurrentWeaponSpread = 1.f;
+}
+
+void AWeapon::EndRecoiling()
+{
+	bIsRecoiling = false;
+
+	// Reload if needed
+	if (WeaponConfig.CurrentAmmoInClip <= 0
+		&& WeaponConfig.CurrentAmmoInStock > 0)
+		StartReloading();
 }

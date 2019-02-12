@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Weapon.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "MyCharacter.generated.h"
 
 
@@ -18,7 +19,8 @@ namespace ECharacterState
 		EIdle			UMETA(DisplayName = "Idle"),
 		EReload			UMETA(DisplayName = "Reload"),
 		EEquip			UMETA(DisplayName = "Equip"),
-		EFire			UMETA(DisplayName = "Fire")
+		EFire			UMETA(DisplayName = "Fire"),
+		EDead			UMETA(DisplayName = "Dead")
 	};
 }
 
@@ -38,6 +40,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	int32 CurrentMoney;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Animation)
+	float DyingAnimationLength;
 };
 
 UCLASS()
@@ -98,13 +103,25 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = State)
 	TEnumAsByte<ECharacterState::CharacterState> State;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Timer)
-	float ReloadTimer;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
+	class USoundBase* PlayerDamagedSound;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Timer)
-	float EquipTimer;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> DamagedWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> DeadWidget;
+	UUserWidget* CurrentDamageWidget;
+
+	// Overridde theses methods to prevent the user from turning
+	// the head of the player when he is dead
+	virtual void AddControllerYawInput(float Val) override;
+	virtual void AddControllerPitchInput(float Val) override;
 
 	void TakeDamages(float Damages);
+
+	void EndEquipping();
+	void EndReloading();
 
 protected:
 	void MoveForward(float Value);
@@ -119,4 +136,8 @@ protected:
 	void EquipGun();
 	void EquipHeavyWeapon();
 	void EquipPreviousWeapon();
+
+
+	void EndTakeDamages();
+	void KillPlayer();
 };

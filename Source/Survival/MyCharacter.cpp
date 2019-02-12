@@ -52,24 +52,6 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (State == ECharacterState::EReload)
-	{
-		ReloadTimer -= DeltaTime;
-		if (ReloadTimer <= 0.f)
-		{
-			State = ECharacterState::EIdle;
-		}
-	}
-
-	if (State == ECharacterState::EEquip)
-	{
-		EquipTimer -= DeltaTime;
-		if (EquipTimer <= 0.f)
-		{
-			State = ECharacterState::EIdle;
-		}
-	}
-
 	if (State == ECharacterState::EFire)
 	{
 		if (CurrentWeapon->WeaponConfig.bAutoFire
@@ -128,8 +110,27 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 }
 
+void AMyCharacter::AddControllerYawInput(float Val)
+{
+	if (State == ECharacterState::EDead)
+		return;
+
+	Super::AddControllerYawInput(Val);
+}
+
+void AMyCharacter::AddControllerPitchInput(float Val)
+{
+	if (State == ECharacterState::EDead)
+		return;
+
+	Super::AddControllerPitchInput(Val);
+}
+
 void AMyCharacter::MoveForward(float Value)
 {
+	if (State == ECharacterState::EDead)
+		return;
+
 	const FRotator YawOnlyRotation = FRotator(0.0f, GetControlRotation().Yaw, 0.0f);
 	FVector Direction = FRotationMatrix(YawOnlyRotation).GetUnitAxis(EAxis::X);
 	AddMovementInput(Direction, Value);
@@ -137,6 +138,9 @@ void AMyCharacter::MoveForward(float Value)
 
 void AMyCharacter::MoveRight(float Value)
 {
+	if (State == ECharacterState::EDead)
+		return;
+
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
@@ -170,9 +174,48 @@ void AMyCharacter::Reload()
 	CurrentWeapon->Reload();
 }
 
+void AMyCharacter::EndReloading()
+{
+	if (State != ECharacterState::EDead)
+		State = ECharacterState::EIdle;
+}
+
 void AMyCharacter::TakeDamages(float Damages)
 {
+	if (State == ECharacterState::EDead)
+		return;
+
 	CharacterConfig.CurrentHealth -= Damages;
+
+	UGameplayStatics::PlaySoundAtLocation(
+		this,
+		PlayerDamagedSound,
+		GetActorLocation()
+	);
+
+	FTimerHandle UnusedHandle;
+	if (CharacterConfig.CurrentHealth > 0.f)
+	{
+		CurrentDamageWidget = CreateWidget<UUserWidget>(GetWorld(), DamagedWidget);
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle,
+			this,
+			&AMyCharacter::EndTakeDamages,
+			1.f,
+			false);
+	}
+	else
+	{
+		CurrentDamageWidget = CreateWidget<UUserWidget>(GetWorld(), DeadWidget);
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle,
+			this,
+			&AMyCharacter::KillPlayer,
+			CharacterConfig.DyingAnimationLength,
+			false);
+		State = ECharacterState::EDead;
+	}
+	CurrentDamageWidget->AddToViewport();
 }
 
 void AMyCharacter::EquipDefaultWeapon()
@@ -198,7 +241,8 @@ void AMyCharacter::EquipDefaultWeapon()
 void AMyCharacter::EquipGun()
 {
 	if (!Weapons[0]
-		|| State == ECharacterState::EEquip)
+		|| State == ECharacterState::EEquip
+		|| State == ECharacterState::EDead)
 		return;
 	if (CurrentWeapon)
 	{
@@ -217,7 +261,8 @@ void AMyCharacter::EquipGun()
 void AMyCharacter::EquipHeavyWeapon()
 {
 	if (!Weapons[1]
-		|| State == ECharacterState::EEquip)
+		|| State == ECharacterState::EEquip
+		|| State == ECharacterState::EDead)
 		return;
 
 	if (CurrentWeapon)
@@ -245,5 +290,23 @@ void AMyCharacter::EquipPreviousWeapon()
 	case EWeaponType::EShotgun:
 		EquipHeavyWeapon();
 		break;
+	case EWeaponType::ERifle:
+		EquipHeavyWeapon();
+		break;
 	}
+}
+
+void AMyCharacter::EndEquipping()
+{
+	if (State != ECharacterState::EDead)
+		State = ECharacterState::EIdle;
+}
+
+void AMyCharacter::EndTakeDamages()
+{
+	CurrentDamageWidget->RemoveFromParent();
+}
+
+void AMyCharacter::KillPlayer()
+{
 }

@@ -41,29 +41,12 @@ void AZombie::BeginPlay()
 	State = EZombieState::EIdle;
 	GetCharacterMovement()->MaxWalkSpeed = ZombieConfig.MovementSpeed;
 	bCanInflictDamages = false;
-	DamageTimer = 0.f;
 }
 
 // Called every frame
 void AZombie::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (State == EZombieState::EDying)
-	{
-		ZombieConfig.DeathTimer -= DeltaTime;
-		if (ZombieConfig.DeathTimer <= 0.f)
-			Destroy();
-	}
-
-	if (State == EZombieState::EAttack)
-	{
-		AttackTimer -= DeltaTime;
-		if (AttackTimer <= 0.f)
-			State = EZombieState::EIdle;
-
-		DamageTimer -= DeltaTime;
-	}
 }
 
 bool AZombie::IsHeadShot(const FHitResult& Impact)
@@ -86,6 +69,14 @@ void AZombie::TakeDamages(const FHitResult& Impact, int Damages)
 		GetCharacterMovement()->MaxWalkSpeed = 0.f;
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->StopAllMontages(0.f);
+
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle,
+			this,
+			&AZombie::KillZombie,
+			ZombieConfig.DeathTimer,
+			false);
 	}
 }
 
@@ -115,8 +106,7 @@ void AZombie::OnInflictDamages(
 	int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult & SweepResult)
 {
-	if (!bCanInflictDamages
-		|| DamageTimer > 0.f)
+	if (!bCanInflictDamages)
 		return;
 	
 	if (Cast<AZombieController>(GetController())->IsActorTargeted(OtherActor))
@@ -125,19 +115,35 @@ void AZombie::OnInflictDamages(
 		if (MyCharacter)
 		{
 			MyCharacter->TakeDamages(ZombieConfig.Damages);
-			DamageTimer = AttackMontage->GetPlayLength();;
+			bCanInflictDamages = false;
 		}
 	}
 }
 
-void AZombie::Attack()
+void AZombie::AttackAnimationStart()
 {
 	if (State == EZombieState::EIdle)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		AnimInstance->Montage_Play(AttackMontage, 1.f);
-		AttackTimer = AttackMontage->GetPlayLength();
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle, 
+			this,
+			&AZombie::AttackAnimationEnd,
+			AttackMontage->GetPlayLength(), 
+			false);
 
 		State = EZombieState::EAttack;
 	}
+}
+
+void AZombie::AttackAnimationEnd()
+{
+	State = EZombieState::EIdle;
+}
+
+void AZombie::KillZombie()
+{
+	Destroy();
 }

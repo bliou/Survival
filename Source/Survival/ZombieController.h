@@ -39,7 +39,7 @@ public:
 	bool ShouldMove();
 
 	UFUNCTION(BlueprintCallable)
-	void Attack();
+	void AttackAnimationStart();
 
 	UFUNCTION(BlueprintCallable)
 	void FaceTarget();

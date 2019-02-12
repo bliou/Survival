@@ -99,13 +99,14 @@ public:
 		int32 OtherBodyIndex, bool bFromSweep,
 		const FHitResult & SweepResult);
 
-	void Attack();
-	float AttackTimer;
+	void AttackAnimationStart();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 	bool bCanInflictDamages;
-	float DamageTimer;
-
 
 	TArray<AActor*> ActorsInRange;
+
+protected:
+	void KillZombie();
+	void AttackAnimationEnd();
 };

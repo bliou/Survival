@@ -55,9 +55,9 @@ bool AZombieController::ShouldMove()
 }
 
 
-void AZombieController::Attack()
+void AZombieController::AttackAnimationStart()
 {
-	MyPawn->Attack();
+	MyPawn->AttackAnimationStart();
 }
 
 void AZombieController::FaceTarget()
