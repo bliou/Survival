@@ -170,6 +170,11 @@ void AMyCharacter::Reload()
 	CurrentWeapon->Reload();
 }
 
+void AMyCharacter::TakeDamages(float Damages)
+{
+	CharacterConfig.CurrentHealth -= Damages;
+}
+
 void AMyCharacter::EquipDefaultWeapon()
 {
 	AWeapon *Spawner = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn);

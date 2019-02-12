@@ -71,3 +71,8 @@ void AZombieController::FaceTarget()
 	FRotator ZombieNewRotation = FMath::RInterpTo(ZombieRotation, LookAt, 0.1f, 2.0f);
 	MyPawn->SetActorRotation(ZombieNewRotation);
 }
+
+bool AZombieController::IsActorTargeted(AActor* Actor)
+{
+	return Actor == MyFocus;
+}

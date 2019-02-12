@@ -24,13 +24,16 @@ struct FZombieData
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
-	int32 Health;
+	float Health;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float DeathTimer;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	float MovementSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	float Damages;
 };
 
 UCLASS()
@@ -58,6 +61,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Collision)
 	UBoxComponent* AttackRangeComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = Collision)
+	UCapsuleComponent* DamageComponent;
+
 	UPROPERTY(EditAnywhere, Category = Behavior)
 	class UBehaviorTree *ZombieBehavior;
 
@@ -68,7 +74,7 @@ public:
 	TEnumAsByte<EZombieState::ZombieState> State;
 
 	UFUNCTION()
-	void Damaged(const FHitResult& Impact, int GunDamage);
+	void TakeDamages(const FHitResult& Impact, int GunDamage);
 
 	UFUNCTION()
 	void OnStartAttack(
@@ -84,9 +90,22 @@ public:
 		class AActor* OtherActor,
 		class UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
-	
+
+	UFUNCTION()
+	void OnInflictDamages(
+		class UPrimitiveComponent* HitComp,
+		class AActor* OtherActor,
+		class UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep,
+		const FHitResult & SweepResult);
+
 	void Attack();
 	float AttackTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+	bool bCanInflictDamages;
+	float DamageTimer;
+
 
 	TArray<AActor*> ActorsInRange;
 };

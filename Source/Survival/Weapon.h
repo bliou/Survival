@@ -79,6 +79,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	bool bAutoFire;
+
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	float Damages;
 };
 
 UCLASS()

@@ -104,6 +104,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Timer)
 	float EquipTimer;
 
+	void TakeDamages(float Damages);
+
 protected:
 	void MoveForward(float Value);
 

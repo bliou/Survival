@@ -44,6 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FaceTarget();
 
+	bool IsActorTargeted(AActor* Actor);
+
 protected:
 	UPROPERTY()
 	AZombie* MyPawn;

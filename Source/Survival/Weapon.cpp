@@ -161,7 +161,7 @@ void AWeapon::ProcessInstantHit(
 		AZombie* zombie = Cast<AZombie>(Impact.GetActor());
 		if (zombie)
 		{
-			zombie->Damaged(Impact, 100);
+			zombie->TakeDamages(Impact, WeaponConfig.Damages);
 
 			UGameplayStatics::PlaySoundAtLocation(
 				this,

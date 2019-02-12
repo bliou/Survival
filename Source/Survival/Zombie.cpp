@@ -2,8 +2,10 @@
 
 #include "Zombie.h"
 #include "Engine.h"
+#include "MyCharacter.h"
 #include "ZombieController.h"
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
+#include "Engine.h"
 
 // Sets default values
 AZombie::AZombie()
@@ -16,6 +18,13 @@ AZombie::AZombie()
 	AttackRangeComponent->SetupAttachment(GetCapsuleComponent());
 	AttackRangeComponent->OnComponentBeginOverlap.AddDynamic(this, &AZombie::OnStartAttack);
 	AttackRangeComponent->OnComponentEndOverlap.AddDynamic(this, &AZombie::OnEndAttack);
+
+	DamageComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("DamageComponent"));
+	DamageComponent->SetupAttachment(
+		GetMesh(),
+		TEXT("DamageSocket")
+	);
+	DamageComponent->OnComponentBeginOverlap.AddDynamic(this, &AZombie::OnInflictDamages);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
@@ -31,6 +40,8 @@ void AZombie::BeginPlay()
 
 	State = EZombieState::EIdle;
 	GetCharacterMovement()->MaxWalkSpeed = ZombieConfig.MovementSpeed;
+	bCanInflictDamages = false;
+	DamageTimer = 0.f;
 }
 
 // Called every frame
@@ -50,6 +61,8 @@ void AZombie::Tick(float DeltaTime)
 		AttackTimer -= DeltaTime;
 		if (AttackTimer <= 0.f)
 			State = EZombieState::EIdle;
+
+		DamageTimer -= DeltaTime;
 	}
 }
 
@@ -58,14 +71,15 @@ bool AZombie::IsHeadShot(const FHitResult& Impact)
 	return Impact.BoneName == "Head";
 }
 
-void AZombie::Damaged(const FHitResult& Impact, int GunDamage)
+void AZombie::TakeDamages(const FHitResult& Impact, int Damages)
 {
 	if (State == EZombieState::EDying)
 		return;
-	if (IsHeadShot(Impact))
-		GunDamage *= 5;
 
-	ZombieConfig.Health -= GunDamage;
+	if (IsHeadShot(Impact))
+		Damages *= 5;
+
+	ZombieConfig.Health -= Damages;
 	if (ZombieConfig.Health <= 0)
 	{
 		State = EZombieState::EDying;
@@ -92,6 +106,28 @@ void AZombie::OnEndAttack(
 	int32 OtherBodyIndex)
 {
 	ActorsInRange.Remove(OtherActor);
+}
+
+void AZombie::OnInflictDamages(
+	class UPrimitiveComponent* HitComp,
+	class AActor* OtherActor,
+	class UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult & SweepResult)
+{
+	if (!bCanInflictDamages
+		|| DamageTimer > 0.f)
+		return;
+	
+	if (Cast<AZombieController>(GetController())->IsActorTargeted(OtherActor))
+	{
+		AMyCharacter* MyCharacter = Cast<AMyCharacter>(OtherActor);
+		if (MyCharacter)
+		{
+			MyCharacter->TakeDamages(ZombieConfig.Damages);
+			DamageTimer = AttackMontage->GetPlayLength();;
+		}
+	}
 }
 
 void AZombie::Attack()
