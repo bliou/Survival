@@ -33,13 +33,16 @@ public:
 	void SetPlayerFocus();
 
 	UFUNCTION(BlueprintCallable)
-	bool IsInAttackRange();
+	bool IsAlive();
 
 	UFUNCTION(BlueprintCallable)
-	bool IsAttacking();
+	bool ShouldMove();
 
 	UFUNCTION(BlueprintCallable)
 	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void FaceTarget();
 
 protected:
 	UPROPERTY()
@@ -47,4 +50,6 @@ protected:
 
 	UPROPERTY()
 	AActor* MyFocus;
+
+	bool IsInAttackRange();
 };

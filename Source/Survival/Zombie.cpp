@@ -67,7 +67,12 @@ void AZombie::Damaged(const FHitResult& Impact, int GunDamage)
 
 	ZombieConfig.Health -= GunDamage;
 	if (ZombieConfig.Health <= 0)
+	{
 		State = EZombieState::EDying;
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		AnimInstance->StopAllMontages(0.f);
+	}
 }
 
 void AZombie::OnStartAttack(

@@ -4,6 +4,7 @@
 #include "Zombie.h"
 #include "Runtime/AIModule/Classes/BehaviorTree/BehaviorTree.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 
 AZombieController::AZombieController()
 {
@@ -33,6 +34,11 @@ void AZombieController::SetPlayerFocus()
 	BlackboardComp->SetValueAsObject("PlayerReference", Player);
 }
 
+bool AZombieController::IsAlive()
+{
+	return MyPawn->State != EZombieState::EDying;
+}
+
 bool AZombieController::IsInAttackRange()
 {
 	if (MyFocus)
@@ -42,13 +48,26 @@ bool AZombieController::IsInAttackRange()
 	return false;
 }
 
-bool AZombieController::IsAttacking()
+bool AZombieController::ShouldMove()
 {
-	return MyPawn->State == EZombieState::EAttack;
+	return !IsInAttackRange()
+		&& MyPawn->State == EZombieState::EIdle;
 }
 
 
 void AZombieController::Attack()
 {
 	MyPawn->Attack();
+}
+
+void AZombieController::FaceTarget()
+{
+	FVector ZombieLocation = MyPawn->GetActorLocation();
+	FRotator ZombieRotation = MyPawn->GetActorRotation();
+
+	FVector TargetLocation = MyFocus->GetActorLocation();
+
+	FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(ZombieLocation, TargetLocation);
+	FRotator ZombieNewRotation = FMath::RInterpTo(ZombieRotation, LookAt, 0.1f, 2.0f);
+	MyPawn->SetActorRotation(ZombieNewRotation);
 }
