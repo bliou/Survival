@@ -6,6 +6,7 @@
 #include "Components/DecalComponent.h"
 #include "MyCharacter.h"
 #include "Zombie.h"
+#include "Barricade.h"
 #include "Engine.h"
 
 AWeapon::AWeapon()
@@ -151,6 +152,7 @@ void AWeapon::ProcessInstantHit(
 	if (Impact.GetActor())
 	{
 		AZombie* zombie = Cast<AZombie>(Impact.GetActor());
+		ABarricade* barricade = Cast<ABarricade>(Impact.GetActor());
 		if (zombie)
 		{
 			zombie->TakeDamages(Impact, WeaponConfig.Damages);
@@ -160,6 +162,10 @@ void AWeapon::ProcessInstantHit(
 				BulletHitZombieSound,
 				Impact.Location
 			);
+		}
+		else if (barricade)
+		{
+			barricade->HittenByBullet(Impact, ShootDir);
 		}
 		else
 		{

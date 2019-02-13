@@ -48,5 +48,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FBarricadeData BarricadeConfig;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Particles)
+	class UParticleSystem* HittenParticles;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
+	class USoundBase* BulletHitSound;
+
+
 	void TakeDamages(float Damages);
+	void HittenByBullet(
+		const FHitResult& Impact,
+		const FVector& ShootDir);
 };

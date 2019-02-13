@@ -2,6 +2,7 @@
 
 #include "Barricade.h"
 #include "Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 ABarricade::ABarricade()
@@ -36,4 +37,23 @@ void ABarricade::TakeDamages(float Damages)
 	BarricadeConfig.CurrentHealth -= Damages;
 	if (BarricadeConfig.CurrentHealth <= 0.f)
 		Destroy();
+}
+
+void ABarricade::HittenByBullet(
+	const FHitResult& Impact,
+	const FVector& ShootDir)
+{
+	UGameplayStatics::SpawnEmitterAtLocation(
+		GetWorld(),
+		HittenParticles,
+		Impact.Location,
+		ShootDir.Rotation().GetInverse(),
+		true
+	);
+
+	UGameplayStatics::PlaySoundAtLocation(
+		this,
+		BulletHitSound,
+		Impact.Location
+	);
 }
