@@ -64,6 +64,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Collision)
 	UCapsuleComponent* DamageComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = Collision)
+	UBoxComponent* DetectPlayerComponent;
+
 	UPROPERTY(EditAnywhere, Category = Behavior)
 	class UBehaviorTree *ZombieBehavior;
 
@@ -98,6 +101,24 @@ public:
 		class UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep,
 		const FHitResult & SweepResult);
+
+	UFUNCTION()
+		void OnDetectPlayerStart(
+			class UPrimitiveComponent* HitComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep,
+			const FHitResult & SweepResult);
+
+	UFUNCTION()
+		void OnDetectPlayerEnd(
+			class UPrimitiveComponent* HitComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	bool bPlayerIsDetected;
 
 	void AttackAnimationStart();
 

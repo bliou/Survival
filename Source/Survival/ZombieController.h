@@ -30,7 +30,7 @@ public:
 	virtual void Possess(class APawn* InPawn) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SetPlayerFocus();
+	void SetTargetFocus();
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive();
@@ -51,7 +51,9 @@ protected:
 	AZombie* MyPawn;
 
 	UPROPERTY()
-	AActor* MyFocus;
+	AActor* MyTarget;
 
 	bool IsInAttackRange();
+	bool CanZombieReachPlayer(AActor* Player);
+	AActor* GetClosestBarricade();
 };

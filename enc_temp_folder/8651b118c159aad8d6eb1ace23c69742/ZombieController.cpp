@@ -68,6 +68,7 @@ void AZombieController::SetTargetFocus()
 	{
 		BlackboardComp->SetValueAsObject("NextTargetReference", Target);
 		MyTarget = Target;
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, Target->GetClass()->GetFName().ToString());
 	}
 }
 

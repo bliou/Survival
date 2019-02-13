@@ -26,6 +26,11 @@ AZombie::AZombie()
 	);
 	DamageComponent->OnComponentBeginOverlap.AddDynamic(this, &AZombie::OnInflictDamages);
 
+	DetectPlayerComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("DetectPlayerComponent"));
+	DetectPlayerComponent->SetupAttachment(GetCapsuleComponent());
+	DetectPlayerComponent->OnComponentBeginOverlap.AddDynamic(this, &AZombie::OnDetectPlayerStart);
+	DetectPlayerComponent->OnComponentEndOverlap.AddDynamic(this, &AZombie::OnDetectPlayerEnd);
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	bUseControllerRotationYaw = false;
@@ -118,6 +123,27 @@ void AZombie::OnInflictDamages(
 			bCanInflictDamages = false;
 		}
 	}
+}
+
+void AZombie::OnDetectPlayerStart(
+	class UPrimitiveComponent* HitComp,
+	class AActor* OtherActor,
+	class UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult & SweepResult)
+{
+	if (Cast<AMyCharacter>(OtherActor))
+		bPlayerIsDetected = true;
+}
+
+void AZombie::OnDetectPlayerEnd(
+	class UPrimitiveComponent* HitComp,
+	class AActor* OtherActor,
+	class UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	if (Cast<AMyCharacter>(OtherActor))
+		bPlayerIsDetected = false;
 }
 
 void AZombie::AttackAnimationStart()
