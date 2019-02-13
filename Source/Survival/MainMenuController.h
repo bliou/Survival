@@ -4,23 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "MyPlayerController.generated.h"
+#include "MainMenuController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SURVIVAL_API AMyPlayerController : public APlayerController
+class SURVIVAL_API AMainMenuController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
 	// Reference UMG Asset in the Editor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
-	TSubclassOf<class UUserWidget> wMainMenu;
+	TSubclassOf<class UUserWidget> wMainMenuHUD;
 
 	// Variable to hold the widget After Creating it.
-	UUserWidget* MyMainMenu;
+	UUserWidget* MainMenuHUD;
 
 	// Override BeginPlay()
 	virtual void BeginPlay() override;
