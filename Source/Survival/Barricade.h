@@ -7,6 +7,21 @@
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Barricade.generated.h"
 
+
+USTRUCT(BlueprintType)
+struct FBarricadeData
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	int32 MaxHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
+	int32 CurrentHealth;
+};
+
 UCLASS()
 class SURVIVAL_API ABarricade : public AActor
 {
@@ -29,4 +44,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
 	class UBoxComponent* CollisionComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	FBarricadeData BarricadeConfig;
+
+	void TakeDamages(float Damages);
 };

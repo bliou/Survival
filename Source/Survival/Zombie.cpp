@@ -3,6 +3,7 @@
 #include "Zombie.h"
 #include "Engine.h"
 #include "MyCharacter.h"
+#include "Barricade.h"
 #include "ZombieController.h"
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
 #include "Engine.h"
@@ -120,6 +121,12 @@ void AZombie::OnInflictDamages(
 		if (MyCharacter)
 		{
 			MyCharacter->TakeDamages(ZombieConfig.Damages);
+			bCanInflictDamages = false;
+		}
+		ABarricade* Barricade = Cast<ABarricade>(OtherActor);
+		if (Barricade)
+		{
+			Barricade->TakeDamages(ZombieConfig.Damages);
 			bCanInflictDamages = false;
 		}
 	}

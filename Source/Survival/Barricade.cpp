@@ -21,6 +21,7 @@ void ABarricade::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	BarricadeConfig.CurrentHealth = BarricadeConfig.MaxHealth;
 }
 
 // Called every frame
@@ -30,3 +31,9 @@ void ABarricade::Tick(float DeltaTime)
 
 }
 
+void ABarricade::TakeDamages(float Damages)
+{
+	BarricadeConfig.CurrentHealth -= Damages;
+	if (BarricadeConfig.CurrentHealth <= 0.f)
+		Destroy();
+}
