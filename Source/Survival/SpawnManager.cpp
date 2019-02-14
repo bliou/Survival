@@ -2,6 +2,8 @@
 
 #include "SpawnManager.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "SurvivalGameStateBase.h"
 
 // Sets default values
 ASpawnManager::ASpawnManager()
@@ -23,6 +25,7 @@ void ASpawnManager::BeginPlay()
 	{
 		Spawners.Add(Cast<ASpawner>(FoundActor));
 	}
+	IsWaveInactive = true;
 }
 
 // Called every frame
@@ -30,11 +33,19 @@ void ASpawnManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (IsWaveInactive)
+		return;
+
 	if (Delay <= 0.f)
 	{
 		ASpawner* Spawner = Spawners[FMath::RandRange(0, Spawners.Num() - 1)];
 		Spawner->InstantiateZombie();
-		Delay = 3.f;
+		ZombiesToSpawnInWave--;
+		if (ZombiesToSpawnInWave <= 0)
+		{
+			IsWaveInactive = true;
+		}
+		Delay = FMath::RandRange(1.5f, 3.f);
 	}
 	else
 	{
@@ -42,3 +53,19 @@ void ASpawnManager::Tick(float DeltaTime)
 	}
 }
 
+void ASpawnManager::StartWave()
+{
+	if (!StartWaveMessage)
+		StartWaveMessage = CreateWidget<UUserWidget>(GetWorld(), wStartWaveMessage);
+	
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	static const FString ContextString = TEXT("Wave context");
+	
+	FWaveConfig* CurrentWaveConfig = WaveData->FindRow<FWaveConfig>(
+		FName(*FString::FromInt(GameState->CurrentWave)),
+		ContextString, 
+		true);
+
+	ZombiesToSpawnInWave = CurrentWaveConfig->ZombiesToSpawn;
+	IsWaveInactive = false;
+}

@@ -25,7 +25,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
 	TSubclassOf<class UUserWidget> wMainMenuHUD;
 
-
 protected:
 	UUserWidget* MainMenuHUD;
 };
