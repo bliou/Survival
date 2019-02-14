@@ -231,14 +231,6 @@ void AMyCharacter::EquipDefaultWeapon()
 		CurrentWeapon->SetOwningPawn(this);
 		CurrentWeapon->Equip();
 	}
-
-	// Equip shotgun test
-	AWeapon *ShotgunSpawn = GetWorld()->SpawnActor<AWeapon>(ShotgunTest);
-	if (ShotgunSpawn)
-	{
-		Weapons[1] = ShotgunSpawn;
-	}
-
 }
 
 void AMyCharacter::EquipGun()

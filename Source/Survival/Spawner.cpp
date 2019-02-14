@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Spawner.h"
+#include "SurvivalGameStateBase.h"
 
 // Sets default values
 ASpawner::ASpawner()
@@ -29,6 +30,18 @@ void ASpawner::InstantiateZombie()
 	FVector Location = GetActorLocation();
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
-	GetWorld()->SpawnActor<AZombie>(ZombieSpawn, Location, Rotation, SpawnInfo);
+
+	AZombie* Zombie = GetWorld()->SpawnActor<AZombie>(ZombieSpawn, Location, Rotation, SpawnInfo);
+
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	static const FString ContextString = TEXT("Zombie context");
+	
+	FZombieDataTable* ZombieData = Zombie->ZombieDataTable->FindRow<FZombieDataTable>(
+		FName(*FString::FromInt(GameState->CurrentWave)),
+		ContextString,
+		true);
+	Zombie->ZombieConfig.Damages = ZombieData->Damages;
+	Zombie->ZombieConfig.Health = ZombieData->Health;
+	Zombie->ZombieConfig.MovementSpeed = ZombieData->MovementSpeed;
 }
 

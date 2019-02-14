@@ -5,18 +5,31 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
+#include "Engine/DataTable.h"
 #include "Zombie.generated.h"
 
 UENUM(BlueprintType)
-namespace EZombieState
+enum class EZombieState: uint8
 {
-	enum ZombieState
-	{
-		EIdle			UMETA(DisplayName = "Idle"),
-		EAttack			UMETA(DisplayName = "Attack"),
-		EDying			UMETA(DisplayName = "Dying")
-	};
-}
+	EIdle			UMETA(DisplayName = "Idle"),
+	EAttack			UMETA(DisplayName = "Attack"),
+	EDying			UMETA(DisplayName = "Dying")
+};
+
+USTRUCT(BlueprintType)
+struct FZombieDataTable: public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	float Health;
+
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	float MovementSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	float Damages;
+};
 
 USTRUCT()
 struct FZombieData
@@ -58,6 +71,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	FZombieData ZombieConfig;
 
+	UPROPERTY(EditDefaultsOnly, Category = Config)
+	class UDataTable* ZombieDataTable;
+
 	UPROPERTY(EditDefaultsOnly, Category = Collision)
 	UBoxComponent* AttackRangeComponent;
 
@@ -74,7 +90,7 @@ public:
 	class UAnimMontage* AttackMontage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TEnumAsByte<EZombieState::ZombieState> State;
+	EZombieState State;
 
 	UFUNCTION()
 	void TakeDamages(const FHitResult& Impact, int GunDamage);

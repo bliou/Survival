@@ -12,17 +12,14 @@
 
 
 UENUM(BlueprintType)
-namespace ECharacterState
+enum class ECharacterState: uint8
 {
-	enum CharacterState
-	{
-		EIdle			UMETA(DisplayName = "Idle"),
-		EReload			UMETA(DisplayName = "Reload"),
-		EEquip			UMETA(DisplayName = "Equip"),
-		EFire			UMETA(DisplayName = "Fire"),
-		EDead			UMETA(DisplayName = "Dead")
-	};
-}
+	EIdle			UMETA(DisplayName = "Idle"),
+	EReload			UMETA(DisplayName = "Reload"),
+	EEquip			UMETA(DisplayName = "Equip"),
+	EFire			UMETA(DisplayName = "Fire"),
+	EDead			UMETA(DisplayName = "Dead")
+};
 
 
 USTRUCT(BlueprintType)
@@ -86,13 +83,10 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	AWeapon *CurrentWeapon;
-	EWeaponType::WeaponType PreviousWeaponSlot;
+	EWeaponType PreviousWeaponSlot;
 
 	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
 	TSubclassOf<class AWeapon> WeaponSpawn;
-
-	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
-	TSubclassOf<class AWeapon> ShotgunTest;
 
 	UPROPERTY()
 	TArray<class AWeapon*> Weapons;
@@ -101,7 +95,7 @@ public:
 	FCharacterData CharacterConfig;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = State)
-	TEnumAsByte<ECharacterState::CharacterState> State;
+	ECharacterState State;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* PlayerDamagedSound;

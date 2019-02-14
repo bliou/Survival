@@ -61,7 +61,7 @@ void ASpawnManager::StartWave()
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	static const FString ContextString = TEXT("Wave context");
 	
-	FWaveConfig* CurrentWaveConfig = WaveData->FindRow<FWaveConfig>(
+	FWaveDataTable* CurrentWaveConfig = WaveDataTable->FindRow<FWaveDataTable>(
 		FName(*FString::FromInt(GameState->CurrentWave)),
 		ContextString, 
 		true);

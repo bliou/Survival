@@ -12,27 +12,21 @@
 class AMyCharacter;
 
 UENUM(BlueprintType)
-namespace EWeaponProjectile
+enum class EWeaponProjectile: uint8
 {
-	enum WeaponProjectile
-	{
-		EBullet			UMETA(DisplayName = "Bullet"),
-		ESpread			UMETA(DisplayName = "Spread"),
-		EProjectile		UMETA(DisplayName = "Projectile")
-	};
-}
+	EBullet			UMETA(DisplayName = "Bullet"),
+	ESpread			UMETA(DisplayName = "Spread"),
+	EProjectile		UMETA(DisplayName = "Projectile")
+};
 
 UENUM(BlueprintType)
-namespace EWeaponType
+enum class EWeaponType: uint8
 {
-	enum WeaponType
-	{
-		EGun			UMETA(DisplayName = "Gun"),
-		EShotgun		UMETA(DisplayName = "Shotgun"),
-		ERifle			UMETA(DisplayName = "Rifle"),
-		ESniper			UMETA(DisplayName = "Sniper")
-	};
-}
+	EGun			UMETA(DisplayName = "Gun"),
+	EShotgun		UMETA(DisplayName = "Shotgun"),
+	ERifle			UMETA(DisplayName = "Rifle"),
+	ESniper			UMETA(DisplayName = "Sniper")
+};
 
 
 USTRUCT(BlueprintType)
@@ -102,10 +96,10 @@ public:
 	FWeaponData WeaponConfig;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
-	TEnumAsByte<EWeaponType::WeaponType> WeaponType;
+	EWeaponType WeaponType;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
-	TEnumAsByte<EWeaponProjectile::WeaponProjectile> WeaponProjectile;
+	EWeaponProjectile WeaponProjectile;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
 	class UBoxComponent* CollisionComp;

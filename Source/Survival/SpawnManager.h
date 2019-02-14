@@ -10,7 +10,7 @@
 
 
 USTRUCT(BlueprintType)
-struct FWaveConfig: public FTableRowBase
+struct FWaveDataTable: public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -40,7 +40,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
-	class UDataTable* WaveData;
+	class UDataTable* WaveDataTable;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Text)
 	FString WaveName;
