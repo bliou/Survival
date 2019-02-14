@@ -67,5 +67,21 @@ void ASpawnManager::StartWave()
 		true);
 
 	ZombiesToSpawnInWave = CurrentWaveConfig->ZombiesToSpawn;
+	WaveName = CurrentWaveConfig->WaveName;
 	IsWaveInactive = false;
+
+	StartWaveMessage->AddToViewport();
+
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(
+		UnusedHandle,
+		this,
+		&ASpawnManager::EndStartWave,
+		1.5f,
+		false);
+}
+
+void ASpawnManager::EndStartWave()
+{
+	StartWaveMessage->RemoveFromParent();
 }

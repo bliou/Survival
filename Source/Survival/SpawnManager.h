@@ -59,4 +59,6 @@ protected:
 
 	int32 ZombiesToSpawnInWave;
 	float Delay;
+
+	void EndStartWave();
 };
