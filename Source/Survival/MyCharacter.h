@@ -107,11 +107,12 @@ public:
 	class USoundBase* PlayerDamagedSound;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UUserWidget> DamagedWidget;
+	TSubclassOf<UUserWidget> wDamagedWidget;
+	class UUserWidget* DamagedWidget;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UUserWidget> DeadWidget;
-	UUserWidget* CurrentDamageWidget;
+	TSubclassOf<UUserWidget> wDeadWidget;
+	class UUserWidget* DeadWidget;
 
 	// Overridde theses methods to prevent the user from turning
 	// the head of the player when he is dead

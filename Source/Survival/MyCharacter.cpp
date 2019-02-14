@@ -196,7 +196,9 @@ void AMyCharacter::TakeDamages(float Damages)
 	FTimerHandle UnusedHandle;
 	if (CharacterConfig.CurrentHealth > 0.f)
 	{
-		CurrentDamageWidget = CreateWidget<UUserWidget>(GetWorld(), DamagedWidget);
+		if (!DamagedWidget)
+			DamagedWidget = CreateWidget<UUserWidget>(GetWorld(), wDamagedWidget);
+		DamagedWidget->AddToViewport();
 		GetWorldTimerManager().SetTimer(
 			UnusedHandle,
 			this,
@@ -206,7 +208,9 @@ void AMyCharacter::TakeDamages(float Damages)
 	}
 	else
 	{
-		CurrentDamageWidget = CreateWidget<UUserWidget>(GetWorld(), DeadWidget);
+		if (!DeadWidget)
+			DeadWidget = CreateWidget<UUserWidget>(GetWorld(), wDeadWidget);
+		DeadWidget->AddToViewport();
 		GetWorldTimerManager().SetTimer(
 			UnusedHandle,
 			this,
@@ -215,7 +219,6 @@ void AMyCharacter::TakeDamages(float Damages)
 			false);
 		State = ECharacterState::EDead;
 	}
-	CurrentDamageWidget->AddToViewport();
 }
 
 void AMyCharacter::EquipDefaultWeapon()
@@ -300,11 +303,15 @@ void AMyCharacter::EndEquipping()
 {
 	if (State != ECharacterState::EDead)
 		State = ECharacterState::EIdle;
+
+	if (!CurrentWeapon->ReticleWidget)
+		CurrentWeapon->ReticleWidget = CreateWidget<UUserWidget>(GetWorld(), CurrentWeapon->wReticleWidget);
+	CurrentWeapon->ReticleWidget->AddToViewport();
 }
 
 void AMyCharacter::EndTakeDamages()
 {
-	CurrentDamageWidget->RemoveFromParent();
+	DamagedWidget->RemoveFromParent();
 }
 
 void AMyCharacter::KillPlayer()

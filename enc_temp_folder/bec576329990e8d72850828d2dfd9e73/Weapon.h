@@ -135,7 +135,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Montage)
 	class UAnimMontage* EquipMontage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Widget)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> wReticleWidget;
 	class UUserWidget* ReticleWidget;
 

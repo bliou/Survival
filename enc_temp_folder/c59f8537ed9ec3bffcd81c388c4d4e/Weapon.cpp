@@ -107,6 +107,8 @@ void AWeapon::InstantFire()
 		WeaponConfig.CurrentWeaponSpread
 	);
 
+	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Black, true, 10.f);
+
 	// Display the particles of the weapon
 	UGameplayStatics::SpawnEmitterAtLocation(
 		GetWorld(),
@@ -147,7 +149,6 @@ void AWeapon::ProcessInstantHit(
 	float ReticleSpread)
 {
 	const FVector EndPoint = Impact.GetActor() ? Impact.ImpactPoint : End;
-	DrawDebugLine(GetWorld(), StartTrace, EndPoint, FColor::Black, true, 10.f);
 
 	if (Impact.GetActor())
 	{
