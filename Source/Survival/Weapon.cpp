@@ -147,7 +147,7 @@ void AWeapon::ProcessInstantHit(
 	float ReticleSpread)
 {
 	const FVector EndPoint = Impact.GetActor() ? Impact.ImpactPoint : End;
-	DrawDebugLine(GetWorld(), StartTrace, EndPoint, FColor::Black, true, 10.f);
+	DrawDebugLine(GetWorld(), Origin, EndPoint, FColor::Black, true, 10.f);
 
 	if (Impact.GetActor())
 	{

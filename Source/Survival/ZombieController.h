@@ -27,6 +27,9 @@ public:
 	UPROPERTY(transient)
 	class UBehaviorTreeComponent* BehaviorComp;
 
+	UPROPERTY()
+	class UCrowdFollowingComponent* CrowdComp;
+
 	virtual void Possess(class APawn* InPawn) override;
 
 	UFUNCTION(BlueprintCallable)

@@ -78,11 +78,8 @@ bool AZombieController::IsAlive()
 
 bool AZombieController::IsInAttackRange()
 {
-	if (MyTarget)
-	{
-		return MyPawn->ActorsInRange.Find(MyTarget) != INDEX_NONE;
-	}
-	return false;
+	return MyTarget
+		&& MyPawn->ActorsInRange.Find(MyTarget) != INDEX_NONE;
 }
 
 bool AZombieController::ShouldMove()
