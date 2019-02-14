@@ -19,16 +19,13 @@ class SURVIVAL_API AZombieController : public AAIController
 	GENERATED_BODY()
 
 public:
-	AZombieController();
+	AZombieController(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(transient)
 	class UBlackboardComponent* BlackboardComp;
 
 	UPROPERTY(transient)
 	class UBehaviorTreeComponent* BehaviorComp;
-
-	UPROPERTY()
-	class UCrowdFollowingComponent* CrowdComp;
 
 	virtual void Possess(class APawn* InPawn) override;
 

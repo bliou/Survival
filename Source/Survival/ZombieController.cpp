@@ -8,10 +8,12 @@
 #include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 #include "Runtime/NavigationSystem/Public/NavigationSystem.h"
 #include "Runtime/NavigationSystem/Public/NavigationPath.h"
+#include "Runtime/AIModule/Classes/Navigation/CrowdFollowingComponent.h"
 #include "Engine.h"
 #include <limits>
 
-AZombieController::AZombieController()
+AZombieController::AZombieController(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
 {
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
 	BehaviorComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorComp"));
