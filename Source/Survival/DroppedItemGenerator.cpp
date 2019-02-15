@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "DroppedItemGenerator.h"
+#include "SurvivalGameStateBase.h"
 
 // Sets default values
 ADroppedItemGenerator::ADroppedItemGenerator()
@@ -25,18 +26,21 @@ void ADroppedItemGenerator::Tick(float DeltaTime)
 }
 
 void ADroppedItemGenerator::GenerateDroppedItem(
-	EDroppedItemType DroppedItemType, 
+	FDroppedItemData DroppedItemData,
 	FVector Location)
 {
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
-	switch (DroppedItemType)
+	ADroppedItem* DroppedItem = NULL;
+	switch (DroppedItemData.DroppedItemType)
 	{
 	case EDroppedItemType::ELife:
-		GetWorld()->SpawnActor<ADroppedItem>(LifeItem, Location, Rotation, SpawnInfo);
+		DroppedItem = GetWorld()->SpawnActor<ADroppedItem>(LifeItem, Location, Rotation, SpawnInfo);
 		break;
 	case EDroppedItemType::EMoney:
-		GetWorld()->SpawnActor<ADroppedItem>(MoneyItem, Location, Rotation, SpawnInfo);
+		 DroppedItem = GetWorld()->SpawnActor<ADroppedItem>(MoneyItem, Location, Rotation, SpawnInfo);
 		break;
 	}
+	if (DroppedItem)
+		DroppedItem->DroppedItemConfig = DroppedItemData;
 }

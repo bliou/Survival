@@ -42,17 +42,14 @@ void ADroppedItem::OnCollide(
 	AMyCharacter* MyCharacter = Cast<AMyCharacter>(OtherActor);
 	if (MyCharacter)
 	{
-		switch (DroppedItemType)
+		switch (DroppedItemConfig.DroppedItemType)
 		{
 		case EDroppedItemType::ELife:
 			MyCharacter->CharacterConfig.CurrentHealth = MyCharacter->CharacterConfig.MaxHealth;
 			break;
 		case EDroppedItemType::EMoney:
-		{
-			// TODO : Use a DataTable to select the money to add
-			MyCharacter->CharacterConfig.CurrentMoney += 300;
+			MyCharacter->CharacterConfig.CurrentMoney += DroppedItemConfig.Value;
 			break;
-		}
 		}
 
 		Destroy();

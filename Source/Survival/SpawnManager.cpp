@@ -39,7 +39,9 @@ void ASpawnManager::Tick(float DeltaTime)
 	if (Delay <= 0.f)
 	{
 		ASpawner* Spawner = Spawners[FMath::RandRange(0, Spawners.Num() - 1)];
-		Spawner->InstantiateZombie();
+		int AvailableItemIndex = FMath::RandRange(0, AvailableDroppedItems.Num() - 1);
+		Spawner->InstantiateZombie(AvailableDroppedItems[AvailableItemIndex]);
+		AvailableDroppedItems.RemoveAt(AvailableItemIndex);
 		ZombiesToSpawnInWave--;
 		if (ZombiesToSpawnInWave <= 0)
 		{
@@ -70,6 +72,24 @@ void ASpawnManager::StartWave()
 	WaveName = CurrentWaveConfig->WaveName;
 	IsWaveInactive = false;
 
+	// Create the dropped items for the wave
+	AvailableDroppedItems.Empty();
+	AvailableDroppedItems.SetNum(ZombiesToSpawnInWave, false);
+	int LifeItemsNum = CurrentWaveConfig->LifeItems;
+	int MoneyItemsNum = CurrentWaveConfig->MoneyItems;
+	SetAvailabeDroppedItemsInRange(
+		FDroppedItemData(EDroppedItemType::ELife, 0),
+		0, 
+		LifeItemsNum);
+	SetAvailabeDroppedItemsInRange(
+		FDroppedItemData(EDroppedItemType::EMoney, CurrentWaveConfig->MoneyValue),
+		LifeItemsNum,
+		LifeItemsNum + MoneyItemsNum);
+	SetAvailabeDroppedItemsInRange(
+		FDroppedItemData(EDroppedItemType::ENone, 0),
+		LifeItemsNum + MoneyItemsNum,
+		ZombiesToSpawnInWave);
+
 	StartWaveMessage->AddToViewport();
 
 	FTimerHandle UnusedHandle;
@@ -84,4 +104,15 @@ void ASpawnManager::StartWave()
 void ASpawnManager::EndStartWave()
 {
 	StartWaveMessage->RemoveFromParent();
+}
+
+void ASpawnManager::SetAvailabeDroppedItemsInRange(
+	FDroppedItemData DroppedItemData,
+	int32 StartIndex,
+	int32 EndIndex)
+{
+	for (int32 i = StartIndex; i < EndIndex; ++i)
+	{
+		AvailableDroppedItems[i] = DroppedItemData;
+	}
 }

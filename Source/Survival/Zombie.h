@@ -50,7 +50,7 @@ struct FZombieData
 	float Damages;
 
 	UPROPERTY(EditDefaultsOnly, Category = Item)
-	EDroppedItemType ItemToDrop;
+	FDroppedItemData DroppedItemData;
 };
 
 UCLASS()

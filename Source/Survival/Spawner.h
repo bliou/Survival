@@ -25,7 +25,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	void InstantiateZombie();
+	void InstantiateZombie(FDroppedItemData DroppedItemData);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spawn)
 	TSubclassOf<class AZombie> ZombieSpawn;

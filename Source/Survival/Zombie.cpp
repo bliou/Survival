@@ -185,8 +185,7 @@ void AZombie::AttackAnimationEnd()
 void AZombie::KillZombie()
 {
 	DroppedItemGenerator->GenerateDroppedItem(
-		ZombieConfig.ItemToDrop,
-		GetActorLocation()
-	);
+		ZombieConfig.DroppedItemData,
+		GetActorLocation());
 	Destroy();
 }

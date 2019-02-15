@@ -25,7 +25,7 @@ void ASpawner::Tick(float DeltaTime)
 
 }
 
-void ASpawner::InstantiateZombie()
+void ASpawner::InstantiateZombie(FDroppedItemData DroppedItemData)
 {
 	FVector Location = GetActorLocation();
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
@@ -43,5 +43,6 @@ void ASpawner::InstantiateZombie()
 	Zombie->ZombieConfig.Damages = ZombieData->Damages;
 	Zombie->ZombieConfig.Health = ZombieData->Health;
 	Zombie->ZombieConfig.MovementSpeed = ZombieData->MovementSpeed;
+	Zombie->ZombieConfig.DroppedItemData = DroppedItemData;
 }
 

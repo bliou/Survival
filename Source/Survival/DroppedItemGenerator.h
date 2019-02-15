@@ -8,7 +8,6 @@
 #include "DroppedItemGenerator.generated.h"
 
 
-
 UCLASS()
 class SURVIVAL_API ADroppedItemGenerator : public AActor
 {
@@ -27,9 +26,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void GenerateDroppedItem(
-		EDroppedItemType DroppedItemType,
+		FDroppedItemData DroppedItemData,
 		FVector Location);
 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Data)
+	class UDataTable* DroppedItemsDataTable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Item)
 	TSubclassOf<ADroppedItem> LifeItem;

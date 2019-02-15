@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Spawner.h"
 #include "Engine/DataTable.h"
+#include "DroppedItem.h"
 #include "SpawnManager.generated.h"
 
 
@@ -19,6 +20,18 @@ struct FWaveDataTable: public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
 	int32 ZombiesToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
+	int32 LifeItems;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
+	int32 MoneyItems;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
+	int32 AmmoItems;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
+	int32 MoneyValue;
 };
 
 
@@ -56,9 +69,14 @@ public:
 
 protected:
 	TArray<ASpawner*> Spawners;
+	TArray<FDroppedItemData> AvailableDroppedItems;
 
 	int32 ZombiesToSpawnInWave;
 	float Delay;
 
 	void EndStartWave();
+	void SetAvailabeDroppedItemsInRange(
+		FDroppedItemData DroppedItemData,
+		int32 StartIndex,
+		int32 EndIndex);
 };

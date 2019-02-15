@@ -9,9 +9,32 @@
 UENUM(BlueprintType)
 enum class EDroppedItemType : uint8
 {
-	ENone			UMETA(DisplayName = "No item to drop"),
-	ELife			UMETA(DisplayName = "Drop life"),
-	EMoney			UMETA(DisplayName = "Drop money")
+	ENone			UMETA(DisplayName = "None"),
+	ELife			UMETA(DisplayName = "Life"),
+	EMoney			UMETA(DisplayName = "Money")
+};
+
+USTRUCT(BlueprintType)
+struct FDroppedItemData
+{
+	GENERATED_USTRUCT_BODY()
+
+	FDroppedItemData()
+	{
+
+	}
+
+	FDroppedItemData(EDroppedItemType Type, int32 Val)
+	{
+		DroppedItemType = Type;
+		Value = Val;
+	}
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
+	EDroppedItemType DroppedItemType;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
+	int32 Value;
 };
 
 
@@ -38,8 +61,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
 	class UBoxComponent* CollisionComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
-	EDroppedItemType DroppedItemType;
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Collision)
+	FDroppedItemData DroppedItemConfig;
 
 	UFUNCTION()
 	void OnCollide(
