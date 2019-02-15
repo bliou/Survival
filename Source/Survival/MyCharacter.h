@@ -51,15 +51,6 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
 
-	UFUNCTION()
-	void OnBeginOverlap(
-		UPrimitiveComponent* OverlappedComponent, 
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, 
-		bool bFromSweep, 
-		const FHitResult &SweepResult);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -77,9 +68,6 @@ public:
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = Collision)
-	UBoxComponent* CollisionComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	AWeapon *CurrentWeapon;

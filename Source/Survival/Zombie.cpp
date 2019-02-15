@@ -6,6 +6,7 @@
 #include "Barricade.h"
 #include "ZombieController.h"
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Engine.h"
 
 // Sets default values
@@ -47,6 +48,11 @@ void AZombie::BeginPlay()
 	State = EZombieState::EIdle;
 	GetCharacterMovement()->MaxWalkSpeed = ZombieConfig.MovementSpeed;
 	bCanInflictDamages = false;
+
+	// Register the dropp item generator
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADroppedItemGenerator::StaticClass(), FoundActors);
+	DroppedItemGenerator = Cast<ADroppedItemGenerator>(FoundActors[0]);
 }
 
 // Called every frame
@@ -178,5 +184,9 @@ void AZombie::AttackAnimationEnd()
 
 void AZombie::KillZombie()
 {
+	DroppedItemGenerator->GenerateDroppedItem(
+		ZombieConfig.ItemToDrop,
+		GetActorLocation()
+	);
 	Destroy();
 }

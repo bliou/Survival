@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Engine/DataTable.h"
+#include "DroppedItemGenerator.h"
 #include "Zombie.generated.h"
 
 UENUM(BlueprintType)
@@ -47,6 +48,9 @@ struct FZombieData
 
 	UPROPERTY(EditDefaultsOnly, Category = Damage)
 	float Damages;
+
+	UPROPERTY(EditDefaultsOnly, Category = Item)
+	EDroppedItemType ItemToDrop;
 };
 
 UCLASS()
@@ -146,4 +150,6 @@ public:
 protected:
 	void KillZombie();
 	void AttackAnimationEnd();
+
+	ADroppedItemGenerator* DroppedItemGenerator;
 };

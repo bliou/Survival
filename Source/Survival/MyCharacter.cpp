@@ -13,10 +13,6 @@ AMyCharacter::AMyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComp"));
-	CollisionComponent->SetupAttachment(GetCapsuleComponent());
-	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AMyCharacter::OnBeginOverlap);
-
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -66,29 +62,6 @@ void AMyCharacter::Tick(float DeltaTime)
 		CurrentWeapon->WeaponConfig.CurrentWeaponSpread = 
 			FMath::Max(CurrentWeapon->WeaponConfig.CurrentWeaponSpread, CurrentWeapon->WeaponConfig.WeaponMaxSpread / 2.f);
 	}
-}
-
-void AMyCharacter::OnBeginOverlap(
-	UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex,
-	bool bFromSweep,
-	const FHitResult &SweepResult)
-{
-	//AWeapon* Weapon = Cast<AWeapon>(OtherActor);
-	//if (Weapon)
-	//{
-	//	AWeapon *Spawner = GetWorld()->SpawnActor<AWeapon>(Weapon->GetClass());
-	//	if (Weapon->WeaponType == EWeaponType::EHeavyWeapon)
-	//	{
-	//		Weapons[1] = Spawner;
-	//	}
-
-	//	Spawner->SetOwningPawn(this);
-	//	Spawner->UnEquip();
-	//	Weapon->Destroy();
-	//}
 }
 
 // Called to bind functionality to input

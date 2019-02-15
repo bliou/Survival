@@ -11,7 +11,7 @@ ABarricade::ABarricade()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionComponent"));
-	RootComponent = dynamic_cast<USceneComponent*>(CollisionComponent);
+	RootComponent = Cast<USceneComponent>(CollisionComponent);
 
 	BarricadeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BarricadeMesh"));
 	BarricadeMesh->SetupAttachment(RootComponent);
