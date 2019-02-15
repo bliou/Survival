@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Engine/DataTable.h"
-#include "DroppedItemGenerator.h"
+#include "PickupItemsGenerator.h"
 #include "Zombie.generated.h"
 
 UENUM(BlueprintType)
@@ -50,7 +50,7 @@ struct FZombieData
 	float Damages;
 
 	UPROPERTY(EditDefaultsOnly, Category = Item)
-	FDroppedItemData DroppedItemData;
+	FPickupItemData PickupItemData;
 };
 
 UCLASS()
@@ -151,5 +151,5 @@ protected:
 	void KillZombie();
 	void AttackAnimationEnd();
 
-	ADroppedItemGenerator* DroppedItemGenerator;
+	APickupItemsGenerator* PickupItemsGenerator;
 };

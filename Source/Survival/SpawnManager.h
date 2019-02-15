@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Spawner.h"
 #include "Engine/DataTable.h"
-#include "DroppedItem.h"
+#include "PickupItem.h"
 #include "SpawnManager.generated.h"
 
 
@@ -69,14 +69,14 @@ public:
 
 protected:
 	TArray<ASpawner*> Spawners;
-	TArray<FDroppedItemData> AvailableDroppedItems;
+	TArray<FPickupItemData> AvailablePickupItems;
 
 	int32 ZombiesToSpawnInWave;
 	float Delay;
 
 	void EndStartWave();
-	void SetAvailabeDroppedItemsInRange(
-		FDroppedItemData DroppedItemData,
+	void SetAvailabePickupItemsInRange(
+		FPickupItemData PickupItemData,
 		int32 StartIndex,
 		int32 EndIndex);
 };

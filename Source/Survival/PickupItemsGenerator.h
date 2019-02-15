@@ -4,18 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DroppedItem.h"
-#include "DroppedItemGenerator.generated.h"
-
+#include "PickupItem.h"
+#include "PickupItemsGenerator.generated.h"
 
 UCLASS()
-class SURVIVAL_API ADroppedItemGenerator : public AActor
+class SURVIVAL_API APickupItemsGenerator : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ADroppedItemGenerator();
+	APickupItemsGenerator();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,17 +24,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void GenerateDroppedItem(
-		FDroppedItemData DroppedItemData,
+	void GeneratePickupItem(
+		FPickupItemData PickupItemData,
 		FVector Location);
 
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Data)
-	class UDataTable* DroppedItemsDataTable;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Item)
+	TSubclassOf<APickupItem> LifeItem;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Item)
-	TSubclassOf<ADroppedItem> LifeItem;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Item)
-	TSubclassOf<ADroppedItem> MoneyItem;
+	TSubclassOf<APickupItem> MoneyItem;
 };

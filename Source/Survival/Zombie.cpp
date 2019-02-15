@@ -51,8 +51,8 @@ void AZombie::BeginPlay()
 
 	// Register the dropp item generator
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADroppedItemGenerator::StaticClass(), FoundActors);
-	DroppedItemGenerator = Cast<ADroppedItemGenerator>(FoundActors[0]);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APickupItemsGenerator::StaticClass(), FoundActors);
+	PickupItemsGenerator = Cast<APickupItemsGenerator>(FoundActors[0]);
 }
 
 // Called every frame
@@ -184,8 +184,8 @@ void AZombie::AttackAnimationEnd()
 
 void AZombie::KillZombie()
 {
-	DroppedItemGenerator->GenerateDroppedItem(
-		ZombieConfig.DroppedItemData,
+	PickupItemsGenerator->GeneratePickupItem(
+		ZombieConfig.PickupItemData,
 		GetActorLocation());
 	Destroy();
 }

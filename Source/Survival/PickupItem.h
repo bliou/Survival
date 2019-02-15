@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "DroppedItem.generated.h"
+#include "PickupItem.generated.h"
 
 UENUM(BlueprintType)
-enum class EDroppedItemType : uint8
+enum class EPickupItemType : uint8
 {
 	ENone			UMETA(DisplayName = "None"),
 	ELife			UMETA(DisplayName = "Life"),
@@ -15,43 +15,42 @@ enum class EDroppedItemType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FDroppedItemData
+struct FPickupItemData
 {
 	GENERATED_USTRUCT_BODY()
 
-	FDroppedItemData()
+	FPickupItemData()
 	{
 
 	}
 
-	FDroppedItemData(EDroppedItemType Type, int32 Val)
+	FPickupItemData(EPickupItemType Type, int32 Val)
 	{
-		DroppedItemType = Type;
+		PickupItemType = Type;
 		Value = Val;
 	}
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
-	EDroppedItemType DroppedItemType;
+	EPickupItemType PickupItemType;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
 	int32 Value;
 };
 
-
 UCLASS()
-class SURVIVAL_API ADroppedItem : public AActor
+class SURVIVAL_API APickupItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ADroppedItem();
+	APickupItem();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -61,14 +60,20 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
 	class UBoxComponent* CollisionComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Collision)
-	FDroppedItemData DroppedItemConfig;
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
+	FPickupItemData PickupItemConfig;
 
 	UFUNCTION()
-	void OnCollide(
-		class UPrimitiveComponent* HitComp,
-		class AActor* OtherActor,
-		class UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep,
-		const FHitResult & SweepResult);
+		void OnCollide(
+			class UPrimitiveComponent* HitComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep,
+			const FHitResult & SweepResult);
+
+
+protected:
+	float LifeSpan;
+	float ToggleVisibilityCurrentTimer;
+	float ToggleVisibilityTimer;
 };

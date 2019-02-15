@@ -39,9 +39,9 @@ void ASpawnManager::Tick(float DeltaTime)
 	if (Delay <= 0.f)
 	{
 		ASpawner* Spawner = Spawners[FMath::RandRange(0, Spawners.Num() - 1)];
-		int AvailableItemIndex = FMath::RandRange(0, AvailableDroppedItems.Num() - 1);
-		Spawner->InstantiateZombie(AvailableDroppedItems[AvailableItemIndex]);
-		AvailableDroppedItems.RemoveAt(AvailableItemIndex);
+		int AvailableItemIndex = FMath::RandRange(0, AvailablePickupItems.Num() - 1);
+		Spawner->InstantiateZombie(AvailablePickupItems[AvailableItemIndex]);
+		AvailablePickupItems.RemoveAt(AvailableItemIndex);
 		ZombiesToSpawnInWave--;
 		if (ZombiesToSpawnInWave <= 0)
 		{
@@ -73,20 +73,20 @@ void ASpawnManager::StartWave()
 	IsWaveInactive = false;
 
 	// Create the dropped items for the wave
-	AvailableDroppedItems.Empty();
-	AvailableDroppedItems.SetNum(ZombiesToSpawnInWave, false);
+	AvailablePickupItems.Empty();
+	AvailablePickupItems.SetNum(ZombiesToSpawnInWave, false);
 	int LifeItemsNum = CurrentWaveConfig->LifeItems;
 	int MoneyItemsNum = CurrentWaveConfig->MoneyItems;
-	SetAvailabeDroppedItemsInRange(
-		FDroppedItemData(EDroppedItemType::ELife, 0),
+	SetAvailabePickupItemsInRange(
+		FPickupItemData(EPickupItemType::ELife, 0),
 		0, 
 		LifeItemsNum);
-	SetAvailabeDroppedItemsInRange(
-		FDroppedItemData(EDroppedItemType::EMoney, CurrentWaveConfig->MoneyValue),
+	SetAvailabePickupItemsInRange(
+		FPickupItemData(EPickupItemType::EMoney, CurrentWaveConfig->MoneyValue),
 		LifeItemsNum,
 		LifeItemsNum + MoneyItemsNum);
-	SetAvailabeDroppedItemsInRange(
-		FDroppedItemData(EDroppedItemType::ENone, 0),
+	SetAvailabePickupItemsInRange(
+		FPickupItemData(EPickupItemType::ENone, 0),
 		LifeItemsNum + MoneyItemsNum,
 		ZombiesToSpawnInWave);
 
@@ -106,13 +106,13 @@ void ASpawnManager::EndStartWave()
 	StartWaveMessage->RemoveFromParent();
 }
 
-void ASpawnManager::SetAvailabeDroppedItemsInRange(
-	FDroppedItemData DroppedItemData,
+void ASpawnManager::SetAvailabePickupItemsInRange(
+	FPickupItemData PickupItemData,
 	int32 StartIndex,
 	int32 EndIndex)
 {
 	for (int32 i = StartIndex; i < EndIndex; ++i)
 	{
-		AvailableDroppedItems[i] = DroppedItemData;
+		AvailablePickupItems[i] = PickupItemData;
 	}
 }
