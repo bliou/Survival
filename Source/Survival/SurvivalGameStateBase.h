@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "SpawnManager.h"
+#include "MyCharacter.h"
 #include "SurvivalGameStateBase.generated.h"
 
 UENUM(BlueprintType)
@@ -42,4 +43,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Spawner)
 	ASpawnManager* SpawnManager;
+
+protected:
+	AMyCharacter* MyCharacter;
 };

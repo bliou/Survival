@@ -26,10 +26,6 @@ AMyCharacter::AMyCharacter()
 		TEXT("Head")
 	);
 	FPSCameraComponent->bUsePawnControlRotation = true;
-
-	// By default, the player has a gun
-	Weapons.SetNum(2, false);
-	PreviousWeaponSlot = EWeaponType::EGun;
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +36,7 @@ void AMyCharacter::BeginPlay()
 	State = ECharacterState::EIdle;
 	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 
-	EquipDefaultWeapon();
+	Inventory = GetWorld()->SpawnActor<AInventory>(Inventory_BP);
 }
 
 // Called every frame
@@ -56,12 +52,27 @@ void AMyCharacter::Tick(float DeltaTime)
 	}
 
 	// If the player is moving, spread the weapon to its max value
-	if (GetVelocity().X != 0.f
+	if ((GetVelocity().X != 0.f
 		|| GetVelocity().Y != 0.f)
+		&& CurrentWeapon)
 	{
 		CurrentWeapon->WeaponConfig.CurrentWeaponSpread = 
 			FMath::Max(CurrentWeapon->WeaponConfig.CurrentWeaponSpread, CurrentWeapon->WeaponConfig.WeaponMaxSpread / 2.f);
 	}
+}
+
+void AMyCharacter::StartWave()
+{
+	bCanEquipWeapon = true;
+	Inventory->EquipPreviousWeapon();
+}
+
+void AMyCharacter::EndWave()
+{
+	bCanEquipWeapon = false;
+	Inventory->SetPreviousWeaponSlot(CurrentWeapon->WeaponType);
+	CurrentWeapon->UnEquip();
+	CurrentWeapon = NULL;
 }
 
 // Called to bind functionality to input
@@ -78,7 +89,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Fire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::StopAutoFiring);
 	PlayerInputComponent->BindAction("EquipGun", IE_Pressed, this, &AMyCharacter::EquipGun);
-	PlayerInputComponent->BindAction("EquipHeavyWeapon", IE_Pressed, this, &AMyCharacter::EquipHeavyWeapon);
+	PlayerInputComponent->BindAction("EquipShotgun", IE_Pressed, this, &AMyCharacter::EquipShotgun);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 }
@@ -121,9 +132,10 @@ void AMyCharacter::MoveRight(float Value)
 
 void AMyCharacter::Fire()
 {
-	if (State == ECharacterState::EIdle
-		|| (State == ECharacterState::EReload
-			&& CurrentWeapon->WeaponType == EWeaponType::EShotgun))
+	if (CurrentWeapon
+		&& (State == ECharacterState::EIdle
+			|| (State == ECharacterState::EReload
+				&& CurrentWeapon->WeaponType == EWeaponType::EShotgun)))
 	{
 		CurrentWeapon->Fire();
 		State = ECharacterState::EFire;
@@ -138,13 +150,15 @@ void AMyCharacter::StopAutoFiring()
 
 void AMyCharacter::StartReloading()
 {
-	if (State == ECharacterState::EIdle)
+	if (State == ECharacterState::EIdle
+		&& CurrentWeapon)
 		CurrentWeapon->StartReloading();
 }
 
 void AMyCharacter::Reload()
 {
-	CurrentWeapon->Reload();
+	if (CurrentWeapon)
+		CurrentWeapon->Reload();
 }
 
 void AMyCharacter::EndReloading()
@@ -194,74 +208,23 @@ void AMyCharacter::TakeDamages(float Damages)
 	}
 }
 
-void AMyCharacter::EquipDefaultWeapon()
-{
-	AWeapon *Spawner = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn);
-	if (Spawner)
-	{
-		Weapons[0] = Spawner;
-		CurrentWeapon = Spawner;
-		CurrentWeapon->SetOwningPawn(this);
-		CurrentWeapon->Equip();
-	}
-}
-
 void AMyCharacter::EquipGun()
 {
-	if (!Weapons[0]
-		|| State == ECharacterState::EEquip
-		|| State == ECharacterState::EDead)
-		return;
-	if (CurrentWeapon)
-	{
-		if (CurrentWeapon->WeaponType == EWeaponType::EGun)
-			return;
-
-		PreviousWeaponSlot = CurrentWeapon->WeaponType;
-		CurrentWeapon->UnEquip();
-	}
-
-	CurrentWeapon = Weapons[0];
-	CurrentWeapon->SetOwningPawn(this);
-	CurrentWeapon->Equip();
+	if (bCanEquipWeapon)
+		Inventory->EquipWeapon(0);
 }
 
-void AMyCharacter::EquipHeavyWeapon()
+void AMyCharacter::EquipShotgun()
 {
-	if (!Weapons[1]
-		|| State == ECharacterState::EEquip
-		|| State == ECharacterState::EDead)
-		return;
-
-	if (CurrentWeapon)
-	{
-		if (CurrentWeapon->WeaponType == EWeaponType::EShotgun)
-			return;
-
-		PreviousWeaponSlot = CurrentWeapon->WeaponType;
-		CurrentWeapon->UnEquip();
-	}
-
-	CurrentWeapon = Weapons[1];
-	CurrentWeapon->SetOwningPawn(this);
-	CurrentWeapon->Equip();
+	if (bCanEquipWeapon)
+		Inventory->EquipWeapon(1);
 }
 
 
 void AMyCharacter::EquipPreviousWeapon()
 {
-	switch (PreviousWeaponSlot)
-	{
-	case EWeaponType::EGun:
-		EquipGun();
-		break;
-	case EWeaponType::EShotgun:
-		EquipHeavyWeapon();
-		break;
-	case EWeaponType::ERifle:
-		EquipHeavyWeapon();
-		break;
-	}
+	if (bCanEquipWeapon)
+		Inventory->EquipPreviousWeapon();
 }
 
 void AMyCharacter::EndEquipping()
@@ -269,6 +232,8 @@ void AMyCharacter::EndEquipping()
 	if (State != ECharacterState::EDead)
 		State = ECharacterState::EIdle;
 
+	if (!CurrentWeapon)
+		return;
 	if (!CurrentWeapon->ReticleWidget)
 		CurrentWeapon->ReticleWidget = CreateWidget<UUserWidget>(GetWorld(), CurrentWeapon->wReticleWidget);
 	CurrentWeapon->ReticleWidget->AddToViewport();

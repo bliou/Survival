@@ -18,6 +18,8 @@ void ASurvivalGameStateBase::BeginPlay()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnManager::StaticClass(), FoundActors);
 	SpawnManager = Cast<ASpawnManager>(FoundActors[0]);
+
+	MyCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void ASurvivalGameStateBase::Tick(float DeltaTime)
@@ -28,15 +30,15 @@ void ASurvivalGameStateBase::Tick(float DeltaTime)
 	{
 	case EGameState::EStartWave:
 		SpawnManager->StartWave();
+		MyCharacter->StartWave();
 		CurrentState = EGameState::EInWave;
 		break;
 	case EGameState::EInWave:
 		if (IsWaveEnded())
 		{
 			CurrentState = EGameState::EInBetweenWaves;
+			MyCharacter->EndWave();
 		}
-		break;
-	case EGameState::EInBetweenWaves:
 		break;
 	}
 }

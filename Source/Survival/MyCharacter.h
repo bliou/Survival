@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Weapon.h"
+#include "Inventory.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "MyCharacter.generated.h"
 
@@ -69,16 +69,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
-	AWeapon *CurrentWeapon;
-	EWeaponType PreviousWeaponSlot;
-
-	UPROPERTY(EditDefaultsOnly, Category = DefaultInv)
-	TSubclassOf<class AWeapon> WeaponSpawn;
-
-	UPROPERTY()
-	TArray<class AWeapon*> Weapons;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FCharacterData CharacterConfig;
 
@@ -87,6 +77,13 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* PlayerDamagedSound;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
+	AWeapon *CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Inventory)
+	TSubclassOf<AInventory> Inventory_BP;
+	class AInventory* Inventory;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> wDamagedWidget;
@@ -106,6 +103,9 @@ public:
 	void EndEquipping();
 	void EndReloading();
 
+	void StartWave();
+	void EndWave();
+
 protected:
 	void MoveForward(float Value);
 
@@ -117,10 +117,12 @@ protected:
 
 	void EquipDefaultWeapon();
 	void EquipGun();
-	void EquipHeavyWeapon();
+	void EquipShotgun();
 	void EquipPreviousWeapon();
 
 
 	void EndTakeDamages();
 	void KillPlayer();
+
+	bool bCanEquipWeapon;
 };
