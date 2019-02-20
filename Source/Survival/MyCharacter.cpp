@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "SurvivalGameStateBase.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -37,6 +38,7 @@ void AMyCharacter::BeginPlay()
 	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 
 	Inventory = GetWorld()->SpawnActor<AInventory>(Inventory_BP);
+	StartWave();
 }
 
 // Called every frame
@@ -63,8 +65,14 @@ void AMyCharacter::Tick(float DeltaTime)
 
 void AMyCharacter::StartWave()
 {
-	bCanEquipWeapon = true;
-	Inventory->EquipPreviousWeapon();
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	if (GameState->CurrentState == EGameState::EInBetweenWaves)
+	{
+		bCanEquipWeapon = true;
+		Inventory->EquipPreviousWeapon();
+
+		GameState->CurrentState = EGameState::EStartWave;
+	}
 }
 
 void AMyCharacter::EndWave()
@@ -92,6 +100,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("EquipShotgun", IE_Pressed, this, &AMyCharacter::EquipShotgun);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
+
+	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
 }
 
 void AMyCharacter::AddControllerYawInput(float Val)

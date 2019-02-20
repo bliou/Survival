@@ -57,8 +57,8 @@ void ASpawnManager::Tick(float DeltaTime)
 
 void ASpawnManager::StartWave()
 {
-	if (!StartWaveMessage)
-		StartWaveMessage = CreateWidget<UUserWidget>(GetWorld(), wStartWaveMessage);
+	if (!WaveMessage)
+		WaveMessage = CreateWidget<UUserWidget>(GetWorld(), wStartWaveMessage);
 	
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	static const FString ContextString = TEXT("Wave context");
@@ -90,20 +90,33 @@ void ASpawnManager::StartWave()
 		LifeItemsNum + MoneyItemsNum,
 		ZombiesToSpawnInWave);
 
-	StartWaveMessage->AddToViewport();
+	WaveMessage->AddToViewport();
 
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(
 		UnusedHandle,
 		this,
-		&ASpawnManager::EndStartWave,
+		&ASpawnManager::EndWaveMessage,
 		1.5f,
 		false);
 }
 
-void ASpawnManager::EndStartWave()
+void ASpawnManager::EndWave()
 {
-	StartWaveMessage->RemoveFromParent();
+	WaveMessage->AddToViewport();
+
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(
+		UnusedHandle,
+		this,
+		&ASpawnManager::EndWaveMessage,
+		1.5f,
+		false);
+}
+
+void ASpawnManager::EndWaveMessage()
+{
+	WaveMessage->RemoveFromParent();
 }
 
 void ASpawnManager::SetAvailabePickupItemsInRange(
