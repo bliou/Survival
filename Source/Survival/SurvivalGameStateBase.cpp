@@ -38,7 +38,6 @@ void ASurvivalGameStateBase::Tick(float DeltaTime)
 		{
 			CurrentState = EGameState::EInBetweenWaves;
 			SpawnManager->EndWave();
-			MyCharacter->EndWave();
 		}
 		break;
 	}

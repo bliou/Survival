@@ -42,8 +42,3 @@ void AInventory::EquipPreviousWeapon()
 {
 	EquipWeapon((int32)PreviousWeaponSlot);
 }
-
-void AInventory::SetPreviousWeaponSlot(EWeaponType WeaponType)
-{
-	PreviousWeaponSlot = WeaponType;
-}

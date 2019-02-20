@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "SurvivalGameStateBase.h"
+#include "SurvivalGameModeBase.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -68,19 +69,11 @@ void AMyCharacter::StartWave()
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	if (GameState->CurrentState == EGameState::EInBetweenWaves)
 	{
-		bCanEquipWeapon = true;
-		Inventory->EquipPreviousWeapon();
+		if (!CurrentWeapon)
+			Inventory->EquipPreviousWeapon();
 
 		GameState->CurrentState = EGameState::EStartWave;
 	}
-}
-
-void AMyCharacter::EndWave()
-{
-	bCanEquipWeapon = false;
-	Inventory->SetPreviousWeaponSlot(CurrentWeapon->WeaponType);
-	CurrentWeapon->UnEquip();
-	CurrentWeapon = NULL;
 }
 
 // Called to bind functionality to input
@@ -100,13 +93,15 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("EquipShotgun", IE_Pressed, this, &AMyCharacter::EquipShotgun);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
-
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
+	PlayerInputComponent->BindAction("Buy", IE_Pressed, this, &AMyCharacter::Buy);
 }
 
 void AMyCharacter::AddControllerYawInput(float Val)
 {
-	if (State == ECharacterState::EDead)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (State == ECharacterState::EDead
+		|| GameMode->CurrentWidgetType != EWidgetType::EInGame)
 		return;
 
 	Super::AddControllerYawInput(Val);
@@ -114,7 +109,9 @@ void AMyCharacter::AddControllerYawInput(float Val)
 
 void AMyCharacter::AddControllerPitchInput(float Val)
 {
-	if (State == ECharacterState::EDead)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (State == ECharacterState::EDead
+		|| GameMode->CurrentWidgetType != EWidgetType::EInGame)
 		return;
 
 	Super::AddControllerPitchInput(Val);
@@ -122,7 +119,9 @@ void AMyCharacter::AddControllerPitchInput(float Val)
 
 void AMyCharacter::MoveForward(float Value)
 {
-	if (State == ECharacterState::EDead)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (State == ECharacterState::EDead
+		|| GameMode->CurrentWidgetType != EWidgetType::EInGame)
 		return;
 
 	const FRotator YawOnlyRotation = FRotator(0.0f, GetControlRotation().Yaw, 0.0f);
@@ -132,7 +131,9 @@ void AMyCharacter::MoveForward(float Value)
 
 void AMyCharacter::MoveRight(float Value)
 {
-	if (State == ECharacterState::EDead)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (State == ECharacterState::EDead
+		|| GameMode->CurrentWidgetType != EWidgetType::EInGame)
 		return;
 
 	// Find out which way is "right" and record that the player wants to move that way.
@@ -142,7 +143,9 @@ void AMyCharacter::MoveRight(float Value)
 
 void AMyCharacter::Fire()
 {
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (CurrentWeapon
+		&& GameMode->CurrentWidgetType == EWidgetType::EInGame
 		&& (State == ECharacterState::EIdle
 			|| (State == ECharacterState::EReload
 				&& CurrentWeapon->WeaponType == EWeaponType::EShotgun)))
@@ -160,8 +163,10 @@ void AMyCharacter::StopAutoFiring()
 
 void AMyCharacter::StartReloading()
 {
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (State == ECharacterState::EIdle
-		&& CurrentWeapon)
+		&& CurrentWeapon
+		&& GameMode->CurrentWidgetType == EWidgetType::EInGame)
 		CurrentWeapon->StartReloading();
 }
 
@@ -220,20 +225,26 @@ void AMyCharacter::TakeDamages(float Damages)
 
 void AMyCharacter::EquipGun()
 {
-	if (bCanEquipWeapon)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
 		Inventory->EquipWeapon(0);
 }
 
 void AMyCharacter::EquipShotgun()
 {
-	if (bCanEquipWeapon)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
 		Inventory->EquipWeapon(1);
 }
 
 
 void AMyCharacter::EquipPreviousWeapon()
 {
-	if (bCanEquipWeapon)
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
 		Inventory->EquipPreviousWeapon();
 }
 
@@ -256,4 +267,14 @@ void AMyCharacter::EndTakeDamages()
 
 void AMyCharacter::KillPlayer()
 {
+}
+
+void AMyCharacter::Buy()
+{
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	if (GameState->CurrentState == EGameState::EInBetweenWaves)
+	{
+		ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+		GameMode->SwitchWidget(EWidgetType::EShop);
+	}
 }

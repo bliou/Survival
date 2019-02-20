@@ -104,7 +104,6 @@ public:
 	void EndReloading();
 
 	void StartWave();
-	void EndWave();
 
 protected:
 	void MoveForward(float Value);
@@ -115,14 +114,12 @@ protected:
 	void StopAutoFiring();
 	void StartReloading();
 
-	void EquipDefaultWeapon();
 	void EquipGun();
 	void EquipShotgun();
 	void EquipPreviousWeapon();
 
+	void Buy();
 
 	void EndTakeDamages();
 	void KillPlayer();
-
-	bool bCanEquipWeapon;
 };
