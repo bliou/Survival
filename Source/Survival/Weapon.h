@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
+#include "WeaponData.h"
 #include "Weapon.generated.h"
 
 class AMyCharacter;
@@ -26,56 +27,6 @@ enum class EWeaponType: uint8
 	EShotgun		UMETA(DisplayName = "Shotgun"),
 	ERifle			UMETA(DisplayName = "Rifle"),
 	ESniper			UMETA(DisplayName = "Sniper")
-};
-
-
-USTRUCT(BlueprintType)
-struct FWeaponData
-{
-	GENERATED_USTRUCT_BODY()
-
-public:
-	UPROPERTY(EditDefaultsOnly, Category = Ammo)
-	int32 MaxAmmoInStock;
-
-	UPROPERTY(EditDefaultsOnly, Category = Clip)
-	int32 MaxAmmoInClip;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Clip)
-	int32 CurrentAmmoInStock;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Clip)
-	int32 CurrentAmmoInClip;
-
-	UPROPERTY(EditDefaultsOnly, Category = Config)
-	float RecoilTime;
-
-	UPROPERTY(EditDefaultsOnly, Category = Config)
-	float WeaponRange;
-
-	UPROPERTY(EditDefaultsOnly, Category = Config)
-	float WeaponShots;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spread)
-	float WeaponMaxSpread;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spread)
-	float WeaponIncreaseSpread;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Spread)
-	float WeaponDecreaseSpread;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Spread)
-	float CurrentWeaponSpread;
-
-	UPROPERTY(EditDefaultsOnly, Category = Config)
-	FString Name;
-
-	UPROPERTY(EditDefaultsOnly, Category = Config)
-	bool bAutoFire;
-
-	UPROPERTY(EditDefaultsOnly, Category = Damage)
-	float Damages;
 };
 
 UCLASS()

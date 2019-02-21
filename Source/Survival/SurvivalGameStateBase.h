@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "SpawnManager.h"
+#include "Shop.h"
 #include "MyCharacter.h"
 #include "SurvivalGameStateBase.generated.h"
 
@@ -44,6 +45,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Spawner)
 	ASpawnManager* SpawnManager;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Spawner)
+	AShop* Shop;
 protected:
 	AMyCharacter* MyCharacter;
 };

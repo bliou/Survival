@@ -18,6 +18,9 @@ void ASurvivalGameStateBase::BeginPlay()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnManager::StaticClass(), FoundActors);
 	SpawnManager = Cast<ASpawnManager>(FoundActors[0]);
+	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShop::StaticClass(), FoundActors);
+	Shop = Cast<AShop>(FoundActors[0]);
 
 	MyCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
