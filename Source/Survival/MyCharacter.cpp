@@ -39,7 +39,7 @@ void AMyCharacter::BeginPlay()
 	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 
 	Inventory = GetWorld()->SpawnActor<AInventory>(Inventory_BP);
-	StartWave();
+	//StartWave();
 }
 
 // Called every frame

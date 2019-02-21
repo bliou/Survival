@@ -19,6 +19,9 @@ public:
 	UWeaponShopItem();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	UTexture2D* Thumbnail;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	FString Name;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
