@@ -116,6 +116,7 @@ protected:
 
 	void EquipGun();
 	void EquipShotgun();
+	void EquipRifle();
 	void EquipPreviousWeapon();
 
 	void Buy();

@@ -15,11 +15,13 @@ void AShop::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
-	for (auto BP_WeaponShopItem : BP_WeaponShopItems)
+	static const FString ContextString = TEXT("Weapons shop data context");
+	for (FName RowName : WeaponShopsDataTable->GetRowNames())
 	{
-		UObject* c = BP_WeaponShopItem->GetDefaultObject();
-		WeaponShopItems.Add(Cast<UWeaponShopItem>(c));
+		FWeaponShopData* WeaponShopData = WeaponShopsDataTable->FindRow<FWeaponShopData>(RowName, ContextString, true);
+		UWeaponShopItem* WeaponShopItem = NewObject<UWeaponShopItem>();
+		WeaponShopItem->Initialize(GetWorld(), *WeaponShopData);
+		WeaponShopItems.Add(WeaponShopItem);
 	}
 }
 

@@ -6,32 +6,32 @@
 
 void ASurvivalGameModeBase::BeginPlay()
 {
-	InGameWidget = CreateWidget<UUserWidget>(GetWorld(), wInGameWidget);
-	InventoryWidget = CreateWidget<UUserWidget>(GetWorld(), wInventoryWidget);
-	ShopWidget = CreateWidget<UUserWidget>(GetWorld(), wShopWidget);
+	Super::BeginPlay();
 
-	CurrentWidget = InGameWidget;
-	CurrentWidgetType = EWidgetType::EInGame;
+	CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), wInGameWidget);
 	AddWidgetToViewPort(false, false);
 }
 
 void ASurvivalGameModeBase::SwitchWidget(EWidgetType WidgetType)
 {
+	if (WidgetType == CurrentWidgetType)
+		return;
+
 	CurrentWidget->RemoveFromParent();
 	CurrentWidgetType = WidgetType;
 
 	switch (WidgetType)
 	{
 	case EWidgetType::EInGame:
-		CurrentWidget = InGameWidget;
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), wInGameWidget);
 		AddWidgetToViewPort(false, false);
 		break;
 	case EWidgetType::EInventory:
-		CurrentWidget = InventoryWidget;
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), wInventoryWidget);
 		AddWidgetToViewPort(true, true);
 		break;
 	case EWidgetType::EShop:
-		CurrentWidget = ShopWidget;
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), wShopWidget);
 		AddWidgetToViewPort(true, true);
 		break;
 	}

@@ -26,7 +26,8 @@ public:
 
 	void EquipWeapon(int32 Slot);
 	void EquipPreviousWeapon();
-	void SetPreviousWeaponSlot(EWeaponType WeaponType);
+
+	void AddWeapon(TSubclassOf<AWeapon> Weapon_BP);
 
 protected:
 	AMyCharacter* MyCharacter;

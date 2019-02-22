@@ -27,8 +27,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	TArray<UWeaponShopItem*> WeaponShopItems;
 
-protected:
-	// Used to init the shop items
-	UPROPERTY(EditDefaultsOnly, meta = (BlueprintProtected))
-	TArray<TSubclassOf<UWeaponShopItem>> BP_WeaponShopItems;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Init)
+	class UDataTable* WeaponShopsDataTable;
 };

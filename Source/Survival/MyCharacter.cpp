@@ -91,6 +91,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::StopAutoFiring);
 	PlayerInputComponent->BindAction("EquipGun", IE_Pressed, this, &AMyCharacter::EquipGun);
 	PlayerInputComponent->BindAction("EquipShotgun", IE_Pressed, this, &AMyCharacter::EquipShotgun);
+	PlayerInputComponent->BindAction("EquipRifle", IE_Pressed, this, &AMyCharacter::EquipRifle);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
@@ -237,6 +238,14 @@ void AMyCharacter::EquipShotgun()
 
 	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
 		Inventory->EquipWeapon(1);
+}
+
+void AMyCharacter::EquipRifle()
+{
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
+		Inventory->EquipWeapon(2);
 }
 
 

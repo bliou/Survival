@@ -4,32 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Weapon.h"
-#include "ShopItem.h"
-#include "WeaponShopData.h"
-#include "WeaponShopItem.generated.h"
-
-class AShop;
+#include "ShopItem.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable, BlueprintType)
-class SURVIVAL_API UWeaponShopItem : public UShopItem
+class SURVIVAL_API UShopItem : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
-	int CurrentWeaponLevel;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
-	bool bISOwned;
+	FString Name;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
-	TSubclassOf<AWeapon> Weapon_BP;
+	UTexture2D* Thumbnail;
 
-	virtual void Buy() override;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	int32 Price;
 
-	void Initialize(UWorld* World, FWeaponShopData WeaponShopData);
+	UFUNCTION(BlueprintCallable)
+	virtual void Buy();
+
+	virtual class UWorld* GetWorld() const override;
+	class UWorld* World;
+
+	void Initialize(
+		UWorld* World,
+		FString Name,
+		UTexture2D* Thumbnail, 
+		int32 Price);
 };

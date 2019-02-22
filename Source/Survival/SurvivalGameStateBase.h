@@ -47,6 +47,4 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Spawner)
 	AShop* Shop;
-protected:
-	AMyCharacter* MyCharacter;
 };

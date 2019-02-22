@@ -27,16 +27,14 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Widget)
 	TSubclassOf<UUserWidget> wInGameWidget;
-	class UUserWidget* InGameWidget;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Widget)
 	TSubclassOf<UUserWidget> wInventoryWidget;
-	class UUserWidget* InventoryWidget;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Widget)
 	TSubclassOf<UUserWidget> wShopWidget;
-	class UUserWidget* ShopWidget;
 
+	UFUNCTION(BlueprintCallable)
 	void SwitchWidget(EWidgetType WidgetType);
 
 	EWidgetType CurrentWidgetType;
@@ -46,6 +44,5 @@ protected:
 		bool bShowMouseCursor,
 		bool bEnableClickEvents);
 
-	UPROPERTY()
 	class UUserWidget* CurrentWidget;
 };

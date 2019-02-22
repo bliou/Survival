@@ -42,3 +42,9 @@ void AInventory::EquipPreviousWeapon()
 {
 	EquipWeapon((int32)PreviousWeaponSlot);
 }
+
+void AInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
+{
+	AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(Weapon_BP);
+	Weapons[(int)Weapon->WeaponType] = Weapon;
+}

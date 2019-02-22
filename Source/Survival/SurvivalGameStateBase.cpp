@@ -21,8 +21,6 @@ void ASurvivalGameStateBase::BeginPlay()
 	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShop::StaticClass(), FoundActors);
 	Shop = Cast<AShop>(FoundActors[0]);
-
-	MyCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void ASurvivalGameStateBase::Tick(float DeltaTime)
