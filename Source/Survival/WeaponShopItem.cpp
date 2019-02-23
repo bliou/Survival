@@ -7,22 +7,21 @@
 
 void UWeaponShopItem::Initialize(UWorld* World, FWeaponShopData WeaponShopData)
 {
-	Super::Initialize(
-		World,
-		WeaponShopData.Name,
-		WeaponShopData.Thumbnail,
-		WeaponShopData.Price);
-
+	this->World = World;
+	this->WeaponShopData = WeaponShopData;
 	CurrentWeaponLevel = 0;
-	bISOwned = WeaponShopData.bISOwned;
-	Weapon_BP = WeaponShopData.Weapon_BP;
 }
 
 void UWeaponShopItem::Buy()
 {
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->CharacterConfig.CurrentMoney -= Price;
+	Player->CharacterConfig.CurrentMoney -= WeaponShopData.Price;
 	
-	Player->Inventory->AddWeapon(Weapon_BP);
-	bISOwned = true;
+	Player->Inventory->AddWeapon(WeaponShopData.Weapon_BP);
+	WeaponShopData.bISOwned = true;
+}
+
+UWorld* UWeaponShopItem::GetWorld() const
+{
+	return World;
 }
