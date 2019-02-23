@@ -20,9 +20,9 @@ void UWeaponShopItem::Initialize(UWorld* World, FWeaponShopData WeaponShopData)
 
 void UWeaponShopItem::Buy()
 {
-	Super::Buy();
-
-	bISOwned = true;
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	Player->CharacterConfig.CurrentMoney -= Price;
+	
 	Player->Inventory->AddWeapon(Weapon_BP);
+	bISOwned = true;
 }

@@ -48,3 +48,20 @@ void AInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
 	AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(Weapon_BP);
 	Weapons[(int)Weapon->WeaponType] = Weapon;
 }
+
+void AInventory::AddBarricades(
+	EBarricadeType BarricadeType,
+	int32 Amount,
+	TSubclassOf<ABarricade> Barricade_BP)
+{
+	if (!Barricades.Contains(BarricadeType))
+	{
+		FBarricadeInventory BarricadeInventory;
+		BarricadeInventory.Amount = Amount;
+		BarricadeInventory.Barricade_BP = Barricade_BP;
+
+		Barricades.Add(BarricadeType, BarricadeInventory);
+	}
+
+	Barricades[BarricadeType].Amount += Amount;
+}

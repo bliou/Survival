@@ -25,9 +25,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	int32 Price;
 
-	UFUNCTION(BlueprintCallable)
-	virtual void Buy();
-
 	virtual class UWorld* GetWorld() const override;
 	class UWorld* World;
 

@@ -16,10 +16,14 @@ class SURVIVAL_API UBarricadeShopItem : public UShopItem
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	EBarricadeType BarricadeType;
 
-	virtual void Buy() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	TSubclassOf<ABarricade> Barricade_BP;
+
+	UFUNCTION(BlueprintCallable)
+	void Buy(int32 Amount);
 
 	void Initialize(UWorld* World, FBarricadeShopData BarricadeShopData);
 };

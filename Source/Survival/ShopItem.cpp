@@ -16,12 +16,6 @@ void UShopItem::Initialize(
 	this->Price = Price;
 }
 
-void UShopItem::Buy()
-{
-	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->CharacterConfig.CurrentMoney -= Price;
-}
-
 UWorld* UShopItem::GetWorld() const
 {
 	return World;

@@ -27,7 +27,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	TSubclassOf<AWeapon> Weapon_BP;
 
-	virtual void Buy() override;
+	UFUNCTION(BlueprintCallable)
+	void Buy();
 
 	void Initialize(UWorld* World, FWeaponShopData WeaponShopData);
 };

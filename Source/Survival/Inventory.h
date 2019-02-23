@@ -10,6 +10,18 @@
 
 class AMyCharacter;
 
+USTRUCT(BlueprintType)
+struct FBarricadeInventory
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 Amount;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TSubclassOf<ABarricade> Barricade_BP;
+};
+
 UCLASS()
 class SURVIVAL_API AInventory: public AActor
 {
@@ -26,13 +38,18 @@ public:
 	UPROPERTY()
 	TArray<class AWeapon*> Weapons;
 
-	UPROPERTY()
-	TMap<EBarricadeType, int32> Barricades;
-
 	void EquipWeapon(int32 Slot);
 	void EquipPreviousWeapon();
 
 	void AddWeapon(TSubclassOf<AWeapon> Weapon_BP);
+
+	UPROPERTY()
+	TMap<EBarricadeType, FBarricadeInventory> Barricades;
+
+	void AddBarricades(
+		EBarricadeType BarricadeType,
+		int32 Amount,
+		TSubclassOf<ABarricade> Barricade_BP);
 
 protected:
 	AMyCharacter* MyCharacter;

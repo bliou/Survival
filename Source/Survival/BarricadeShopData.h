@@ -25,4 +25,7 @@ struct FBarricadeShopData : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	EBarricadeType BarricadeType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	TSubclassOf<ABarricade> Barricade_BP;
 };
