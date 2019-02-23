@@ -9,8 +9,6 @@
 #include "WeaponShopData.h"
 #include "WeaponShopItem.generated.h"
 
-class AShop;
-
 /**
  * 
  */

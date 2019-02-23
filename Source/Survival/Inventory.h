@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Weapon.h"
+#include "Barricade.h"
+#include "BarricadeType.h"
 #include "Inventory.generated.h"
 
 class AMyCharacter;
@@ -23,6 +25,9 @@ public:
 
 	UPROPERTY()
 	TArray<class AWeapon*> Weapons;
+
+	UPROPERTY()
+	TMap<EBarricadeType, int32> Barricades;
 
 	void EquipWeapon(int32 Slot);
 	void EquipPreviousWeapon();

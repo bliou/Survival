@@ -7,7 +7,6 @@
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Barricade.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FBarricadeData
 {
