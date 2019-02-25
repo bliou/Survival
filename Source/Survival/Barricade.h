@@ -63,13 +63,30 @@ public:
 	TSubclassOf<UUserWidget> wEquippedWidget;
 	class UUserWidget* EquippedWidget;
 
+	UPROPERTY()
+	UMaterialInstanceDynamic* DynamicMaterial;
+
 	// Equip the barricade to the player
 	void Equip(AMyCharacter* MyCharacter);
 	
-
-	void Place();
+	bool Place();
 	void RotateBarricadeLeft();
 	void RotateBarricadeRight();
+
+	UFUNCTION()
+		void OnStartColliding(
+			class UPrimitiveComponent* HitComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep,
+			const FHitResult & SweepResult);
+
+	UFUNCTION()
+		void OnEndColliding(
+			class UPrimitiveComponent* HitComp,
+			class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex);
 
 	void TakeDamages(float Damages);
 	void HittenByBullet(
@@ -78,4 +95,8 @@ public:
 
 	bool bIsRotatingLeft;
 	bool bIsRotatingRight;
+
+protected:
+	bool bIsPlaced;
+	int NumActorsCollided;
 };

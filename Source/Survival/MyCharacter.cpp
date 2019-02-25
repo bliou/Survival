@@ -333,8 +333,8 @@ void AMyCharacter::BarricadeInteraction()
 {
 	if (CurrentBarricade)
 	{
-		CurrentBarricade->Place();
-		CurrentBarricade = NULL;
+		if (CurrentBarricade->Place())
+			CurrentBarricade = NULL;
 	}
 	else
 	{
