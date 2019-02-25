@@ -33,7 +33,7 @@ public:
 	int32 CurrentBuyPriceLevel;
 
 	UFUNCTION(BlueprintCallable)
-	void Buy(int32 Amount);
+	void Buy(int32 Quantity);
 
 	UFUNCTION(BlueprintCallable)
 	void UpgradeHealth();

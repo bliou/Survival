@@ -16,7 +16,7 @@ struct FBarricadeInventory
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 Amount;
+	int32 Quantity;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TSubclassOf<ABarricade> Barricade_BP;
@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	TSubclassOf<class AWeapon> WeaponSpawn;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	TArray<class AWeapon*> Weapons;
 
 	void EquipWeapon(int32 Slot);
@@ -43,12 +43,12 @@ public:
 
 	void AddWeapon(TSubclassOf<AWeapon> Weapon_BP);
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	TMap<EBarricadeType, FBarricadeInventory> Barricades;
 
 	void AddBarricades(
 		EBarricadeType BarricadeType,
-		int32 Amount,
+		int32 Quantity,
 		TSubclassOf<ABarricade> Barricade_BP);
 
 	void UpdateBarricadeMaxHealth(EBarricadeType BarricadeType, int32 NewMaxHealth);

@@ -26,14 +26,14 @@ void UBarricadeShopItem::Initialize(
 	this->BarricadeShopData.Price = BuyPriceUpgrades[0].BuyPrice;
 }
 
-void UBarricadeShopItem::Buy(int Amount)
+void UBarricadeShopItem::Buy(int Quantity)
 {
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->CharacterConfig.CurrentMoney -= BarricadeShopData.Price * Amount;
+	Player->CharacterConfig.CurrentMoney -= BarricadeShopData.Price * Quantity;
 	
 	Player->Inventory->AddBarricades(
 		BarricadeShopData.BarricadeType, 
-		Amount, 
+		Quantity, 
 		BarricadeShopData.Barricade_BP);
 }
 

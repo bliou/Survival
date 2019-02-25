@@ -51,19 +51,21 @@ void AInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
 
 void AInventory::AddBarricades(
 	EBarricadeType BarricadeType,
-	int32 Amount,
+	int32 Quantity,
 	TSubclassOf<ABarricade> Barricade_BP)
 {
 	if (!Barricades.Contains(BarricadeType))
 	{
 		FBarricadeInventory BarricadeInventory;
-		BarricadeInventory.Amount = Amount;
+		BarricadeInventory.Quantity = Quantity;
 		BarricadeInventory.Barricade_BP = Barricade_BP;
 
 		Barricades.Add(BarricadeType, BarricadeInventory);
 	}
-
-	Barricades[BarricadeType].Amount += Amount;
+	else
+	{
+		Barricades[BarricadeType].Quantity += Quantity;
+	}
 }
 
 void AInventory::UpdateBarricadeMaxHealth(

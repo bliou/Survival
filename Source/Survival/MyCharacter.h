@@ -83,6 +83,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Inventory)
 	TSubclassOf<AInventory> Inventory_BP;
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Inventory)
 	class AInventory* Inventory;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
