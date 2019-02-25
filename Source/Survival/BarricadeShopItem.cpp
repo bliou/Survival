@@ -17,6 +17,13 @@ void UBarricadeShopItem::Initialize(
 		FBarricadeHealthUpgrade* HealthUpgrade = BarricadeShopData.HealthUpgrade->FindRow<FBarricadeHealthUpgrade>(RowName, ContextString, true);
 		HealthUpgrades.Add(*HealthUpgrade);
 	}
+
+	for (FName RowName : BarricadeShopData.BuyPriceUpgrade->GetRowNames())
+	{
+		FBarricadeBuyPriceUpgrade* BuyPriceUpgrade = BarricadeShopData.BuyPriceUpgrade->FindRow<FBarricadeBuyPriceUpgrade>(RowName, ContextString, true);
+		BuyPriceUpgrades.Add(*BuyPriceUpgrade);
+	}
+	this->BarricadeShopData.Price = BuyPriceUpgrades[0].BuyPrice;
 }
 
 void UBarricadeShopItem::Buy(int Amount)
@@ -57,4 +64,15 @@ void UBarricadeShopItem::UpgradeHealth()
 	{
 		Cast<ABarricade>(FoundActor)->BarricadeConfig.MaxHealth = NewMaxHealth;
 	}
+}
+
+void UBarricadeShopItem::UpgradeBuyPrice()
+{
+	CurrentBuyPriceLevel++;
+	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	Player->CharacterConfig.CurrentMoney -= BuyPriceUpgrades[CurrentBuyPriceLevel].Price;
+
+	// Update the max health where needed
+	int32 NewBuyPrice = BuyPriceUpgrades[CurrentBuyPriceLevel].BuyPrice;
+	BarricadeShopData.Price = NewBuyPrice;
 }

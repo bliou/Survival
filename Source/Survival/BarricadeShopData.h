@@ -20,7 +20,7 @@ struct FBarricadeShopData : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	UTexture2D* Thumbnail;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	int32 Price;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)

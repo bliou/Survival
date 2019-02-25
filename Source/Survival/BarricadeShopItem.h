@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BarricadeShopData.h"
 #include "BarricadeHealthUpgrade.h"
+#include "BarricadeBuyPriceUpgrade.h"
 #include "BarricadeShopItem.generated.h"
 
 /**
@@ -26,6 +27,9 @@ public:
 	int32 CurrentHealthLevel;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	TArray<FBarricadeBuyPriceUpgrade> BuyPriceUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	int32 CurrentBuyPriceLevel;
 
 	UFUNCTION(BlueprintCallable)
@@ -33,6 +37,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpgradeHealth();
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeBuyPrice();
 
 	void Initialize(UWorld* World, FBarricadeShopData BarricadeShopData);
 	

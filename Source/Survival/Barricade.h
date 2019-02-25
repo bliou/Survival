@@ -14,7 +14,7 @@ struct FBarricadeData
 
 public:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
 	int32 MaxHealth;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
