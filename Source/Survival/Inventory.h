@@ -51,6 +51,8 @@ public:
 		int32 Amount,
 		TSubclassOf<ABarricade> Barricade_BP);
 
+	void UpdateBarricadeMaxHealth(EBarricadeType BarricadeType, int32 NewMaxHealth);
+
 protected:
 	AMyCharacter* MyCharacter;
 	EWeaponType PreviousWeaponSlot;

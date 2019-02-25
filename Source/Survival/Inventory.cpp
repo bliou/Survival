@@ -65,3 +65,14 @@ void AInventory::AddBarricades(
 
 	Barricades[BarricadeType].Amount += Amount;
 }
+
+void AInventory::UpdateBarricadeMaxHealth(
+	EBarricadeType BarricadeType,
+	int32 NewMaxHealth)
+{
+	if (Barricades.Contains(BarricadeType))
+	{
+		ABarricade* Barricade = Cast<ABarricade>(Barricades[BarricadeType].Barricade_BP->GetDefaultObject());
+		Barricade->BarricadeConfig.MaxHealth = NewMaxHealth;
+	}
+}

@@ -28,4 +28,10 @@ struct FBarricadeShopData : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	TSubclassOf<ABarricade> Barricade_BP;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	class UDataTable* HealthUpgrade;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	class UDataTable* BuyPriceUpgrade;
 };
