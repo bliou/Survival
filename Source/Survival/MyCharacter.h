@@ -122,6 +122,11 @@ protected:
 
 	void EquipPreviousWeapon();
 
+	void RotateBarricadeLeft();
+	void StopRotateBarricadeLeft();
+	void RotateBarricadeRight();
+	void StopRotateBarricadeRight();
+
 	void Buy();
 
 	void EndTakeDamages();

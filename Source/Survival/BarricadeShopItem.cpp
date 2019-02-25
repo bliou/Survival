@@ -24,6 +24,9 @@ void UBarricadeShopItem::Initialize(
 		BuyPriceUpgrades.Add(*BuyPriceUpgrade);
 	}
 	this->BarricadeShopData.Price = BuyPriceUpgrades[0].BuyPrice;
+	ABarricade* Barricade = Cast<ABarricade>(BarricadeShopData.Barricade_BP->GetDefaultObject());
+	Barricade->BarricadeConfig.MaxHealth = HealthUpgrades[0].Health;
+	Barricade->BarricadeConfig.BarricadeType = BarricadeShopData.BarricadeType;
 }
 
 void UBarricadeShopItem::Buy(int Quantity)

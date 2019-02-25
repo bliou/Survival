@@ -96,6 +96,15 @@ void UInventory::EquipBarricade(int32 Slot)
 	if (Barricades.Contains(BarricadeType)
 		&& Barricades[BarricadeType].Quantity > 0)
 	{
+		if (MyCharacter->CurrentBarricade)
+		{
+			if (MyCharacter->CurrentBarricade->BarricadeConfig.BarricadeType == BarricadeType)
+			{
+				return;
+			}
+			Barricades[MyCharacter->CurrentBarricade->BarricadeConfig.BarricadeType].Quantity++;
+			MyCharacter->CurrentBarricade->Destroy();
+		}
 		MyCharacter->CurrentBarricade = GetWorld()->SpawnActor<ABarricade>(Barricades[BarricadeType].Barricade_BP);
 		MyCharacter->CurrentBarricade->Equip(MyCharacter);
 	}

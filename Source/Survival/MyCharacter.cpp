@@ -98,6 +98,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
 	PlayerInputComponent->BindAction("Buy", IE_Pressed, this, &AMyCharacter::Buy);
+
+	PlayerInputComponent->BindAction("RotateBarricadeLeft", IE_Pressed, this, &AMyCharacter::RotateBarricadeLeft);
+	PlayerInputComponent->BindAction("RotateBarricadeLeft", IE_Released, this, &AMyCharacter::StopRotateBarricadeLeft);
+	PlayerInputComponent->BindAction("RotateBarricadeRight", IE_Pressed, this, &AMyCharacter::RotateBarricadeRight);
+	PlayerInputComponent->BindAction("RotateBarricadeRight", IE_Released, this, &AMyCharacter::StopRotateBarricadeRight);
 }
 
 void AMyCharacter::AddControllerYawInput(float Val)
@@ -306,4 +311,32 @@ void AMyCharacter::Buy()
 		ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 		GameMode->SwitchWidget(EWidgetType::EShop);
 	}
+}
+
+void AMyCharacter::RotateBarricadeLeft()
+{
+	if (!CurrentBarricade)
+		return;
+	CurrentBarricade->RotateBarricadeLeft();
+	CurrentBarricade->bIsRotatingLeft = true;
+}
+
+void AMyCharacter::StopRotateBarricadeLeft()
+{
+	if (CurrentBarricade)
+		CurrentBarricade->bIsRotatingLeft = false;
+}
+
+void AMyCharacter::RotateBarricadeRight()
+{
+	if (!CurrentBarricade)
+		return;
+	CurrentBarricade->RotateBarricadeRight();
+	CurrentBarricade->bIsRotatingRight = true;
+}
+
+void AMyCharacter::StopRotateBarricadeRight()
+{
+	if (CurrentBarricade)
+		CurrentBarricade->bIsRotatingRight = false;
 }

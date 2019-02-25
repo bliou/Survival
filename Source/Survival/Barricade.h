@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
+#include "BarricadeType.h"
 #include "Barricade.generated.h"
 
 class AMyCharacter;
@@ -21,6 +22,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
 	int32 CurrentHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
+	EBarricadeType BarricadeType;
 };
 
 UCLASS()
@@ -58,8 +62,14 @@ public:
 	// Equip the barricade to the player
 	void Equip(AMyCharacter* MyCharacter);
 
+	void RotateBarricadeLeft();
+	void RotateBarricadeRight();
+
 	void TakeDamages(float Damages);
 	void HittenByBullet(
 		const FHitResult& Impact,
 		const FVector& ShootDir);
+
+	bool bIsRotatingLeft;
+	bool bIsRotatingRight;
 };

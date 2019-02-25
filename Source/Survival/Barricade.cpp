@@ -24,6 +24,8 @@ void ABarricade::BeginPlay()
 	Super::BeginPlay();
 	
 	BarricadeConfig.CurrentHealth = BarricadeConfig.MaxHealth;
+	bIsRotatingLeft = false;
+	bIsRotatingRight = false;
 }
 
 // Called every frame
@@ -31,6 +33,10 @@ void ABarricade::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bIsRotatingLeft)
+		RotateBarricadeLeft();
+	if (bIsRotatingRight)
+		RotateBarricadeRight();
 }
 
 void ABarricade::TakeDamages(float Damages)
@@ -69,4 +75,18 @@ void ABarricade::Equip(AMyCharacter* MyCharacter)
 	SetActorRelativeLocation(FVector(100.0f, 0.f, 0.f));
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ABarricade::RotateBarricadeLeft()
+{
+	FRotator RelativeRotation = GetActorRotation();
+	RelativeRotation.Yaw += 2.f;
+	SetActorRotation(RelativeRotation);
+}
+
+void ABarricade::RotateBarricadeRight()
+{
+	FRotator RelativeRotation = GetActorRotation();
+	RelativeRotation.Yaw -= 2.f;
+	SetActorRotation(RelativeRotation);
 }
