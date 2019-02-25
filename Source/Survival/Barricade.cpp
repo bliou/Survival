@@ -3,6 +3,7 @@
 #include "Barricade.h"
 #include "Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "MyCharacter.h"
 
 // Sets default values
 ABarricade::ABarricade()
@@ -56,4 +57,16 @@ void ABarricade::HittenByBullet(
 		BulletHitSound,
 		Impact.Location
 	);
+}
+
+void ABarricade::Equip(AMyCharacter* MyCharacter)
+{
+	AttachToActor(
+		MyCharacter,
+		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true)
+	);
+	SetActorRelativeScale3D(FVector(1.1f, 2.0f, 2.0f));
+	SetActorRelativeLocation(FVector(100.0f, 0.f, 0.f));
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

@@ -7,6 +7,8 @@
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Barricade.generated.h"
 
+class AMyCharacter;
+
 USTRUCT(BlueprintType)
 struct FBarricadeData
 {
@@ -53,6 +55,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* BulletHitSound;
 
+	// Equip the barricade to the player
+	void Equip(AMyCharacter* MyCharacter);
 
 	void TakeDamages(float Damages);
 	void HittenByBullet(

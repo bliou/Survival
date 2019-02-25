@@ -3,22 +3,33 @@
 #include "Inventory.h"
 #include "MyCharacter.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "SurvivalGameStateBase.h"
 
-AInventory::AInventory()
+void UInventory::Initialize(UWorld* World)
 {
 	// By default, the player has a gun
 	Weapons.SetNum(5, false);
 	PreviousWeaponSlot = EWeaponType::EGun;
-}
+	this->World = World;
 
-void AInventory::BeginPlay()
-{
-	Weapons[0] = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn);
+//	Weapons[0] = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn);
 
 	MyCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	AShop* Shop = GameState->Shop;
+	AddBarricades(
+		EBarricadeType::EDumpster, 
+		5,
+		Shop->BarricadeShopItems[0]->BarricadeShopData.Barricade_BP);
 }
 
-void AInventory::EquipWeapon(int32 Slot)
+UWorld* UInventory::GetWorld() const
+{
+	return World;
+}
+
+void UInventory::EquipWeapon(int32 Slot)
 {
 	if (!Weapons[Slot]
 		|| MyCharacter->State == ECharacterState::EEquip
@@ -38,18 +49,18 @@ void AInventory::EquipWeapon(int32 Slot)
 	MyCharacter->CurrentWeapon->Equip();
 }
 
-void AInventory::EquipPreviousWeapon()
+void UInventory::EquipPreviousWeapon()
 {
 	EquipWeapon((int32)PreviousWeaponSlot);
 }
 
-void AInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
+void UInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
 {
 	AWeapon* Weapon = GetWorld()->SpawnActor<AWeapon>(Weapon_BP);
 	Weapons[(int)Weapon->WeaponType] = Weapon;
 }
 
-void AInventory::AddBarricades(
+void UInventory::AddBarricades(
 	EBarricadeType BarricadeType,
 	int32 Quantity,
 	TSubclassOf<ABarricade> Barricade_BP)
@@ -68,7 +79,7 @@ void AInventory::AddBarricades(
 	}
 }
 
-void AInventory::UpdateBarricadeMaxHealth(
+void UInventory::UpdateBarricadeMaxHealth(
 	EBarricadeType BarricadeType,
 	int32 NewMaxHealth)
 {
@@ -76,5 +87,16 @@ void AInventory::UpdateBarricadeMaxHealth(
 	{
 		ABarricade* Barricade = Cast<ABarricade>(Barricades[BarricadeType].Barricade_BP->GetDefaultObject());
 		Barricade->BarricadeConfig.MaxHealth = NewMaxHealth;
+	}
+}
+
+void UInventory::EquipBarricade(int32 Slot)
+{
+	EBarricadeType BarricadeType = (EBarricadeType)Slot;
+	if (Barricades.Contains(BarricadeType)
+		&& Barricades[BarricadeType].Quantity > 0)
+	{
+		MyCharacter->CurrentBarricade = GetWorld()->SpawnActor<ABarricade>(Barricades[BarricadeType].Barricade_BP);
+		MyCharacter->CurrentBarricade->Equip(MyCharacter);
 	}
 }

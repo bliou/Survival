@@ -5,5 +5,5 @@
 
 UENUM(BlueprintType)
 enum class EBarricadeType : uint8 {
-	EDumpster			UMETA(DisplayName = "Dumpster")
+	EDumpster = 0			UMETA(DisplayName = "Dumpster")
 };

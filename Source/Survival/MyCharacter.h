@@ -81,10 +81,11 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 	AWeapon *CurrentWeapon;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Inventory)
-	TSubclassOf<AInventory> Inventory_BP;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Barricade)
+	ABarricade * CurrentBarricade;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Inventory)
-	class AInventory* Inventory;
+	UInventory* Inventory;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> wDamagedWidget;
@@ -115,9 +116,10 @@ protected:
 	void StopAutoFiring();
 	void StartReloading();
 
-	void EquipGun();
-	void EquipShotgun();
-	void EquipRifle();
+	void EquipFirstItem();
+	void EquipSecondItem();
+	void EquipThirdItem();
+
 	void EquipPreviousWeapon();
 
 	void Buy();

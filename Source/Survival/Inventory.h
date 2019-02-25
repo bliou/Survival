@@ -23,14 +23,12 @@ struct FBarricadeInventory
 };
 
 UCLASS()
-class SURVIVAL_API AInventory: public AActor
+class SURVIVAL_API UInventory: public UObject
 {
 	GENERATED_BODY()
 
 public:
-	AInventory();
-
-	virtual void BeginPlay() override;
+	void Initialize(UWorld* World);
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)
 	TSubclassOf<class AWeapon> WeaponSpawn;
@@ -51,9 +49,14 @@ public:
 		int32 Quantity,
 		TSubclassOf<ABarricade> Barricade_BP);
 
+	void EquipBarricade(int32 Slot);
+
 	void UpdateBarricadeMaxHealth(EBarricadeType BarricadeType, int32 NewMaxHealth);
 
 protected:
 	AMyCharacter* MyCharacter;
 	EWeaponType PreviousWeaponSlot;
+
+	UWorld* World;
+	virtual UWorld* GetWorld() const override;
 };

@@ -38,7 +38,9 @@ void AMyCharacter::BeginPlay()
 	State = ECharacterState::EIdle;
 	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 
-	Inventory = GetWorld()->SpawnActor<AInventory>(Inventory_BP);
+	Inventory = NewObject<UInventory>();
+	Inventory->Initialize(GetWorld());
+
 	//StartWave();
 }
 
@@ -89,9 +91,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Fire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::StopAutoFiring);
-	PlayerInputComponent->BindAction("EquipGun", IE_Pressed, this, &AMyCharacter::EquipGun);
-	PlayerInputComponent->BindAction("EquipShotgun", IE_Pressed, this, &AMyCharacter::EquipShotgun);
-	PlayerInputComponent->BindAction("EquipRifle", IE_Pressed, this, &AMyCharacter::EquipRifle);
+	PlayerInputComponent->BindAction("EquipFirstItem", IE_Pressed, this, &AMyCharacter::EquipFirstItem);
+	PlayerInputComponent->BindAction("EquipSecondItem", IE_Pressed, this, &AMyCharacter::EquipSecondItem);
+	PlayerInputComponent->BindAction("EquipThirdItem", IE_Pressed, this, &AMyCharacter::EquipThirdItem);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
@@ -224,28 +226,46 @@ void AMyCharacter::TakeDamages(float Damages)
 	}
 }
 
-void AMyCharacter::EquipGun()
+void AMyCharacter::EquipFirstItem()
 {
 	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
-		Inventory->EquipWeapon(0);
+	{
+		ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+		if (GameState->CurrentState == EGameState::EInBetweenWaves)
+			Inventory->EquipBarricade(0);
+		else
+			Inventory->EquipWeapon(0);
+	}
 }
 
-void AMyCharacter::EquipShotgun()
+void AMyCharacter::EquipSecondItem()
 {
 	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
-		Inventory->EquipWeapon(1);
+	{
+		ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+		if (GameState->CurrentState == EGameState::EInBetweenWaves)
+			Inventory->EquipBarricade(1);
+		else
+			Inventory->EquipWeapon(1);
+	}
 }
 
-void AMyCharacter::EquipRifle()
+void AMyCharacter::EquipThirdItem()
 {
 	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
-		Inventory->EquipWeapon(2);
+	{
+		ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+		if (GameState->CurrentState == EGameState::EInBetweenWaves)
+			Inventory->EquipBarricade(2);
+		else
+			Inventory->EquipWeapon(2);
+	}
 }
 
 
