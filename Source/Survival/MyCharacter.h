@@ -122,6 +122,7 @@ protected:
 
 	void EquipPreviousWeapon();
 
+	void BarricadeInteraction();
 	void RotateBarricadeLeft();
 	void StopRotateBarricadeLeft();
 	void RotateBarricadeRight();

@@ -99,6 +99,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
 	PlayerInputComponent->BindAction("Buy", IE_Pressed, this, &AMyCharacter::Buy);
 
+	PlayerInputComponent->BindAction("BarricadeInteraction", IE_Pressed, this, &AMyCharacter::BarricadeInteraction);
 	PlayerInputComponent->BindAction("RotateBarricadeLeft", IE_Pressed, this, &AMyCharacter::RotateBarricadeLeft);
 	PlayerInputComponent->BindAction("RotateBarricadeLeft", IE_Released, this, &AMyCharacter::StopRotateBarricadeLeft);
 	PlayerInputComponent->BindAction("RotateBarricadeRight", IE_Pressed, this, &AMyCharacter::RotateBarricadeRight);
@@ -310,6 +311,19 @@ void AMyCharacter::Buy()
 	{
 		ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 		GameMode->SwitchWidget(EWidgetType::EShop);
+	}
+}
+
+void AMyCharacter::BarricadeInteraction()
+{
+	if (CurrentBarricade)
+	{
+		CurrentBarricade->Place();
+		CurrentBarricade = NULL;
+	}
+	else
+	{
+		// TRY TO PICK UP A BARRICADE
 	}
 }
 

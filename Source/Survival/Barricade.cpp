@@ -77,6 +77,14 @@ void ABarricade::Equip(AMyCharacter* MyCharacter)
 	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ABarricade::Place()
+{
+	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+
+	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
 void ABarricade::RotateBarricadeLeft()
 {
 	FRotator RelativeRotation = GetActorRotation();

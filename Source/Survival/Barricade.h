@@ -62,6 +62,7 @@ public:
 	// Equip the barricade to the player
 	void Equip(AMyCharacter* MyCharacter);
 
+	void Place();
 	void RotateBarricadeLeft();
 	void RotateBarricadeRight();
 
