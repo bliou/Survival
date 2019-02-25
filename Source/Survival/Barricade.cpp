@@ -26,6 +26,8 @@ void ABarricade::BeginPlay()
 	BarricadeConfig.CurrentHealth = BarricadeConfig.MaxHealth;
 	bIsRotatingLeft = false;
 	bIsRotatingRight = false;
+
+	EquippedWidget = CreateWidget<UUserWidget>(GetWorld(), wEquippedWidget);
 }
 
 // Called every frame
@@ -75,6 +77,8 @@ void ABarricade::Equip(AMyCharacter* MyCharacter)
 	SetActorRelativeLocation(FVector(100.0f, 0.f, 0.f));
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	EquippedWidget->AddToViewport();
 }
 
 void ABarricade::Place()
@@ -83,6 +87,8 @@ void ABarricade::Place()
 
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+	EquippedWidget->RemoveFromParent();
 }
 
 void ABarricade::RotateBarricadeLeft()

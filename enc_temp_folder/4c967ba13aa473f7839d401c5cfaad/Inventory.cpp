@@ -112,6 +112,5 @@ void UInventory::EquipBarricade(int32 Slot)
 void UInventory::UnEquipBarricade()
 {
 	Barricades[MyCharacter->CurrentBarricade->BarricadeConfig.BarricadeType].Quantity++;
-	MyCharacter->CurrentBarricade->EquippedWidget->RemoveFromParent();
 	MyCharacter->CurrentBarricade->Destroy();
 }

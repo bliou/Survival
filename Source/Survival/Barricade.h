@@ -59,8 +59,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Sounds)
 	class USoundBase* BulletHitSound;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Widget)
+	TSubclassOf<UUserWidget> wEquippedWidget;
+	class UUserWidget* EquippedWidget;
+
 	// Equip the barricade to the player
 	void Equip(AMyCharacter* MyCharacter);
+	
 
 	void Place();
 	void RotateBarricadeLeft();

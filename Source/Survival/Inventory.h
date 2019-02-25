@@ -50,6 +50,7 @@ public:
 		TSubclassOf<ABarricade> Barricade_BP);
 
 	void EquipBarricade(int32 Slot);
+	void UnEquipBarricade();
 
 	void UpdateBarricadeMaxHealth(EBarricadeType BarricadeType, int32 NewMaxHealth);
 

@@ -120,6 +120,8 @@ protected:
 	void EquipSecondItem();
 	void EquipThirdItem();
 
+	void UnEquip();
+
 	void EquipPreviousWeapon();
 
 	void BarricadeInteraction();

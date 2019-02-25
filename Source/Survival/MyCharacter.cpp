@@ -94,6 +94,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("EquipFirstItem", IE_Pressed, this, &AMyCharacter::EquipFirstItem);
 	PlayerInputComponent->BindAction("EquipSecondItem", IE_Pressed, this, &AMyCharacter::EquipSecondItem);
 	PlayerInputComponent->BindAction("EquipThirdItem", IE_Pressed, this, &AMyCharacter::EquipThirdItem);
+	PlayerInputComponent->BindAction("UnEquip", IE_Pressed, this, &AMyCharacter::UnEquip);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
@@ -271,6 +272,20 @@ void AMyCharacter::EquipThirdItem()
 			Inventory->EquipBarricade(2);
 		else
 			Inventory->EquipWeapon(2);
+	}
+}
+
+void AMyCharacter::UnEquip()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->UnEquip();
+		CurrentWeapon = NULL;
+	}
+	if (CurrentBarricade)
+	{
+		Inventory->UnEquipBarricade();
+		CurrentBarricade = NULL;
 	}
 }
 
