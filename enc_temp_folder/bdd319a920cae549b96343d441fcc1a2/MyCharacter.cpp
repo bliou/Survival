@@ -343,7 +343,6 @@ void AMyCharacter::BarricadeInteraction()
 		if (InterractableBarricade)
 		{
 			InterractableBarricade->Equip(this);
-			InterractableBarricade->InterractWidgetComponent->SetVisibility(false);
 			CurrentBarricade = InterractableBarricade;
 			InterractableBarricade = NULL;
 		}

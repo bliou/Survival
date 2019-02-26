@@ -66,7 +66,7 @@ public:
 	void Reload();
 
 	// FPS camera.
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	UCameraComponent* FPSCameraComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
@@ -129,6 +129,9 @@ protected:
 	void StopRotateBarricadeLeft();
 	void RotateBarricadeRight();
 	void StopRotateBarricadeRight();
+
+	void InteractWithBarricade();
+	ABarricade* InterractableBarricade;
 
 	void Buy();
 

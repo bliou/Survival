@@ -5,6 +5,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "MyCharacter.h"
 #include "Runtime/Engine/Classes/Materials/MaterialInstanceDynamic.h"
+#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ABarricade::ABarricade()
@@ -20,6 +21,9 @@ ABarricade::ABarricade()
 
 	BarricadeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BarricadeMesh"));
 	BarricadeMesh->SetupAttachment(RootComponent);
+
+	InteractWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractWidgetComponent"));
+	InteractWidgetComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +35,8 @@ void ABarricade::BeginPlay()
 	bIsRotatingLeft = false;
 	bIsRotatingRight = false;
 	bIsPlaced = false;
+
+	InteractWidgetComponent->SetVisibility(false);
 
 	EquippedWidget = CreateWidget<UUserWidget>(GetWorld(), wEquippedWidget);
 
@@ -56,6 +62,10 @@ void ABarricade::Tick(float DeltaTime)
 			DynamicMaterial->SetVectorParameterValue(FName("MaterialColor"), FLinearColor::Green);
 
 		BarricadeMesh->SetMaterial(0, DynamicMaterial);
+	}
+	else
+	{
+		RotateInteractWidget();
 	}
 }
 
@@ -91,7 +101,7 @@ void ABarricade::Equip(AMyCharacter* MyCharacter)
 		MyCharacter,
 		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true)
 	);
-	SetActorRelativeScale3D(FVector(1.1f, 2.0f, 2.0f));
+	SetActorRelativeScale3D(FVector(1.0f, 1.5f, 1.5f));
 	SetActorRelativeLocation(FVector(100.0f, 0.f, 0.f));
 	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -107,7 +117,7 @@ bool ABarricade::Place()
 		return false;
 	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 
-	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	EquippedWidget->RemoveFromParent();
 	bIsPlaced = true;
@@ -156,4 +166,13 @@ void ABarricade::OnEndColliding(
 		return;
 
 	NumActorsCollided--;
+}
+
+void ABarricade::RotateInteractWidget()
+{
+	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	FVector PlayerLocation = Player->GetActorLocation();
+	FVector InteractWidgetLocation = InteractWidgetComponent->GetComponentLocation();
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(InteractWidgetLocation, PlayerLocation);
+	InteractWidgetComponent->SetWorldRotation(LookAtRotation);
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "BarricadeType.h"
+#include "Runtime/UMG/Public/Components/WidgetComponent.h"
 #include "Barricade.generated.h"
 
 class AMyCharacter;
@@ -49,6 +50,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
 	class UBoxComponent* CollisionComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
+	class UWidgetComponent* InteractWidgetComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FBarricadeData BarricadeConfig;
@@ -99,4 +103,6 @@ public:
 protected:
 	bool bIsPlaced;
 	int NumActorsCollided;
+
+	void RotateInteractWidget();
 };

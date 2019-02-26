@@ -130,7 +130,7 @@ FHitResult AWeapon::WeaponTrace(
 
 	FHitResult Hit(ForceInit);
 
-	bool r = GetWorld()->LineTraceSingleByChannel(
+	GetWorld()->LineTraceSingleByChannel(
 		Hit, 
 		TraceFrom, 
 		TraceTo, 

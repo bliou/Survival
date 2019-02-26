@@ -104,6 +104,7 @@ void UInventory::EquipBarricade(int32 Slot)
 			}
 			UnEquipBarricade();
 		}
+		Barricades[BarricadeType].Quantity--;
 		MyCharacter->CurrentBarricade = GetWorld()->SpawnActor<ABarricade>(Barricades[BarricadeType].Barricade_BP);
 		MyCharacter->CurrentBarricade->Equip(MyCharacter);
 	}
