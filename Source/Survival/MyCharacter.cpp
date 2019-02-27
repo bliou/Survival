@@ -383,7 +383,7 @@ void AMyCharacter::InteractWithBarricade()
 	if (InterractableBarricade)
 	{
 		InterractableBarricade->BarricadeMesh->SetRenderCustomDepth(false);
-		InterractableBarricade->InteractWidgetComponent->SetVisibility(false);
+		InterractableBarricade->InterractWidgetComponent->SetVisibility(false);
 		InterractableBarricade = NULL;
 	}
 
@@ -423,7 +423,7 @@ void AMyCharacter::InteractWithBarricade()
 		{
 			InterractableBarricade = barricade;
 			InterractableBarricade->BarricadeMesh->SetRenderCustomDepth(true);
-			InterractableBarricade->InteractWidgetComponent->SetVisibility(true);
+			InterractableBarricade->InterractWidgetComponent->SetVisibility(true);
 		}
 	}
 }

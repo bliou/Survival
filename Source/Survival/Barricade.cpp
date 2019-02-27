@@ -22,8 +22,8 @@ ABarricade::ABarricade()
 	BarricadeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BarricadeMesh"));
 	BarricadeMesh->SetupAttachment(RootComponent);
 
-	InteractWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractWidgetComponent"));
-	InteractWidgetComponent->SetupAttachment(RootComponent);
+	InterractWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractWidgetComponent"));
+	InterractWidgetComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -36,7 +36,7 @@ void ABarricade::BeginPlay()
 	bIsRotatingRight = false;
 	bIsPlaced = false;
 
-	InteractWidgetComponent->SetVisibility(false);
+	InterractWidgetComponent->SetVisibility(false);
 
 	EquippedWidget = CreateWidget<UUserWidget>(GetWorld(), wEquippedWidget);
 
@@ -102,7 +102,7 @@ void ABarricade::Equip(AMyCharacter* MyCharacter)
 		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true)
 	);
 	SetActorRelativeScale3D(FVector(1.0f, 1.5f, 1.5f));
-	SetActorRelativeLocation(FVector(100.0f, 0.f, 0.f));
+	SetActorRelativeLocation(FVector(100.0f, 0.f, -25.f));
 	BarricadeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	EquippedWidget->AddToViewport();
@@ -172,7 +172,7 @@ void ABarricade::RotateInteractWidget()
 {
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FVector PlayerLocation = Player->GetActorLocation();
-	FVector InteractWidgetLocation = InteractWidgetComponent->GetComponentLocation();
+	FVector InteractWidgetLocation = InterractWidgetComponent->GetComponentLocation();
 	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(InteractWidgetLocation, PlayerLocation);
-	InteractWidgetComponent->SetWorldRotation(LookAtRotation);
+	InterractWidgetComponent->SetWorldRotation(LookAtRotation);
 }

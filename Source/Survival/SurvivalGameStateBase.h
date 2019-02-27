@@ -31,6 +31,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void EndBeginPlay();
+
 	bool IsWaveEnded();
 
 public:

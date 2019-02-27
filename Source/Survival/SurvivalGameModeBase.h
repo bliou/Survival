@@ -34,6 +34,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Widget)
 	TSubclassOf<UUserWidget> wShopWidget;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Widget)
+	class UUserWidget* CurrentWidget;
+
 	UFUNCTION(BlueprintCallable)
 	void SwitchWidget(EWidgetType WidgetType);
 
@@ -43,6 +46,4 @@ protected:
 	void AddWidgetToViewPort(
 		bool bShowMouseCursor,
 		bool bEnableClickEvents);
-
-	class UUserWidget* CurrentWidget;
 };

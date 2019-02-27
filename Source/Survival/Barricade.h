@@ -52,7 +52,7 @@ public:
 	class UBoxComponent* CollisionComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
-	class UWidgetComponent* InteractWidgetComponent;
+	class UWidgetComponent* InterractWidgetComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FBarricadeData BarricadeConfig;

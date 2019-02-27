@@ -21,6 +21,8 @@ void ASurvivalGameStateBase::BeginPlay()
 	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShop::StaticClass(), FoundActors);
 	Shop = Cast<AShop>(FoundActors[0]);
+
+	EndBeginPlay();
 }
 
 void ASurvivalGameStateBase::Tick(float DeltaTime)
@@ -50,4 +52,9 @@ bool ASurvivalGameStateBase::IsWaveEnded()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AZombie::StaticClass(), FoundActors);
 
 	return FoundActors.Num() == 0 && SpawnManager->IsWaveInactive;
+}
+
+void ASurvivalGameStateBase::EndBeginPlay_Implementation()
+{
+
 }

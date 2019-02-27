@@ -12,16 +12,7 @@ void UInventory::Initialize(UWorld* World)
 	PreviousWeaponSlot = EWeaponType::EGun;
 	this->World = World;
 
-//	Weapons[0] = GetWorld()->SpawnActor<AWeapon>(WeaponSpawn);
-
 	MyCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
-	AShop* Shop = GameState->Shop;
-	AddBarricades(
-		EBarricadeType::EDumpster, 
-		5,
-		Shop->BarricadeShopItems[0]->BarricadeShopData.Barricade_BP);
 }
 
 UWorld* UInventory::GetWorld() const
