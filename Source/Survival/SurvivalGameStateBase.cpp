@@ -41,6 +41,8 @@ void ASurvivalGameStateBase::Tick(float DeltaTime)
 		{
 			CurrentState = EGameState::EInBetweenWaves;
 			SpawnManager->EndWave();
+			AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+			Player->EndWave();
 		}
 		break;
 	}

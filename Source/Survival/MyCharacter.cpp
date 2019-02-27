@@ -41,7 +41,7 @@ void AMyCharacter::BeginPlay()
 	Inventory = NewObject<UInventory>();
 	Inventory->Initialize(GetWorld());
 
-	//StartWave();
+	StartWave();
 }
 
 // Called every frame
@@ -73,11 +73,22 @@ void AMyCharacter::StartWave()
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	if (GameState->CurrentState == EGameState::EInBetweenWaves)
 	{
-		if (!CurrentWeapon)
-			Inventory->EquipPreviousWeapon();
+		if (CurrentBarricade)
+		{
+			Inventory->UnEquipBarricade();
+			CurrentBarricade = NULL;
+		}
+		Inventory->EquipPreviousWeapon();
 
 		GameState->CurrentState = EGameState::EStartWave;
 	}
+}
+
+void AMyCharacter::EndWave()
+{
+	Inventory->SetPreviousWeapon();
+	CurrentWeapon->UnEquip();
+	CurrentWeapon = NULL;
 }
 
 // Called to bind functionality to input

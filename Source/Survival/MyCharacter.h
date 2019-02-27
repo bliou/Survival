@@ -106,6 +106,7 @@ public:
 	void EndReloading();
 
 	void StartWave();
+	void EndWave();
 
 protected:
 	void MoveForward(float Value);

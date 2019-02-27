@@ -39,6 +39,8 @@ public:
 	void EquipWeapon(int32 Slot);
 	void EquipPreviousWeapon();
 
+	void SetPreviousWeapon();
+
 	void AddWeapon(TSubclassOf<AWeapon> Weapon_BP);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)

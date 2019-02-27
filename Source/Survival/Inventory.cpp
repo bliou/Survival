@@ -13,6 +13,10 @@ void UInventory::Initialize(UWorld* World)
 	this->World = World;
 
 	MyCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	// Set the pistol
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	AddWeapon(GameState->Shop->WeaponShopItems[0]->WeaponShopData.Weapon_BP);
 }
 
 UWorld* UInventory::GetWorld() const
@@ -43,6 +47,14 @@ void UInventory::EquipWeapon(int32 Slot)
 void UInventory::EquipPreviousWeapon()
 {
 	EquipWeapon((int32)PreviousWeaponSlot);
+}
+
+void UInventory::SetPreviousWeapon()
+{
+	if (MyCharacter->CurrentWeapon)
+	{
+		PreviousWeaponSlot = MyCharacter->CurrentWeapon->WeaponType;
+	}
 }
 
 void UInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
