@@ -147,6 +147,9 @@ void AWeapon::ProcessInstantHit(
 	const FVector& End,
 	float ReticleSpread)
 {
+	const FVector EndPoint = Impact.GetActor() ? Impact.ImpactPoint : End;
+	DrawDebugLine(GetWorld(), Origin, EndPoint, FColor::Black, true, 10.f);
+
 	if (Impact.GetActor())
 	{
 		AZombie* zombie = Cast<AZombie>(Impact.GetActor());

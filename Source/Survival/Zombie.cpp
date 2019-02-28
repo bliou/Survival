@@ -66,7 +66,9 @@ bool AZombie::IsHeadShot(const FHitResult& Impact)
 	return Impact.BoneName == "Head";
 }
 
-void AZombie::TakeDamages(const FHitResult& Impact, int Damages)
+void AZombie::TakeDamages(
+	const FHitResult& Impact, 
+	int Damages)
 {
 	if (State == EZombieState::EDying)
 		return;
@@ -75,6 +77,16 @@ void AZombie::TakeDamages(const FHitResult& Impact, int Damages)
 		Damages *= 5;
 
 	ZombieConfig.Health -= Damages;
+
+	// Display the blood splatter
+	UGameplayStatics::SpawnEmitterAtLocation(
+		GetWorld(),
+		BloodSplatterParticles,
+		Impact.Location,
+		Impact.ImpactPoint.Rotation().GetInverse(),
+		true
+	);
+
 	if (ZombieConfig.Health <= 0)
 	{
 		State = EZombieState::EDying;

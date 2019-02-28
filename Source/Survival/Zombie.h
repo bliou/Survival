@@ -93,6 +93,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Montage)
 	class UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Particles)
+	class UParticleSystem* BloodSplatterParticles;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	EZombieState State;
 
