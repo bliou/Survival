@@ -87,6 +87,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Recoil)
 	bool bIsRecoiling;
 
+	bool bUnEquip;
+
 protected:
 
 	UFUNCTION()

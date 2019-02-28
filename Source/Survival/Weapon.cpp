@@ -29,6 +29,7 @@ void AWeapon::BeginPlay()
 	WeaponConfig.CurrentAmmoInClip = WeaponConfig.MaxAmmoInClip;
 
 	bIsRecoiling = false;
+	bUnEquip = false;
 
 	WeaponConfig.CurrentWeaponSpread = 1.f;
 }

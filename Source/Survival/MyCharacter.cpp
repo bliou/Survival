@@ -87,8 +87,17 @@ void AMyCharacter::StartWave()
 void AMyCharacter::EndWave()
 {
 	Inventory->SetPreviousWeapon();
-	CurrentWeapon->UnEquip();
-	CurrentWeapon = NULL;
+	if (State != ECharacterState::EReload)
+	{
+		CurrentWeapon->UnEquip();
+		CurrentWeapon = NULL;
+	}
+	else 
+	{
+		CurrentWeapon->bUnEquip = true;
+	}
+
+	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 }
 
 // Called to bind functionality to input
@@ -203,6 +212,13 @@ void AMyCharacter::EndReloading()
 {
 	if (State != ECharacterState::EDead)
 		State = ECharacterState::EIdle;
+
+	if (CurrentWeapon->bUnEquip)
+	{
+		CurrentWeapon->bUnEquip = false;
+		CurrentWeapon->UnEquip();
+		CurrentWeapon = NULL;
+	}
 }
 
 void AMyCharacter::TakeDamages(float Damages)

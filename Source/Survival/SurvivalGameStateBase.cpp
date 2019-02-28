@@ -43,6 +43,15 @@ void ASurvivalGameStateBase::Tick(float DeltaTime)
 			SpawnManager->EndWave();
 			AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			Player->EndWave();
+
+			TArray<AActor*> FoundActors;
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABarricade::StaticClass(), FoundActors);
+
+			for (AActor* FoundActor : FoundActors)
+			{
+				ABarricade* Barricade = Cast<ABarricade>(FoundActor);
+				Barricade->BarricadeConfig.CurrentHealth = Barricade->BarricadeConfig.MaxHealth;
+			}
 		}
 		break;
 	}

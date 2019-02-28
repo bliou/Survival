@@ -124,6 +124,8 @@ bool ABarricade::Place()
 	DynamicMaterial->SetVectorParameterValue(FName("MaterialColor"), FLinearColor::Black);
 	BarricadeMesh->SetMaterial(0, DynamicMaterial);
 
+	BarricadeConfig.CurrentHealth = BarricadeConfig.MaxHealth;
+
 	return true;
 }
 
