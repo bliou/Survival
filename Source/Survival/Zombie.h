@@ -32,21 +32,21 @@ struct FZombieDataTable: public FTableRowBase
 	float Damages;
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FZombieData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditDefaultsOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	float Health;
 
-	UPROPERTY(EditDefaultsOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	float DeathTimer;
 
-	UPROPERTY(EditDefaultsOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	float MovementSpeed;
 
-	UPROPERTY(EditDefaultsOnly, Category = Damage)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Damage)
 	float Damages;
 
 	UPROPERTY(EditDefaultsOnly, Category = Item)
@@ -72,7 +72,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditDefaultsOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	FZombieData ZombieConfig;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)

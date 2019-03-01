@@ -31,18 +31,20 @@ void ASpawner::InstantiateZombie(FPickupItemData PickupItemData)
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
 
-	AZombie* Zombie = GetWorld()->SpawnActor<AZombie>(ZombieSpawn, Location, Rotation, SpawnInfo);
-
+	AZombie* ZombieObj = Cast<AZombie>(ZombieSpawn->GetDefaultObject());
+	
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	static const FString ContextString = TEXT("Zombie context");
 	
-	FZombieDataTable* ZombieData = Zombie->ZombieDataTable->FindRow<FZombieDataTable>(
+	FZombieDataTable* ZombieData = ZombieObj->ZombieDataTable->FindRow<FZombieDataTable>(
 		FName(*FString::FromInt(GameState->CurrentWave)),
 		ContextString,
 		true);
-	Zombie->ZombieConfig.Damages = ZombieData->Damages;
-	Zombie->ZombieConfig.Health = ZombieData->Health;
-	Zombie->ZombieConfig.MovementSpeed = ZombieData->MovementSpeed;
-	Zombie->ZombieConfig.PickupItemData = PickupItemData;
+	ZombieObj->ZombieConfig.Damages = ZombieData->Damages;
+	ZombieObj->ZombieConfig.Health = ZombieData->Health;
+	ZombieObj->ZombieConfig.MovementSpeed = ZombieData->MovementSpeed;
+	ZombieObj->ZombieConfig.PickupItemData = PickupItemData;
+
+	GetWorld()->SpawnActor<AZombie>(ZombieSpawn, Location, Rotation, SpawnInfo);
 }
 
