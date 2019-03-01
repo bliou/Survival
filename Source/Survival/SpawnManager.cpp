@@ -77,6 +77,7 @@ void ASpawnManager::StartWave()
 	AvailablePickupItems.SetNum(ZombiesToSpawnInWave, false);
 	int LifeItemsNum = CurrentWaveConfig->LifeItems;
 	int MoneyItemsNum = CurrentWaveConfig->MoneyItems;
+	int AmmoItemsNum = CurrentWaveConfig->AmmoItems;
 	SetAvailabePickupItemsInRange(
 		FPickupItemData(EPickupItemType::ELife, 0),
 		0, 
@@ -86,8 +87,12 @@ void ASpawnManager::StartWave()
 		LifeItemsNum,
 		LifeItemsNum + MoneyItemsNum);
 	SetAvailabePickupItemsInRange(
-		FPickupItemData(EPickupItemType::ENone, 0),
+		FPickupItemData(EPickupItemType::EAmmo, CurrentWaveConfig->ClipsValue),
 		LifeItemsNum + MoneyItemsNum,
+		LifeItemsNum + MoneyItemsNum + AmmoItemsNum);
+	SetAvailabePickupItemsInRange(
+		FPickupItemData(EPickupItemType::ENone, 0),
+		LifeItemsNum + MoneyItemsNum + AmmoItemsNum,
 		ZombiesToSpawnInWave);
 
 	WaveMessage->AddToViewport();

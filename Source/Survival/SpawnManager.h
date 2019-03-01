@@ -32,6 +32,9 @@ struct FWaveDataTable: public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
 	int32 MoneyValue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Wave)
+	int32 ClipsValue;
 };
 
 

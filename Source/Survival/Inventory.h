@@ -42,6 +42,7 @@ public:
 	void SetPreviousWeapon();
 
 	void AddWeapon(TSubclassOf<AWeapon> Weapon_BP);
+	void AddAmmoToRandomWeapon(int32 Clips);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	TMap<EBarricadeType, FBarricadeInventory> Barricades;

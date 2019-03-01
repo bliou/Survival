@@ -63,6 +63,23 @@ void UInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
 	Weapons[(int)Weapon->WeaponType] = Weapon;
 }
 
+void UInventory::AddAmmoToRandomWeapon(int32 Clips)
+{
+	TArray<AWeapon*> AvailableWeapons;
+	for (AWeapon* Weapon : Weapons)
+	{
+		if (Weapon
+			&& Weapon->WeaponConfig.CurrentAmmoInStock != Weapon->WeaponConfig.MaxAmmoInStock)
+			AvailableWeapons.Add(Weapon);
+	}
+	int AvailableWeaponIndex = FMath::RandRange(0, AvailableWeapons.Num() - 1);
+	AWeapon* WeaponToAddAmmo = AvailableWeapons[AvailableWeaponIndex];
+	WeaponToAddAmmo->WeaponConfig.CurrentAmmoInStock += WeaponToAddAmmo->WeaponConfig.MaxAmmoInClip * Clips;
+
+	if (WeaponToAddAmmo->WeaponConfig.CurrentAmmoInStock > WeaponToAddAmmo->WeaponConfig.MaxAmmoInStock)
+		WeaponToAddAmmo->WeaponConfig.CurrentAmmoInStock = WeaponToAddAmmo->WeaponConfig.MaxAmmoInStock;
+}
+
 void UInventory::AddBarricades(
 	EBarricadeType BarricadeType,
 	int32 Quantity,

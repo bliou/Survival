@@ -33,4 +33,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Item)
 	TSubclassOf<APickupItem> MoneyItem;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Item)
+	TSubclassOf<APickupItem> AmmoItem;
 };

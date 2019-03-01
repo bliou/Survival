@@ -40,7 +40,11 @@ void APickupItemsGenerator::GeneratePickupItem(
 	case EPickupItemType::EMoney:
 		PickupItem = GetWorld()->SpawnActor<APickupItem>(MoneyItem, Location, Rotation, SpawnInfo);
 		break;
+	case EPickupItemType::EAmmo:
+		PickupItem = GetWorld()->SpawnActor<APickupItem>(AmmoItem, Location, Rotation, SpawnInfo);
+		break;
 	}
+
 	if (PickupItem)
 		PickupItem->PickupItemConfig = PickupItemData;
 }

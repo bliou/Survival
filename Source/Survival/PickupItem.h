@@ -11,7 +11,8 @@ enum class EPickupItemType : uint8
 {
 	ENone			UMETA(DisplayName = "None"),
 	ELife			UMETA(DisplayName = "Life"),
-	EMoney			UMETA(DisplayName = "Money")
+	EMoney			UMETA(DisplayName = "Money"),
+	EAmmo			UMETA(DisplayName = "Ammo")
 };
 
 USTRUCT(BlueprintType)
