@@ -63,7 +63,15 @@ void UInventory::AddWeapon(TSubclassOf<AWeapon> Weapon_BP)
 	Weapons[(int)Weapon->WeaponType] = Weapon;
 }
 
-void UInventory::AddAmmoToRandomWeapon(int32 Clips)
+void UInventory::AddAmmosToWeapon(EWeaponType WeaponType, int32 Ammos)
+{
+	AWeapon* Weapon = Weapons[(int)WeaponType];
+	Weapon->WeaponConfig.CurrentAmmoInStock += Ammos;
+	if (Weapon->WeaponConfig.CurrentAmmoInStock > Weapon->WeaponConfig.MaxAmmoInStock)
+		Weapon->WeaponConfig.CurrentAmmoInStock = Weapon->WeaponConfig.MaxAmmoInStock;
+}
+
+void UInventory::AddClipsToRandomWeapon(int32 Clips)
 {
 	TArray<AWeapon*> AvailableWeapons;
 	for (AWeapon* Weapon : Weapons)

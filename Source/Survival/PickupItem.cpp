@@ -74,7 +74,7 @@ void APickupItem::OnCollide(
 			MyCharacter->CharacterConfig.CurrentMoney += PickupItemConfig.Value;
 			break;
 		case EPickupItemType::EAmmo:
-			MyCharacter->Inventory->AddAmmoToRandomWeapon(PickupItemConfig.Value);
+			MyCharacter->Inventory->AddClipsToRandomWeapon(PickupItemConfig.Value);
 			break;
 		}
 

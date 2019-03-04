@@ -11,10 +11,10 @@ struct FWeaponData : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = Ammo)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Clip)
 		int32 MaxAmmoInStock;
 
-	UPROPERTY(EditDefaultsOnly, Category = Clip)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Clip)
 		int32 MaxAmmoInClip;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Clip)

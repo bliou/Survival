@@ -27,4 +27,7 @@ struct FWeaponShopData : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	TSubclassOf<AWeapon> Weapon_BP;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	class UDataTable* AmmoPriceUpgrade;
 };
