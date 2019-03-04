@@ -120,7 +120,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
 	PlayerInputComponent->BindAction("StartWave", IE_Pressed, this, &AMyCharacter::StartWave);
-	PlayerInputComponent->BindAction("Buy", IE_Pressed, this, &AMyCharacter::Buy);
+	PlayerInputComponent->BindAction("OpenShop", IE_Pressed, this, &AMyCharacter::OpenShop);
+	PlayerInputComponent->BindAction("ExitShop", IE_Pressed, this, &AMyCharacter::ExitShop);
 
 	PlayerInputComponent->BindAction("BarricadeInteraction", IE_Pressed, this, &AMyCharacter::BarricadeInteraction);
 	PlayerInputComponent->BindAction("RotateBarricadeLeft", IE_Pressed, this, &AMyCharacter::RotateBarricadeLeft);
@@ -348,7 +349,7 @@ void AMyCharacter::KillPlayer()
 {
 }
 
-void AMyCharacter::Buy()
+void AMyCharacter::OpenShop()
 {
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	if (GameState->CurrentState == EGameState::EInBetweenWaves)
@@ -356,6 +357,13 @@ void AMyCharacter::Buy()
 		ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
 		GameMode->SwitchWidget(EWidgetType::EShop);
 	}
+}
+
+void AMyCharacter::ExitShop()
+{
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (GameMode->CurrentWidgetType == EWidgetType::EShop)
+	GameMode->SwitchWidget(EWidgetType::EInGame);
 }
 
 void AMyCharacter::BarricadeInteraction()

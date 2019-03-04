@@ -134,7 +134,8 @@ protected:
 	void InteractWithBarricade();
 	ABarricade* InterractableBarricade;
 
-	void Buy();
+	void OpenShop();
+	void ExitShop();
 
 	void EndTakeDamages();
 	void KillPlayer();
