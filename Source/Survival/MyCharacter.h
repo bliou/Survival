@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	int32 MaxHealth;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Config)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Config)
 	int32 CurrentHealth;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
@@ -69,7 +69,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	UCameraComponent* FPSCameraComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Config)
 	FCharacterData CharacterConfig;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = State)

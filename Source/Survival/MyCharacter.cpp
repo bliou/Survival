@@ -41,7 +41,7 @@ void AMyCharacter::BeginPlay()
 	Inventory = NewObject<UInventory>();
 	Inventory->Initialize(GetWorld());
 
-	StartWave();
+	//StartWave();
 }
 
 // Called every frame
