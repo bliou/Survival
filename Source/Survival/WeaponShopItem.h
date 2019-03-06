@@ -31,8 +31,44 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	int32 CurrentAmmoPriceLevel;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	TArray<FItemUpgradeData> DamageUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	int32 CurrentDamageLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	TArray<FItemUpgradeData> RangeUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	int32 CurrentRangeLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	TArray<FItemUpgradeData> AmmoInStockUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	int32 CurrentAmmoInStockLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	TArray<FItemUpgradeData> AmmoInClipUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	int32 CurrentAmmoInClipLevel;
+
 	UFUNCTION(BlueprintCallable)
 	void UpgradeAmmoPrice();
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeDammages();
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeRange();
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeAmmoInStock();
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeAmmoInClip();
 
 	UFUNCTION(BlueprintCallable)
 	void Buy();
