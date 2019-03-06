@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BarricadeShopData.h"
-#include "BarricadeHealthUpgrade.h"
-#include "BarricadeBuyPriceUpgrade.h"
+#include "ItemUpgradeData.h"
 #include "BarricadeShopItem.generated.h"
 
 /**
@@ -21,13 +20,13 @@ public:
 	FBarricadeShopData BarricadeShopData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
-	TArray<FBarricadeHealthUpgrade> HealthUpgrades;
+	TArray<FItemUpgradeData> HealthUpgrades;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	int32 CurrentHealthLevel;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
-	TArray<FBarricadeBuyPriceUpgrade> BuyPriceUpgrades;
+	TArray<FItemUpgradeData> BuyPriceUpgrades;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	int32 CurrentBuyPriceLevel;

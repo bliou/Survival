@@ -14,18 +14,18 @@ void UBarricadeShopItem::Initialize(
 	static FString ContextString = "Init barricade shop items";
 	for (FName RowName : BarricadeShopData.HealthUpgrade->GetRowNames())
 	{
-		FBarricadeHealthUpgrade* HealthUpgrade = BarricadeShopData.HealthUpgrade->FindRow<FBarricadeHealthUpgrade>(RowName, ContextString, true);
+		FItemUpgradeData* HealthUpgrade = BarricadeShopData.HealthUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
 		HealthUpgrades.Add(*HealthUpgrade);
 	}
 
 	for (FName RowName : BarricadeShopData.BuyPriceUpgrade->GetRowNames())
 	{
-		FBarricadeBuyPriceUpgrade* BuyPriceUpgrade = BarricadeShopData.BuyPriceUpgrade->FindRow<FBarricadeBuyPriceUpgrade>(RowName, ContextString, true);
+		FItemUpgradeData* BuyPriceUpgrade = BarricadeShopData.BuyPriceUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
 		BuyPriceUpgrades.Add(*BuyPriceUpgrade);
 	}
-	this->BarricadeShopData.Price = BuyPriceUpgrades[0].BuyPrice;
+	this->BarricadeShopData.Price = BuyPriceUpgrades[0].UpgradeValue;
 	ABarricade* Barricade = Cast<ABarricade>(BarricadeShopData.Barricade_BP->GetDefaultObject());
-	Barricade->BarricadeConfig.MaxHealth = HealthUpgrades[0].Health;
+	Barricade->BarricadeConfig.MaxHealth = HealthUpgrades[0].UpgradeValue;
 	Barricade->BarricadeConfig.BarricadeType = BarricadeShopData.BarricadeType;
 }
 
@@ -52,7 +52,7 @@ void UBarricadeShopItem::UpgradeHealth()
 	Player->CharacterConfig.CurrentMoney -= HealthUpgrades[CurrentHealthLevel].Price;
 
 	// Update the max health where needed
-	int32 NewMaxHealth = HealthUpgrades[CurrentHealthLevel].Health;
+	int32 NewMaxHealth = HealthUpgrades[CurrentHealthLevel].UpgradeValue;
 	ABarricade* Barricade = Cast<ABarricade>(BarricadeShopData.Barricade_BP->GetDefaultObject());
 	Barricade->BarricadeConfig.MaxHealth = NewMaxHealth;
 
@@ -76,6 +76,6 @@ void UBarricadeShopItem::UpgradeBuyPrice()
 	Player->CharacterConfig.CurrentMoney -= BuyPriceUpgrades[CurrentBuyPriceLevel].Price;
 
 	// Update the max health where needed
-	int32 NewBuyPrice = BuyPriceUpgrades[CurrentBuyPriceLevel].BuyPrice;
+	int32 NewBuyPrice = BuyPriceUpgrades[CurrentBuyPriceLevel].UpgradeValue;
 	BarricadeShopData.Price = NewBuyPrice;
 }
