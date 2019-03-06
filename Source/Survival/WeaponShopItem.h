@@ -6,7 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "Weapon.h"
 #include "WeaponShopData.h"
-#include "WeaponAmmoPriceUpgrade.h"
+#include "ItemUpgradeData.h"
 #include "WeaponShopItem.generated.h"
 
 /**
@@ -26,7 +26,7 @@ public:
 	EWeaponType WeaponType;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
-	TArray<FWeaponAmmoPriceUpgrade> AmmoPriceUpgrades;
+	TArray<FItemUpgradeData> AmmoPriceUpgrades;
 		
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	int32 CurrentAmmoPriceLevel;

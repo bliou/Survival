@@ -15,7 +15,7 @@ void UWeaponShopItem::Initialize(UWorld* World, FWeaponShopData WeaponShopData)
 	static FString ContextString = "Init weapons shop items";
 	for (FName RowName : WeaponShopData.AmmoPriceUpgrade->GetRowNames())
 	{
-		FWeaponAmmoPriceUpgrade* AmmoPriceUpdate = WeaponShopData.AmmoPriceUpgrade->FindRow<FWeaponAmmoPriceUpgrade>(RowName, ContextString, true);
+		FItemUpgradeData* AmmoPriceUpdate = WeaponShopData.AmmoPriceUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
 		AmmoPriceUpgrades.Add(*AmmoPriceUpdate);
 	}
 }
@@ -23,6 +23,9 @@ void UWeaponShopItem::Initialize(UWorld* World, FWeaponShopData WeaponShopData)
 void UWeaponShopItem::UpgradeAmmoPrice()
 {
 	CurrentAmmoPriceLevel++;
+
+	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	Player->CharacterConfig.CurrentMoney -= AmmoPriceUpgrades[CurrentAmmoPriceLevel].Price;
 }
 
 void UWeaponShopItem::Buy()
@@ -37,7 +40,7 @@ void UWeaponShopItem::Buy()
 void UWeaponShopItem::BuyAmmos(int32 Ammos)
 {
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->CharacterConfig.CurrentMoney -= AmmoPriceUpgrades[CurrentAmmoPriceLevel].AmmoPrice * Ammos;
+	Player->CharacterConfig.CurrentMoney -= AmmoPriceUpgrades[CurrentAmmoPriceLevel].UpgradeValue * Ammos;
 
 	Player->Inventory->AddAmmosToWeapon(WeaponType, Ammos);
 }

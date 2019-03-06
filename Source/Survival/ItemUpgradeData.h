@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "WeaponAmmoPriceUpgrade.generated.h"
+#include "ItemUpgradeData.generated.h"
 
 
 USTRUCT(BlueprintType)
-struct FWeaponAmmoPriceUpgrade : public FTableRowBase
+struct FItemUpgradeData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
-	int32 AmmoPrice;
+	float UpgradeValue;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	int32 Price;
