@@ -8,7 +8,7 @@ ASniper::ASniper()
 	: Super()
 {
 	WeaponType = EWeaponType::ESniper;
-	WeaponProjectile = EWeaponProjectile::EPierce;
+	WeaponProjectile = EWeaponProjectile::EBullet;
 
 	TimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComponent"));
 	InterpFunction.BindUFunction(this, FName("TimelineFloatReturn"));

@@ -90,13 +90,13 @@ void AWeapon::InstantFire()
 	UCameraComponent* FPSCamera = MyPawn->FPSCameraComponent;
 	FVector FPSCameraWorldLocation = FPSCamera->GetComponentLocation();
 	FVector FPSCameraForwardVector = FPSCamera->GetForwardVector();
-	FVector StartTrace = FPSCameraWorldLocation;
+	FVector StartTrace = WeaponMesh->GetSocketLocation("MS");
 
 	const int32 RandomSeed = FMath::Rand();
 	FRandomStream WeaponRandomStream(RandomSeed);
 	const float ConeHalfAngle = FMath::DegreesToRadians(WeaponConfig.WeaponShots * 0.5f * WeaponConfig.CurrentWeaponSpread);
 	const FVector ShootDir = WeaponRandomStream.VRandCone(FPSCameraForwardVector, ConeHalfAngle, ConeHalfAngle);
-	FVector EndTrace = ShootDir * WeaponConfig.WeaponRange + StartTrace;
+	FVector EndTrace = ShootDir * WeaponConfig.WeaponRange + FPSCameraWorldLocation;
 
 	if (WeaponProjectile == EWeaponProjectile::EBullet
 		|| WeaponProjectile == EWeaponProjectile::ESpread)
@@ -155,6 +155,8 @@ FHitResult AWeapon::BulletTrace(
 		ECollisionChannel::ECC_PhysicsBody, 
 		TraceParams);
 
+	DrawDebugLine(GetWorld(), TraceFrom, TraceTo, FColor::Black, true, 20.f);
+
 	return Hit;
 }
 
@@ -162,7 +164,7 @@ TArray<FHitResult> AWeapon::PierceTrace(
 	const FVector& TraceFrom,
 	const FVector& TraceTo) const
 {
-	static FName WeaponFireTag = FName(TEXT("BulletFireTag"));
+	static FName WeaponFireTag = FName(TEXT("PierceFireTag"));
 
 	FCollisionQueryParams TraceParams(WeaponFireTag, true, Instigator);
 	TraceParams.bTraceAsyncScene = true;
@@ -178,6 +180,7 @@ TArray<FHitResult> AWeapon::PierceTrace(
 		ECollisionChannel::ECC_PhysicsBody,
 		TraceParams);
 
+	DrawDebugLine(GetWorld(), TraceFrom, TraceTo, FColor::Black, true, 20.f);
 	return Hits;
 }
 

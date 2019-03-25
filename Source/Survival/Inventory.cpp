@@ -17,6 +17,9 @@ void UInventory::Initialize(UWorld* World)
 	// Set the pistol
 	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
 	AddWeapon(GameState->Shop->WeaponShopItems[0]->WeaponShopData.Weapon_BP);
+	AddWeapon(GameState->Shop->WeaponShopItems[1]->WeaponShopData.Weapon_BP);
+	AddWeapon(GameState->Shop->WeaponShopItems[2]->WeaponShopData.Weapon_BP);
+	AddWeapon(GameState->Shop->WeaponShopItems[3]->WeaponShopData.Weapon_BP);
 }
 
 UWorld* UInventory::GetWorld() const
