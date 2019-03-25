@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FGenericCrashContext>
+<RuntimeProperties>
+<CrashVersion>3</CrashVersion>
+<CrashGUID>UE4CC-Windows-970F006A481C6C0EB60255B1415885FF_0000</CrashGUID>
+<ProcessId>6048</ProcessId>
+<IsInternalBuild>false</IsInternalBuild>
+<IsPerforceBuild>false</IsPerforceBuild>
+<IsSourceDistribution>false</IsSourceDistribution>
+<IsEnsure>false</IsEnsure>
+<IsAssert>false</IsAssert>
+<CrashType>Crash</CrashType>
+<SecondsSinceStart>4</SecondsSinceStart>
+<GameName>UE4-Survival</GameName>
+<ExecutableName>Survival</ExecutableName>
+<BuildConfiguration>Development</BuildConfiguration>
+<GameSessionID></GameSessionID>
+<Symbols>**UE4*Release-4.21-CL-4753647-Win64-Development</Symbols>
+<PlatformName>WindowsNoEditor</PlatformName>
+<PlatformNameIni>Windows</PlatformNameIni>
+<EngineMode>Game</EngineMode>
+<EngineModeEx>Unset</EngineModeEx>
+<DeploymentName></DeploymentName>
+<EngineVersion>4.21.2-4753647+++UE4+Release-4.21</EngineVersion>
+<CommandLine>Survival</CommandLine>
+<LanguageLCID>1036</LanguageLCID>
+<AppDefaultLocale>fr-FR</AppDefaultLocale>
+<BuildVersion>++UE4+Release-4.21-CL-4753647</BuildVersion>
+<IsUE4Release>false</IsUE4Release>
+<UserName></UserName>
+<BaseDir>C:/Users/User/Documents/Unreal Projects/Survival/Package/WindowsNoEditor/Survival/Binaries/Win64/</BaseDir>
+<RootDir>C:/Users/User/Documents/Unreal Projects/Survival/Package/WindowsNoEditor/</RootDir>
+<MachineId>4FE48DE948174CD81C3F22BFE6CFE1A8</MachineId>
+<LoginId>4fe48de948174cd81c3f22bfe6cfe1a8</LoginId>
+<EpicAccountId>98aace2d19084a7c9b65eee94e98cf59</EpicAccountId>
+<CallStack></CallStack>
+<PCallStack>
+Survival  0x0000000090ce0000 + 988bc7  
+Survival  0x0000000090ce0000 + 98a1c8  
+Survival  0x0000000090ce0000 + 2c3035d 
+Survival  0x0000000090ce0000 + 3b3bc13 
+Survival  0x0000000090ce0000 + 31ad8a1 
+Survival  0x0000000090ce0000 + 3b007fe 
+Survival  0x0000000090ce0000 + 3a0d768 
+Survival  0x0000000090ce0000 + 39a8f1e 
+Survival  0x0000000090ce0000 + 3a409c2 
+Survival  0x0000000090ce0000 + 315cf75 
+Survival  0x0000000090ce0000 + 440219  
+Survival  0x0000000090ce0000 + 44fc6c  
+Survival  0x0000000090ce0000 + 44fcca  
+Survival  0x0000000090ce0000 + 45e2b5  
+Survival  0x0000000090ce0000 + 47f8a16 
+KERNEL32  0x00000000283f0000 + 13dc4   
+ntdll     0x000000002aa00000 + 73691   
+</PCallStack>
+<SourceContext></SourceContext>
+<UserDescription></UserDescription>
+<UserActivityHint></UserActivityHint>
+<ErrorMessage></ErrorMessage>
+<CrashDumpMode>0</CrashDumpMode>
+<CrashReporterMessage></CrashReporterMessage>
+<Misc.NumberOfCores>4</Misc.NumberOfCores>
+<Misc.NumberOfCoresIncludingHyperthreads>8</Misc.NumberOfCoresIncludingHyperthreads>
+<Misc.Is64bitOperatingSystem>1</Misc.Is64bitOperatingSystem>
+<Misc.CPUVendor>GenuineIntel</Misc.CPUVendor>
+<Misc.CPUBrand>Intel(R) Core(TM) i7-5700HQ CPU @ 2.70GHz</Misc.CPUBrand>
+<Misc.PrimaryGPUBrand>Intel(R) HD Graphics 5600</Misc.PrimaryGPUBrand>
+<Misc.OSVersionMajor>Windows 10</Misc.OSVersionMajor>
+<Misc.OSVersionMinor></Misc.OSVersionMinor>
+<GameStateName>GameState</GameStateName>
+<MemoryStats.TotalPhysical>8501035008</MemoryStats.TotalPhysical>
+<MemoryStats.TotalVirtual>140737488224256</MemoryStats.TotalVirtual>
+<MemoryStats.PageSize>4096</MemoryStats.PageSize>
+<MemoryStats.TotalPhysicalGB>8</MemoryStats.TotalPhysicalGB>
+<MemoryStats.AvailablePhysical>0</MemoryStats.AvailablePhysical>
+<MemoryStats.AvailableVirtual>0</MemoryStats.AvailableVirtual>
+<MemoryStats.UsedPhysical>0</MemoryStats.UsedPhysical>
+<MemoryStats.PeakUsedPhysical>0</MemoryStats.PeakUsedPhysical>
+<MemoryStats.UsedVirtual>0</MemoryStats.UsedVirtual>
+<MemoryStats.PeakUsedVirtual>0</MemoryStats.PeakUsedVirtual>
+<MemoryStats.bIsOOM>0</MemoryStats.bIsOOM>
+<MemoryStats.OOMAllocationSize>0</MemoryStats.OOMAllocationSize>
+<MemoryStats.OOMAllocationAlignment>0</MemoryStats.OOMAllocationAlignment>
+</RuntimeProperties>
+<PlatformProperties>
+<PlatformIsRunningWindows>1</PlatformIsRunningWindows>
+<PlatformCallbackResult>0</PlatformCallbackResult>
+</PlatformProperties>
+</FGenericCrashContext>

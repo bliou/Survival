@@ -41,7 +41,7 @@ void AMyCharacter::BeginPlay()
 	Inventory = NewObject<UInventory>();
 	Inventory->Initialize(GetWorld());
 
-	//StartWave();
+	StartWave();
 }
 
 // Called every frame
@@ -113,9 +113,12 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Fire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMyCharacter::StopAutoFiring);
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AMyCharacter::StartAiming);
+	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AMyCharacter::StopAiming);
 	PlayerInputComponent->BindAction("EquipFirstItem", IE_Pressed, this, &AMyCharacter::EquipFirstItem);
 	PlayerInputComponent->BindAction("EquipSecondItem", IE_Pressed, this, &AMyCharacter::EquipSecondItem);
 	PlayerInputComponent->BindAction("EquipThirdItem", IE_Pressed, this, &AMyCharacter::EquipThirdItem);
+	PlayerInputComponent->BindAction("EquipFourthItem", IE_Pressed, this, &AMyCharacter::EquipFourthItem);
 	PlayerInputComponent->BindAction("UnEquip", IE_Pressed, this, &AMyCharacter::UnEquip);
 	PlayerInputComponent->BindAction("EquipPreviousWeapon", IE_Pressed, this, &AMyCharacter::EquipPreviousWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMyCharacter::StartReloading);
@@ -192,6 +195,20 @@ void AMyCharacter::StopAutoFiring()
 {
 	if (State == ECharacterState::EFire)
 		State = ECharacterState::EIdle;
+}
+
+void AMyCharacter::StartAiming()
+{
+	if (!CurrentWeapon)
+		return;
+	CurrentWeapon->StartAiming();
+}
+
+void AMyCharacter::StopAiming()
+{
+	if (!CurrentWeapon)
+		return;
+	CurrentWeapon->EndAiming();
 }
 
 void AMyCharacter::StartReloading()
@@ -305,6 +322,20 @@ void AMyCharacter::EquipThirdItem()
 	}
 }
 
+void AMyCharacter::EquipFourthItem()
+{
+	ASurvivalGameModeBase* GameMode = Cast<ASurvivalGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->CurrentWidgetType == EWidgetType::EInGame)
+	{
+		ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+		if (GameState->CurrentState == EGameState::EInBetweenWaves)
+			Inventory->EquipBarricade(3);
+		else
+			Inventory->EquipWeapon(3);
+	}
+}
+
 void AMyCharacter::UnEquip()
 {
 	if (CurrentWeapon)
@@ -333,7 +364,8 @@ void AMyCharacter::EndEquipping()
 	if (State != ECharacterState::EDead)
 		State = ECharacterState::EIdle;
 
-	if (!CurrentWeapon)
+	if (!CurrentWeapon
+		|| !CurrentWeapon->wReticleWidget)
 		return;
 	if (!CurrentWeapon->ReticleWidget)
 		CurrentWeapon->ReticleWidget = CreateWidget<UUserWidget>(GetWorld(), CurrentWeapon->wReticleWidget);

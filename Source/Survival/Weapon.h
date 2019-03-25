@@ -17,7 +17,7 @@ enum class EWeaponProjectile: uint8
 {
 	EBullet			UMETA(DisplayName = "Bullet"),
 	ESpread			UMETA(DisplayName = "Spread"),
-	EProjectile		UMETA(DisplayName = "Projectile")
+	EPierce			UMETA(DisplayName = "Pierce")
 };
 
 UENUM(BlueprintType)
@@ -46,10 +46,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
 	FWeaponData WeaponConfig;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
 	EWeaponType WeaponType;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
 	EWeaponProjectile WeaponProjectile;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Collision)
@@ -94,7 +94,8 @@ protected:
 	UFUNCTION()
 	void InstantFire();
 
-	FHitResult WeaponTrace(const FVector& TraceFrom, const FVector& TraceTo) const;
+	FHitResult BulletTrace(const FVector& TraceFrom, const FVector& TraceTo) const;
+	TArray<FHitResult> PierceTrace(const FVector& TraceFrom, const FVector& TraceTo) const;
 
 	void ProcessInstantHit(
 		const FHitResult& Impact,
@@ -110,7 +111,9 @@ public:
 	void Equip();
 	void UnEquip();
 	void StartReloading();
-	void Reload();
+	virtual void Reload();
+	virtual void StartAiming();
+	virtual void EndAiming();
 
 	void EndRecoiling();
 

@@ -115,11 +115,14 @@ protected:
 
 	void Fire();
 	void StopAutoFiring();
+	void StartAiming();
+	void StopAiming();
 	void StartReloading();
 
 	void EquipFirstItem();
 	void EquipSecondItem();
 	void EquipThirdItem();
+	void EquipFourthItem();
 
 	void UnEquip();
 

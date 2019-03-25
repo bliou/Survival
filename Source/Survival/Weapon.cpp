@@ -60,6 +60,7 @@ void AWeapon::Fire()
 	switch (WeaponProjectile)
 	{
 	case EWeaponProjectile::EBullet:
+	case EWeaponProjectile::EPierce:
 		InstantFire();
 		break;
 	case EWeaponProjectile::ESpread:
@@ -67,9 +68,6 @@ void AWeapon::Fire()
 		{
 			InstantFire();
 		}
-		break;
-	case EWeaponProjectile::EProjectile:
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, FString(TEXT("Fire Projectile")));
 		break;
 	}
 
@@ -99,14 +97,33 @@ void AWeapon::InstantFire()
 	const float ConeHalfAngle = FMath::DegreesToRadians(WeaponConfig.WeaponShots * 0.5f * WeaponConfig.CurrentWeaponSpread);
 	const FVector ShootDir = WeaponRandomStream.VRandCone(FPSCameraForwardVector, ConeHalfAngle, ConeHalfAngle);
 	FVector EndTrace = ShootDir * WeaponConfig.WeaponRange + StartTrace;
-	const FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
 
-	ProcessInstantHit(
-		Impact,
-		StartTrace,
-		EndTrace,
-		WeaponConfig.CurrentWeaponSpread
-	);
+	if (WeaponProjectile == EWeaponProjectile::EBullet
+		|| WeaponProjectile == EWeaponProjectile::ESpread)
+	{
+		const FHitResult Impact = BulletTrace(StartTrace, EndTrace);
+
+		ProcessInstantHit(
+			Impact,
+			StartTrace,
+			EndTrace,
+			WeaponConfig.CurrentWeaponSpread
+		);
+	}
+	else
+	{
+		TArray<FHitResult> Impacts = PierceTrace(StartTrace, EndTrace);
+
+		for (FHitResult Impact : Impacts)
+		{
+			ProcessInstantHit(
+				Impact,
+				StartTrace,
+				EndTrace,
+				WeaponConfig.CurrentWeaponSpread
+			);
+		}
+	}
 
 	// Display the particles of the weapon
 	UGameplayStatics::SpawnEmitterAtLocation(
@@ -118,11 +135,11 @@ void AWeapon::InstantFire()
 	);
 }
 
-FHitResult AWeapon::WeaponTrace(
+FHitResult AWeapon::BulletTrace(
 	const FVector& TraceFrom,
 	const FVector& TraceTo) const
 {
-	static FName WeaponFireTag = FName(TEXT("WeaponFireTag"));
+	static FName WeaponFireTag = FName(TEXT("BulletFireTag"));
 
 	FCollisionQueryParams TraceParams(WeaponFireTag, true, Instigator);
 	TraceParams.bTraceAsyncScene = true;
@@ -139,6 +156,29 @@ FHitResult AWeapon::WeaponTrace(
 		TraceParams);
 
 	return Hit;
+}
+
+TArray<FHitResult> AWeapon::PierceTrace(
+	const FVector& TraceFrom,
+	const FVector& TraceTo) const
+{
+	static FName WeaponFireTag = FName(TEXT("BulletFireTag"));
+
+	FCollisionQueryParams TraceParams(WeaponFireTag, true, Instigator);
+	TraceParams.bTraceAsyncScene = true;
+	TraceParams.bReturnPhysicalMaterial = true;
+	TraceParams.AddIgnoredActor(this);
+
+	TArray<FHitResult> Hits;
+
+	GetWorld()->LineTraceMultiByChannel(
+		Hits,
+		TraceFrom,
+		TraceTo,
+		ECollisionChannel::ECC_PhysicsBody,
+		TraceParams);
+
+	return Hits;
 }
 
 void AWeapon::ProcessInstantHit(
@@ -216,7 +256,9 @@ void AWeapon::UnEquip()
 {
 	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepRelative, true));
 	WeaponMesh->SetHiddenInGame(true);
-	ReticleWidget->RemoveFromParent();
+	EndAiming();
+	if (ReticleWidget)
+		ReticleWidget->RemoveFromParent();
 }
 
 void AWeapon::StartReloading()
@@ -238,32 +280,15 @@ void AWeapon::StartReloading()
 			&AMyCharacter::EndReloading,
 			ReloadMontage->GetPlayLength(),
 			false);
+		EndAiming();
 	}
 }
 
 void AWeapon::Reload()
 {
-	if (WeaponType != EWeaponType::EShotgun)
-	{
-		int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
-		WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
-		WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
-	}
-	else
-	{
-		WeaponConfig.CurrentAmmoInClip++;
-		WeaponConfig.CurrentAmmoInStock--;
-		if (WeaponConfig.CurrentAmmoInClip != WeaponConfig.MaxAmmoInClip
-			&& WeaponConfig.CurrentAmmoInStock != 0)
-		{
-			UAnimInstance* AnimInstance = MyPawn->GetMesh()->GetAnimInstance();
-			if (AnimInstance != NULL)
-			{
-				FName CurrentSection = AnimInstance->Montage_GetCurrentSection();
-				AnimInstance->Montage_JumpToSection(CurrentSection, ReloadMontage);
-			}
-		}
-	}
+	int32 ReloadAmmo = FMath::Min(WeaponConfig.CurrentAmmoInStock, WeaponConfig.MaxAmmoInClip - WeaponConfig.CurrentAmmoInClip);
+	WeaponConfig.CurrentAmmoInClip += ReloadAmmo;
+	WeaponConfig.CurrentAmmoInStock -= ReloadAmmo;
 }
 
 void AWeapon::IncreaseSpread()
@@ -293,4 +318,13 @@ void AWeapon::EndRecoiling()
 	if (WeaponConfig.CurrentAmmoInClip <= 0
 		&& WeaponConfig.CurrentAmmoInStock > 0)
 		StartReloading();
+}
+
+void AWeapon::StartAiming()
+{
+}
+
+void AWeapon::EndAiming()
+{
+
 }
