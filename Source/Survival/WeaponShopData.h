@@ -38,8 +38,8 @@ struct FWeaponShopData : public FTableRowBase
 	class UDataTable* RangeUpgrade;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
-	class UDataTable* AmmoInStockUpgrade;
+	class UDataTable* AmmosUpgrade;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
-	class UDataTable* AmmoInClipUpgrade;
+	class UDataTable* ReloadTimeUpgrade;
 };

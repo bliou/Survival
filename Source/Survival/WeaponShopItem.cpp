@@ -28,22 +28,22 @@ void UWeaponShopItem::Initialize(UWorld* World, FWeaponShopData WeaponShopData)
 		FItemUpgradeData* RangeUpgrade = WeaponShopData.RangeUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
 		RangeUpgrades.Add(*RangeUpgrade);
 	}
-	for (FName RowName : WeaponShopData.AmmoInStockUpgrade->GetRowNames())
+	for (FName RowName : WeaponShopData.AmmosUpgrade->GetRowNames())
 	{
-		FItemUpgradeData* AmmoInStockUpgrade = WeaponShopData.AmmoInStockUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
-		AmmoInStockUpgrades.Add(*AmmoInStockUpgrade);
+		FItemUpgradeData* AmmosUpgrade = WeaponShopData.AmmosUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
+		AmmosUpgrades.Add(*AmmosUpgrade);
 	}
-	for (FName RowName : WeaponShopData.AmmoInClipUpgrade->GetRowNames())
+	for (FName RowName : WeaponShopData.ReloadTimeUpgrade->GetRowNames())
 	{
-		FItemUpgradeData* AmmoInClipUpgrade = WeaponShopData.AmmoInClipUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
-		AmmoInClipUpgrades.Add(*AmmoInClipUpgrade);
+		FItemUpgradeData* ReloadTimeUpgrade = WeaponShopData.ReloadTimeUpgrade->FindRow<FItemUpgradeData>(RowName, ContextString, true);
+		ReloadTimeUpgrades.Add(*ReloadTimeUpgrade);
 	}
 
 	AWeapon* Weapon = Cast<AWeapon>(WeaponShopData.Weapon_BP->GetDefaultObject());
 	Weapon->WeaponConfig.Damages = DamageUpgrades[0].UpgradeValue;
 	Weapon->WeaponConfig.WeaponRange = RangeUpgrades[0].UpgradeValue;
-	Weapon->WeaponConfig.MaxAmmoInStock = AmmoInStockUpgrades[0].UpgradeValue;
-	Weapon->WeaponConfig.MaxAmmoInClip = AmmoInClipUpgrades[0].UpgradeValue;
+	Weapon->WeaponConfig.MaxAmmoInStock = AmmosUpgrades[0].UpgradeValue;
+	Weapon->WeaponConfig.ReloadTime = ReloadTimeUpgrades[0].UpgradeValue;
 }
 
 void UWeaponShopItem::UpgradeAmmoPrice()
@@ -74,24 +74,24 @@ void UWeaponShopItem::UpgradeRange()
 	Player->Inventory->Weapons[(int)WeaponType]->WeaponConfig.WeaponRange = RangeUpgrades[CurrentRangeLevel].UpgradeValue;
 }
 
-void UWeaponShopItem::UpgradeAmmoInStock()
+void UWeaponShopItem::UpgradeAmmos()
 {
-	CurrentAmmoInStockLevel++;
+	CurrentAmmosLevel++;
 
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->CharacterConfig.CurrentMoney -= AmmoInStockUpgrades[CurrentAmmoInStockLevel].Price;
+	Player->CharacterConfig.CurrentMoney -= AmmosUpgrades[CurrentAmmosLevel].Price;
 
-	Player->Inventory->Weapons[(int)WeaponType]->WeaponConfig.MaxAmmoInStock = AmmoInStockUpgrades[CurrentAmmoInStockLevel].UpgradeValue;
+	Player->Inventory->Weapons[(int)WeaponType]->WeaponConfig.MaxAmmoInStock = AmmosUpgrades[CurrentAmmosLevel].UpgradeValue;
 }
 
-void UWeaponShopItem::UpgradeAmmoInClip()
+void UWeaponShopItem::UpgradeReloadTime()
 {
-	CurrentAmmoInClipLevel++;
+	CurrentReloadLevel++;
 
 	AMyCharacter* Player = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->CharacterConfig.CurrentMoney -= AmmoInClipUpgrades[CurrentAmmoInClipLevel].Price;
+	Player->CharacterConfig.CurrentMoney -= ReloadTimeUpgrades[CurrentReloadLevel].Price;
 
-	Player->Inventory->Weapons[(int)WeaponType]->WeaponConfig.MaxAmmoInClip = AmmoInClipUpgrades[CurrentAmmoInClipLevel].UpgradeValue;
+	Player->Inventory->Weapons[(int)WeaponType]->WeaponConfig.ReloadTime = ReloadTimeUpgrades[CurrentReloadLevel].UpgradeValue;
 }
 
 void UWeaponShopItem::Buy()

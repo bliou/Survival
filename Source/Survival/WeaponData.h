@@ -23,7 +23,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Clip)
 		int32 CurrentAmmoInClip;
 
-	UPROPERTY(EditDefaultsOnly, Category = Config)
+	UPROPERTY(EditDefaultsOnly, Category = Time)
+		float ReloadTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = Time)
 		float RecoilTime;
 
 	UPROPERTY(EditDefaultsOnly, Category = Config)

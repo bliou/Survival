@@ -155,6 +155,8 @@ FHitResult AWeapon::BulletTrace(
 		ECollisionChannel::ECC_PhysicsBody, 
 		TraceParams);
 
+	DrawDebugLine(GetWorld(), TraceFrom, TraceTo, FColor::Black, true, 20.f);
+
 	return Hit;
 }
 
@@ -178,6 +180,7 @@ TArray<FHitResult> AWeapon::PierceTrace(
 		ECollisionChannel::ECC_PhysicsBody,
 		TraceParams);
 
+	DrawDebugLine(GetWorld(), TraceFrom, TraceTo, FColor::Black, true, 20.f);
 	return Hits;
 }
 
