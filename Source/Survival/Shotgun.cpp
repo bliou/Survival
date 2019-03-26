@@ -2,6 +2,7 @@
 
 #include "Shotgun.h"
 #include "MyCharacter.h"
+#include "Runtime/Engine/Classes/Animation/AnimInstance.h"
 
 AShotgun::AShotgun()
 {

@@ -244,10 +244,13 @@ void AWeapon::Equip()
 
 		CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		WeaponMesh->SetHiddenInGame(false);
+		FName Socket = WeaponType == EWeaponType::EGun
+			? TEXT("GunSocket")
+			: TEXT("HeavyGunSocket");
 		AttachToComponent(
 			MyPawn->GetMesh(),
 			FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
-			TEXT("WeaponSocket")
+			Socket
 		);
 	}
 }
