@@ -41,7 +41,9 @@ void AMyCharacter::BeginPlay()
 	Inventory = NewObject<UInventory>();
 	Inventory->Initialize(GetWorld());
 
-	StartWave();
+	HealthRegenTimer = 0.f;
+
+	//StartWave();
 }
 
 // Called every frame
@@ -63,6 +65,19 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 		CurrentWeapon->WeaponConfig.CurrentWeaponSpread = 
 			FMath::Max(CurrentWeapon->WeaponConfig.CurrentWeaponSpread, CurrentWeapon->WeaponConfig.WeaponMaxSpread / 2.f);
+	}
+
+	ASurvivalGameStateBase* GameState = GetWorld()->GetGameState<ASurvivalGameStateBase>();
+	if (GameState->CurrentState == EGameState::EInWave)
+	{
+		HealthRegenTimer += DeltaTime;
+		if (HealthRegenTimer >= 1.f)
+		{
+			HealthRegenTimer = 0.f;
+			CharacterConfig.CurrentHealth += CharacterConfig.HealthRegen;
+			if (CharacterConfig.CurrentHealth > CharacterConfig.MaxHealth)
+				CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
+		}
 	}
 
 	InteractWithBarricade();

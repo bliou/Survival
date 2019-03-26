@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "WeaponShopItem.h"
 #include "BarricadeShopItem.h"
+#include "CharacterShopItem.h"
 #include "Shop.generated.h"
 
 UCLASS()
@@ -30,9 +31,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	TArray<UBarricadeShopItem*> BarricadeShopItems;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+	UCharacterShopItem* CharacterShopItem;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Init)
 	class UDataTable* WeaponsDataTable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Init)
 	class UDataTable* BarricadesDataTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Init)
+	FCharacterShopData CharacterShopData;
 };

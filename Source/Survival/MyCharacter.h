@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Config)
 	int32 CurrentHealth;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
+	int32 HealthRegen;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	int32 CurrentMoney;
 
@@ -142,4 +145,6 @@ protected:
 
 	void EndTakeDamages();
 	void KillPlayer();
+
+	float HealthRegenTimer;
 };

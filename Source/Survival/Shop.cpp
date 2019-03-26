@@ -31,6 +31,9 @@ void AShop::BeginPlay()
 		BarricadeShopItem->Initialize(GetWorld(), *BarricadeShopData);
 		BarricadeShopItems.Add(BarricadeShopItem);
 	}
+
+	CharacterShopItem = NewObject<UCharacterShopItem>();
+	CharacterShopItem->Initialize(GetWorld(), CharacterShopData);
 }
 
 // Called every frame
