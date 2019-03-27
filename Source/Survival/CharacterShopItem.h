@@ -32,11 +32,29 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 		int CurrentHealthRegenLevel;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+		TArray<FItemUpgradeData> MovementSpeedUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+		int CurrentMovementSpeedLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+		TArray<FItemUpgradeData> PickupRangeUpgrades;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
+		int CurrentPickupRangeLevel;
+
 	UFUNCTION(BlueprintCallable)
 		void UpgradeHealth();
 
 	UFUNCTION(BlueprintCallable)
 	void UpgradeHealthRegen();
+
+	UFUNCTION(BlueprintCallable)
+		void UpgradeMovementSpeed();
+
+	UFUNCTION(BlueprintCallable)
+		void UpgradePickupRange();
 
 	void Initialize(UWorld* World, FCharacterShopData CharacterShopData);
 

@@ -94,6 +94,7 @@ void AMyCharacter::StartWave()
 			CurrentBarricade = NULL;
 		}
 		Inventory->EquipPreviousWeapon();
+		CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 
 		GameState->CurrentState = EGameState::EStartWave;
 	}
@@ -111,8 +112,6 @@ void AMyCharacter::EndWave()
 	{
 		CurrentWeapon->bUnEquip = true;
 	}
-
-	CharacterConfig.CurrentHealth = CharacterConfig.MaxHealth;
 }
 
 // Called to bind functionality to input
@@ -177,7 +176,8 @@ void AMyCharacter::MoveForward(float Value)
 
 	const FRotator YawOnlyRotation = FRotator(0.0f, GetControlRotation().Yaw, 0.0f);
 	FVector Direction = FRotationMatrix(YawOnlyRotation).GetUnitAxis(EAxis::X);
-	AddMovementInput(Direction, Value);
+	
+	AddMovementInput(Direction, Value * CharacterConfig.MovementSpeed / 1000.f);
 }
 
 void AMyCharacter::MoveRight(float Value)
@@ -189,7 +189,8 @@ void AMyCharacter::MoveRight(float Value)
 
 	// Find out which way is "right" and record that the player wants to move that way.
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
-	AddMovementInput(Direction, Value);
+	
+	AddMovementInput(Direction, Value * CharacterConfig.MovementSpeed / 1000.f);
 }
 
 void AMyCharacter::Fire()

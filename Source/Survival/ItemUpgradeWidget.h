@@ -20,7 +20,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CustomInit(
 		const FText& Title,
-		TArray<FItemUpgradeData> ItemUpgrades);
+		TArray<FItemUpgradeData> ItemUpgrades,
+		int CurrentUpgrade);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FText Title;

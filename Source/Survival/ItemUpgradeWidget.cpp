@@ -4,11 +4,12 @@
 
 void UItemUpgradeWidget::CustomInit(
 	const FText& Title,
-	TArray<FItemUpgradeData> ItemUpgrades)
+	TArray<FItemUpgradeData> ItemUpgrades,
+	int CurrentUpgrade)
 {
 	this->Title = Title;
 	this->ItemUpgrades = ItemUpgrades;
-	this->CurrentUpgrade = 0;
+	this->CurrentUpgrade = CurrentUpgrade;
 }
 
 void UItemUpgradeWidget::Upgrade_Implementation()

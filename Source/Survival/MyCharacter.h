@@ -38,6 +38,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = Config)
 	int32 HealthRegen;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = Config)
+	float MovementSpeed;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Config)
 	int32 CurrentMoney;
 

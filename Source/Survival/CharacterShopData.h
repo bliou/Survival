@@ -16,4 +16,10 @@ struct FCharacterShopData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	class UDataTable* HealthRegenUpgrade;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	class UDataTable* MovementSpeedUpgrade;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	class UDataTable* PickupRangeUpgrade;
 };
